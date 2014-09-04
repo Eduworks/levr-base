@@ -6,7 +6,6 @@
 	<property name="levr.base.build.dir" value="../levr-base/web/WEB-INF/classes" />
 	<property name="levr.base.src" value="../levr-base/src/java" />
 	<property name="levr.base.base.src" value="../levr-base-base/src/java" />
-	<property name="levr.base.semantic.src" value="../levr-base-semantic/src/java" />
 	<property name="levr.base.dist" value="../levr-base/dist" />
 	<property name="levr.base.deps" value="../levr-base/deps" />
 	<property name="levr.base.lib" value="../levr-base/lib" />
@@ -14,7 +13,6 @@
 	<property name="levr.base.web" value="../levr-base/web" />
 	<property name="levr.base.etc" value="../levr-base/etc" />
 	<property name="levr.base.base.etc" value="../levr-base-base/etc" />
-	<property name="levr.base.semantic.etc" value="../levr-base-semantic/etc" />
 	<import file="../levr-core/build.xml" />
 
 	<target name="levr-base-copy-config" depends="" description="Copies the src config files to etc, useful in development">
@@ -37,34 +35,6 @@
 				<include name="**/*.json" />
 				<include name="**/*.rsl" />
 				<include name="**/*.rs2" />
-			</fileset>
-		</copy>
-		<copy todir="${levr.base.etc}">
-			<fileset dir="${levr.core.semantic.src}">
-				<include name="*.json" />
-				<include name="*.rsl" />
-				<include name="*.rs2" />
-				<include name="**/*.json" />
-				<include name="**/*.rsl" />
-				<include name="**/*.rs2" />
-			</fileset>
-		</copy>
-		<copy todir="${levr.base.web}">
-			<fileset dir="${levr.core.semantic.web}">
-				<include name="*.json" />
-				<include name="*.rsl" />
-				<include name="*.version" />
-				<include name="*.rs2" />
-				<include name="**/*.json" />
-				<include name="**/*.rsl" />
-				<include name="**/*.rs2" />
-				<include name="**/*.html" />
-				<include name="**/*.js" />
-				<include name="**/*.css" />
-				<include name="**/**/*.js" />
-				<include name="**/**/*.css" />
-				<include name="**/**/**/*.js" />
-				<include name="**/**/**/*.css" />
 			</fileset>
 		</copy>
 	</target>
