@@ -1,0 +1,370 @@
+package com.eduworks.cruncher.lang;
+
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.eduworks.interfaces.EwJsonSerializable;
+import com.eduworks.lang.EwList;
+import com.eduworks.lang.EwMap;
+import com.eduworks.lang.EwStringUtil;
+import com.eduworks.lang.threading.EwThreading;
+import com.eduworks.lang.threading.EwThreading.MyFutureList;
+import com.eduworks.lang.threading.EwThreading.MyRunnable;
+import com.eduworks.lang.util.EwCache;
+import com.eduworks.resolver.Cruncher;
+import com.eduworks.resolver.Resolver;
+import com.eduworks.resolver.exception.SoftException;
+
+public class CruncherForEach extends Cruncher
+{
+
+	@Override
+	public Object resolve(final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
+			throws JSONException
+	{
+		boolean threaded = optAsBoolean("threaded", true, parameters, dataStreams);
+		Object obj = getObj(parameters, dataStreams);
+		verifyCloneMode(this);
+		final String paramName = optAsString("paramName", "eachId", parameters, dataStreams);
+		final String prevParamName = optAsString("prevParamName", null, parameters, dataStreams);
+		final String valueName = getAsString("valueName", parameters, dataStreams);
+		final String extraParamName = optAsString("extraParamName", null, parameters, dataStreams);
+		final boolean memorySaver = optAsBoolean("memorySaver", false, parameters, dataStreams);
+		final Integer cap = Integer.parseInt(optAsString("cap", "-1", parameters, dataStreams));
+		if (cap > 0)
+			threaded = false;
+		final boolean rethrow = optAsBoolean("rethrow", false, parameters, dataStreams);
+		String extraParam = null;
+		if (extraParamName != null)
+			extraParam = get("extraParam", parameters, dataStreams).toString();
+
+		if (obj instanceof JSONObject)
+		{
+			return executeJsonObject(parameters, dataStreams, threaded, obj, paramName, valueName, prevParamName,
+					extraParamName, extraParam, memorySaver, rethrow,cap);
+		}
+		else if (obj instanceof JSONArray)
+		{
+			return executeJsonArray(parameters, dataStreams, threaded, obj, paramName, prevParamName, extraParamName,
+					extraParam, memorySaver, rethrow,cap);
+		}
+		else if (obj instanceof EwList)
+		{
+			obj = new JSONArray((EwList) obj);
+			return executeJsonArray(parameters, dataStreams, threaded, obj, paramName, prevParamName, extraParamName,
+					extraParam, memorySaver, rethrow,cap);
+		}
+		return null;
+	}
+
+	public Object executeJsonObject(final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams,
+			final boolean threaded, Object obj, final String paramName, final String valueName, final String prevParamName,
+			final String extraParamName, final String extraParam, final boolean memorySaver, final boolean rethrow,final Integer cap)
+			throws JSONException
+	{
+		final JSONObject output = new JSONObject();
+		final JSONArray outputArray = new JSONArray();
+		MyFutureList fl = new MyFutureList();
+		JSONObject json = (JSONObject) obj;
+		Iterator<String> keys = json.keys();
+		String prevId = null;
+		int counter = 0;
+		int sequenceI = Integer.parseInt(optAsString("sequenceI", "-1", parameters, dataStreams));
+		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", parameters, dataStreams));
+		while (keys.hasNext() && (cap == -1 || output.length() < cap))
+		{
+			final String key = keys.next();
+			final Object value = json.get(key);
+			final String prevIdFinal = prevId;
+
+			final int index = counter;
+			counter++;
+			if (counter % 1000 == 0)
+				log.debug(EwStringUtil.tabs(EwThreading.getThreadLevel()) + ": On " + counter + "/" + json.length());
+			MyRunnable r = new MyRunnable()
+			{
+				@Override
+				public void run()
+				{
+					try
+					{
+						final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
+						newParams.put(paramName, new String[] { key });
+
+						if (prevParamName != null)
+							newParams.put(prevParamName, new String[] { prevIdFinal });
+						if (valueName != null && value != null)
+						{
+							String valueString = value.toString();
+							newParams.put(valueName, new String[] { valueString });
+							newParams.put("i", new String[] { Integer.toString(index) });
+							EwCache.getCache("callCache").put(valueString, value);
+						}
+						if (extraParamName != null)
+							newParams.put(extraParamName, new String[] { extraParam });
+						Object result = resolveAChild("op", newParams, dataStreams);
+						if (result instanceof EwJsonSerializable)
+							result = ((EwJsonSerializable) result).toJsonObject();
+						if (!memorySaver)
+							synchronized (output)
+							{
+								output.put(key, result);
+								outputArray.put(index, result);
+							}
+						if (threaded)
+							clearThreadCache();
+					}
+					catch (JSONException e)
+					{
+						if (rethrow)
+							throw new RuntimeException(e);
+						else
+							e.printStackTrace();
+					}
+					catch (Exception ex)
+					{
+						if (rethrow)
+							throw new RuntimeException(ex);
+						else
+							ex.printStackTrace();
+					}
+				}
+			};
+			if (sequenceI == -1 || sequenceMod == -1 || counter % sequenceMod == sequenceI)
+				if (threaded)
+				{
+					EwThreading.forkAccm(fl, true, r);
+				}
+				else
+				{
+					r.run();
+				}
+			prevId = key;
+		}
+		fl.nowPause(true);
+		if (optAsBoolean("array", false, parameters, dataStreams))
+		{
+			JSONArray ja = new JSONArray();
+			for (int i = 0;i < outputArray.length();i++)
+				if (!outputArray.isNull(i))
+					ja.put(outputArray.get(i));
+			return ja;
+		}
+		if (optAsBoolean("soft", false, parameters, dataStreams))
+			if (output.length() == 0)
+				return null;
+		return output;
+	}
+
+	public Object executeJsonArray(final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams,
+			boolean threaded, Object obj, final String paramName, final String prevParamName,
+			final String extraParamName, final String extraParam, final boolean memorySaver, final boolean rethrow,final Integer cap)
+			throws JSONException
+	{
+		final JSONObject output = new JSONObject();
+		final JSONArray outputArray = new JSONArray();
+		MyFutureList fl = new MyFutureList();
+		JSONArray json = (JSONArray) obj;
+		String prevId = null;
+		int sequenceI = Integer.parseInt(optAsString("sequenceI", "-1", parameters, dataStreams));
+		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", parameters, dataStreams));
+		for (int i = 0; i < json.length() && (cap == -1 || output.length() < cap); i++)
+		{
+			final String key = json.getString(i);
+			final Object value = json.get(i);
+			final String prevIdFinal = prevId;
+			final int index = i;
+			if (i > 0 && i % 1000 == 0)
+				log.debug(EwStringUtil.tabs(EwThreading.getThreadLevel()) + ": On " + i + "/" + json.length());
+			if (sequenceI == -1 || sequenceMod == -1 || i % sequenceMod == sequenceI)
+				if (threaded)
+				{
+					EwThreading.forkAccm(fl, true, new MyRunnable()
+					{
+						@Override
+						public void run()
+						{
+							try
+							{
+								final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
+								newParams.put(paramName, new String[] { key });
+								EwCache.getCache("callCache").put(key, value);
+								if (prevParamName != null)
+									newParams.put(prevParamName, new String[] { prevIdFinal });
+								if (extraParamName != null)
+									newParams.put(extraParamName, new String[] { extraParam });
+								newParams.put("i", new String[] { Integer.toString(index) });
+								int tryCount = 0;
+								boolean keepTrying = true;
+								Object result = null;
+								while (keepTrying)
+									try
+									{
+										keepTrying = false;
+										result = resolveAChild("op", newParams, dataStreams);
+									}
+									catch (SoftException ex)
+									{
+										tryCount++;
+										if (tryCount < 30)
+											keepTrying = true;
+									}
+								if (result instanceof EwJsonSerializable)
+									result = ((EwJsonSerializable) result).toJsonObject();
+								if (!memorySaver)
+									synchronized (output)
+									{
+										if (optAsString("countInstances", "false", parameters, dataStreams).equals(
+												"true"))
+										{
+											if (result instanceof JSONObject)
+											{
+												int count = 0;
+												if (output.has(key))
+													count = output.getJSONObject(key).optInt("count", 0);
+												((JSONObject) result).put("count", ++count);
+											}
+										}
+										output.put(key, result);
+										outputArray.put(index, result);
+									}
+									clearThreadCache();
+							}
+							catch (JSONException e)
+							{
+								if (rethrow)
+									throw new RuntimeException(e);
+								else
+									e.printStackTrace();
+							}
+							catch (Exception ex)
+							{
+								if (rethrow)
+									throw new RuntimeException(ex);
+								else
+									ex.printStackTrace();
+							}
+						}
+					});
+				}
+				else
+				{
+					try
+					{
+						final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
+						newParams.put(paramName, new String[] { key });
+						if (prevParamName != null)
+							newParams.put(prevParamName, new String[] { prevIdFinal });
+						if (extraParamName != null)
+							newParams.put(extraParamName, new String[] { extraParam });
+						newParams.put("i", new String[] { Integer.toString(index) });
+						Object result = resolveAChild("op", newParams, dataStreams);
+
+						if (!memorySaver)
+						{
+							if (optAsString("countInstances", "false", parameters, dataStreams).equals("true"))
+							{
+								if (result instanceof JSONObject)
+								{
+									int count = 0;
+									if (output.has(key))
+										count = output.getJSONObject(key).optInt("count", 0);
+									((JSONObject) result).put("count", ++count);
+								}
+							}
+							output.put(key, result);
+							outputArray.put(index, result);
+						}
+						if (threaded)
+							clearThreadCache();
+					}
+					catch (Exception ex)
+					{
+						if (rethrow)
+							throw new RuntimeException(ex);
+						else
+							ex.printStackTrace();
+					}
+				}
+			prevId = key;
+		}
+		fl.nowPause(true);
+
+		if (optAsBoolean("array", false, parameters, dataStreams))
+		{
+			JSONArray results = new JSONArray();
+			for (int i = 0; i < outputArray.length(); i++)
+				if (!outputArray.isNull(i))
+					results.put(outputArray.get(i));
+			return results;
+
+		}
+		if (optAsBoolean("soft", false, parameters, dataStreams))
+			if (output.length() == 0)
+				return null;
+		return output;
+	}
+
+	private boolean verifyCloneMode(Object o) throws JSONException
+	{
+		if (o instanceof Resolver)
+		{
+			Resolver r = (Resolver) o;
+			for (String key : r.keySet())
+				verifyCloneMode(r.get(key));
+			return true;
+		}
+		if (o instanceof Cruncher)
+		{
+			Cruncher c = (Cruncher) o;
+			if (c.resolverCompatibilityReplaceMode == true)
+				return true;
+			boolean replaceMode = false;
+			for (String key : c.keySet())
+			{
+				if (verifyCloneMode(c.get(key)))
+					replaceMode = true;
+			}
+			c.resolverCompatibilityReplaceMode = replaceMode;
+			return replaceMode;
+		}
+		return false;
+	}
+
+	@Override
+	public String getDescription()
+	{
+		return "Iterates over a collection.\n"
+				+ "If an array or list, places each object into the @parameters (under paramName) and performs 'op'\n"
+				+ "If a JSONObject, places the key and value into the @parameters (under paramName and valueName) and performs 'op'\n"
+				+ "Other parameters set: i (index)\n" + "Switches: \n"
+				+ "array='false' (Returns only the results of 'op')\n"
+				+ "threaded='true' (Performs operations simultaneously)\n"
+				+ "memorySaver='false' (Discards results of 'op')\n"
+				+ "soft='false' (Returns a null value instead of an empty array)\n" + "op= (Operation to perform)\n";
+	}
+
+	@Override
+	public String getReturn()
+	{
+		return "JSONArray|JSONObject";
+	}
+
+	@Override
+	public String getAttribution()
+	{
+		return ATTRIB_NONE;
+	}
+
+	@Override
+	public JSONObject getParameters() throws JSONException
+	{
+		return jo("obj", "JSONArray|JSONObject", "paramName", "String", "valueName", "String", "op", "Resolvable",
+				"?array", "Boolean", "?threaded", "Boolean", "?memorySaver", "Boolean", "?soft", "Boolean");
+	}
+}
