@@ -13,7 +13,7 @@ public class CruncherCreateDirectory extends Cruncher {
 			throws org.json.JSONException {
 		
 		String path = getAsString("path", parameters, dataStreams);
-		if (path.contains(".."))
+		if (optAsBoolean("safe",true,parameters,dataStreams) && path.contains(".."))
 			throw new RuntimeException("Cannot go up in filesystem.");
 		
 		File f = new File(path);
