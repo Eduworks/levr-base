@@ -79,4 +79,9 @@ public class EwDB
 				});
 	}
 
+	public void compact()
+	{
+		db.compact();
+	}
+
 }
