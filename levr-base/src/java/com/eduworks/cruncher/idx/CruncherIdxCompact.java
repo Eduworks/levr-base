@@ -2,11 +2,9 @@ package com.eduworks.cruncher.idx;
 
 import java.io.InputStream;
 import java.util.Map;
-import java.util.NavigableSet;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mapdb.Fun;
 
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
