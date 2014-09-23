@@ -5,7 +5,7 @@
  <servlet>
   <display-name>Resolver Servlet</display-name>
   <servlet-name>resolver</servlet-name>
-  <servlet-class>com.eduworks.ace.product.levr.servlet.impl.LevrResolverServlet</servlet-class>
+  <servlet-class>com.eduworks.levr.servlet.impl.LevrResolverServlet</servlet-class>
  </servlet>
  <servlet-mapping>
   <servlet-name>resolver</servlet-name>
