@@ -49,7 +49,7 @@ public class CruncherXmppListen extends Cruncher
 					if (!(e instanceof RuntimeException))
 						e.printStackTrace();
 					else if (e.getMessage() != null && !e.getMessage().isEmpty())
-						e.printStackTrace();
+						System.out.println(e.getMessage());
 			}
 		}
 	}
