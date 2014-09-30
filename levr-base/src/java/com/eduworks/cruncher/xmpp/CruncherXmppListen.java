@@ -46,10 +46,10 @@ public class CruncherXmppListen extends Cruncher
 			}
 			catch (Throwable e)
 			{
-					if (!(e instanceof RuntimeException))
-						e.printStackTrace();
-					else if (e.getMessage() != null && !e.getMessage().isEmpty())
-						System.out.println(e.getMessage());
+				if (!(e instanceof RuntimeException))
+					e.printStackTrace();
+				else if (e.getMessage() != null && !e.getMessage().isEmpty())
+					System.out.println(e.getMessage());
 			}
 		}
 	}
