@@ -30,6 +30,7 @@ public class CruncherCollapse extends Cruncher
 			for (int i = 0;i < ja.length();i++)
 			{
 				JSONObject jo = ja.getJSONObject(i);
+				if (ja.isNull(i) || ja.get(i) == null) continue;
 				if (value != null)
 					result.accumulate(jo.getString(key),jo.get(value));
 				else
@@ -44,9 +45,10 @@ public class CruncherCollapse extends Cruncher
 			JSONObject jo = (JSONObject) obj;
 			for (String objKey : EwJson.getKeys(jo))
 			{
+				if (jo.isNull(objKey) || jo.get(objKey) == null) continue;
 				JSONObject jo2 = jo.getJSONObject(objKey);
 				if (value != null)
-				result.accumulate(jo2.getString(key),jo2.get(value));
+					result.accumulate(jo2.getString(key),jo2.get(value));
 				else
 				{
 					result.accumulate(jo2.getString(key),jo2);
