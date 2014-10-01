@@ -16,26 +16,33 @@ public class CruncherCollapse extends Cruncher
 	@Override
 	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		Object obj = getObj(parameters,dataStreams);
-		
+		Object obj = getObj(parameters, dataStreams);
+
 		String key = getAsString("keyKey", parameters, dataStreams);
-		String value = getAsString("valueKey",parameters,dataStreams);
-		
+		String value = getAsString("valueKey", parameters, dataStreams);
+
 		JSONObject result = new JSONObject();
-		if (obj == null) return null;
-		if (key == null|| key.isEmpty()) return null;
+		if (obj == null)
+			return null;
+		if (key == null || key.isEmpty())
+			return null;
 		if (obj instanceof JSONArray)
 		{
 			JSONArray ja = (JSONArray) obj;
-			for (int i = 0;i < ja.length();i++)
+			for (int i = 0; i < ja.length(); i++)
 			{
 				JSONObject jo = ja.getJSONObject(i);
-				if (ja.isNull(i) || ja.get(i) == null) continue;
+				if (ja.isNull(i) || ja.get(i) == null)
+					continue;
 				if (value != null)
-					result.accumulate(jo.getString(key),jo.get(value));
+				{
+					if (!jo.isNull(value) && jo.get(value) != null)
+						if (!jo.isNull(key) && jo.get(key) != null)
+						result.accumulate(jo.getString(key), jo.get(value));
+				}
 				else
 				{
-					result.accumulate(jo.getString(key),jo);
+					result.accumulate(jo.getString(key), jo);
 					jo.remove(key);
 				}
 			}
@@ -45,13 +52,18 @@ public class CruncherCollapse extends Cruncher
 			JSONObject jo = (JSONObject) obj;
 			for (String objKey : EwJson.getKeys(jo))
 			{
-				if (jo.isNull(objKey) || jo.get(objKey) == null) continue;
+				if (jo.isNull(objKey) || jo.get(objKey) == null)
+					continue;
 				JSONObject jo2 = jo.getJSONObject(objKey);
 				if (value != null)
-					result.accumulate(jo2.getString(key),jo2.get(value));
+				{
+					if (!jo2.isNull(value) && jo2.get(value) != null)
+						if (!jo2.isNull(key) && jo2.get(key) != null)
+						result.accumulate(jo2.getString(key), jo2.get(value));
+				}
 				else
 				{
-					result.accumulate(jo2.getString(key),jo2);
+					result.accumulate(jo2.getString(key), jo2);
 					jo2.remove(key);
 				}
 			}
@@ -76,7 +88,7 @@ public class CruncherCollapse extends Cruncher
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("obj","JSONObject,JSONArray","keyKey","String","valueKey","String");
+		return jo("obj", "JSONObject,JSONArray", "keyKey", "String", "valueKey", "String");
 	}
 
 	@Override
