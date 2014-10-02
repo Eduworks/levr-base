@@ -35,9 +35,9 @@ public class CruncherTop extends Cruncher
 				public int compare(Tuple<String, Double> o1, Tuple<String, Double> o2)
 				{
 					if (o2.getSecond() < o1.getSecond())
-						return 1;
-					else if (o2.getSecond() > o1.getSecond())
 						return -1;
+					else if (o2.getSecond() > o1.getSecond())
+						return 1;
 					else
 						return 0;
 				}
