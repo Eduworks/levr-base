@@ -14,7 +14,7 @@ public class CruncherToLower extends Cruncher
 	@Override
 	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String asString = getAsString("obj",parameters,dataStreams);
+		String asString = optAsString("obj",null,parameters,dataStreams);
 		if (asString == null) return null;
 		return asString.toLowerCase();
 	}
