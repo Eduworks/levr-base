@@ -37,14 +37,14 @@ public class CruncherCatch extends Cruncher
 				throw e;
 			}
 			
-		}catch(JSONException e){
+		}catch(Exception e){
 			if(has("any")){
 				final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 				newParams.put("message", new String[] { e.getMessage() });
 				
 				result = resolveAChild("any", newParams, dataStreams);
 			}else{
-				throw e;
+				throw new RuntimeException(e);
 			}
 		}finally{
 			if(has("finally")){
