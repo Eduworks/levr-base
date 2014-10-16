@@ -86,6 +86,16 @@ public class CruncherHttpPost extends Cruncher
 		if (authToken != null && !authToken.trim().isEmpty()) {
 		   post.setHeader("Authorization", "Basic " + authToken);
 		}
+		for (String key : keySet())
+		{
+			if (key.equals("url")) continue;
+			if (key.equals("obj")) continue;
+			if (key.equals("authToken")) continue;
+			if (key.equals("multipart")) continue;
+			if (key.equals("name")) continue;
+			if (key.equals("contentType")) continue;
+			post.setHeader(key,getAsString(key, parameters, dataStreams));
+		}
 		
 		post.setEntity(entity);
 		
