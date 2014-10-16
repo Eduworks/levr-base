@@ -1,5 +1,6 @@
 package com.eduworks.cruncher.net;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -11,9 +12,14 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.AbstractContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -22,6 +28,7 @@ import org.json.JSONObject;
 
 import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Cruncher;
+import com.eduworks.util.io.InMemoryFile;
 
 public class CruncherHttpPost extends Cruncher
 {
@@ -43,7 +50,14 @@ public class CruncherHttpPost extends Cruncher
 		if (multiPart)
 		try
 		{
-			((MultipartEntity) entity).addPart( name, new StringBody(o.toString(), contentType,Charset.defaultCharset()));
+			AbstractContentBody contentBody = null;
+			if (o instanceof File)
+				contentBody = new FileBody((File) o,contentType);
+			else if (o instanceof InMemoryFile)
+				contentBody = new InputStreamBody(((InMemoryFile) o).getInputStream(),contentType);
+			else
+				contentBody = new StringBody(o.toString(), contentType,Charset.defaultCharset());
+			((MultipartEntity) entity).addPart(name, contentBody);
 		}
 		catch (UnsupportedEncodingException e1)
 		{
@@ -53,7 +67,12 @@ public class CruncherHttpPost extends Cruncher
 		{
 			try
 			{
-				entity = new StringEntity(o.toString());
+				if (o instanceof File)
+					entity = new FileEntity((File) o);
+				else if (o instanceof InMemoryFile)
+					entity = new InputStreamEntity(((InMemoryFile) o).getInputStream());
+				else
+					entity = new StringEntity(o.toString());
 				post.setHeader("Content-Type", contentType);
 //				if (accept != null)
 //				post.setHeader("Accept", accept);
