@@ -107,7 +107,7 @@ public class ResolverDisplayCsv extends Resolver
 		for (String row : rowKeys)
 		{
 			accmData.append("\n");
-			accmData.append(row);
+			accmData.append(encodeCsv(row));
 			for (String col : indexKeys)
 			{
 				accmData.append(",");
