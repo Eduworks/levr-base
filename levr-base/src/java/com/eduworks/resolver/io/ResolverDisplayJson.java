@@ -23,6 +23,7 @@ public class ResolverDisplayJson extends Resolver
 
 		final boolean collapse = optAsBoolean("collapse", false, parameters);
 		final boolean asArray = optAsBoolean("asArray", false, parameters);
+		final Integer spaces = optAsInteger("spaces", 5, parameters);
 
 		for (String key : keySet())
 		{
@@ -38,19 +39,41 @@ public class ResolverDisplayJson extends Resolver
 
 		dismantleInfiniteLoops(this);
 
-		Object result = (collapse && length() == 1)
-			? get(keySet().iterator().next())	// Clones first value
-			: toString(5);			// Clones this from string value
+		Object result; // Clones this from string value
+		if (collapse && length() == 1)
+			result = get(keySet().iterator().next());
+		else
+		{
+			if (spaces > 0)
+				result = toString(spaces);
+			else
+				result = toString();
+		}
 
 		final boolean isJsonArray = (result instanceof JSONArray);
 		final boolean isJsonObject = (result instanceof JSONObject);
 
 		if (asArray && isJsonObject)
-			return EwJson.copyFromObject((JSONObject) result).toString(2);
+		{
+			if (spaces > 0)
+				return EwJson.copyFromObject((JSONObject) result).toString(spaces);
+			else
+				return EwJson.copyFromObject((JSONObject) result).toString();
+		}
 		else if (isJsonObject)
-			result = ((JSONObject) result).toString(5);
+		{
+			if (spaces > 0)
+				result = ((JSONObject) result).toString(spaces);
+			else
+				result = ((JSONObject) result).toString();
+		}
 		else if (isJsonArray)
-			result = ((JSONArray) result).toString(5);
+		{
+			if (spaces > 0)
+				result = ((JSONArray) result).toString(spaces);
+			else
+				result = ((JSONArray) result).toString();
+		}
 
 		return result;
 	}
@@ -66,23 +89,23 @@ public class ResolverDisplayJson extends Resolver
 				Object object = jo.get(key);
 				Object repl = dismantleInfiniteLoops(object);
 				if (repl != null)
-					jo.put(key,repl);
+					jo.put(key, repl);
 			}
 		}
 		else if (o instanceof JSONArray)
 		{
 			JSONArray jo = (JSONArray) o;
 
-			for (int i = 0;i < jo.length();i++)
+			for (int i = 0; i < jo.length(); i++)
 			{
 				Object object = jo.get(i);
 				Object repl = dismantleInfiniteLoops(object);
 				if (repl != null)
-				jo.put(i,repl);
+					jo.put(i, repl);
 			}
 		}
 		else if (o instanceof EwDisplayable)
-			return ((EwDisplayable)o).toDisplayString();
+			return ((EwDisplayable) o).toDisplayString();
 		else if (o instanceof Collection)
 		{
 			Iterator<?> iterator = ((Collection<?>) o).iterator();
@@ -110,9 +133,8 @@ public class ResolverDisplayJson extends Resolver
 	@Override
 	public String getDescription()
 	{
-		return "Displays the resultant object, array, or any other renderable as JSON." +
-				"\nCollapse will have the resultant object not wrapped (if one object/array/etc)" +
-				"\nAsArray will place the parameters into an array.";
+		return "Displays the resultant object, array, or any other renderable as JSON."
+				+ "\nCollapse will have the resultant object not wrapped (if one object/array/etc)" + "\nAsArray will place the parameters into an array.";
 	}
 
 	@Override
@@ -130,6 +152,6 @@ public class ResolverDisplayJson extends Resolver
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("<any>","Object|Array|String|Number|Boolean","?collapse","Boolean","?asArray","Boolean");
+		return jo("<any>", "Object|Array|String|Number|Boolean", "?collapse", "Boolean", "?asArray", "Boolean","?spaces","Integer");
 	}
 }
