@@ -21,6 +21,7 @@ public class CruncherWhile extends Cruncher
 		while(o != null && !o.equals("false"))
 		{
 			result = getObj(parameters,dataStreams);
+			o = get("condition", parameters, dataStreams);
 		}
 		return result;
 	}
