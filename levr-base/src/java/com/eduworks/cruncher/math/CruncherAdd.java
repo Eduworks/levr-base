@@ -28,17 +28,17 @@ public class CruncherAdd extends Cruncher
 			if (resultStr.length() == 0 && !optAsBoolean("_string",false,parameters,dataStreams))
 				try
 				{
-					Double value = getAsDouble(key, parameters,dataStreams);
+					Double value = objectToDouble(o);
 					result += value;
 				}
 				catch (NumberFormatException ex)
 				{
 					if (result != 0.0)
 						resultStr.append(result);
-					resultStr.append(getAsString(key,parameters,dataStreams));
+					resultStr.append(objectToString(o));
 				}
 			else
-				resultStr.append(getAsString(key,parameters,dataStreams));
+				resultStr.append(objectToString(o));
 		}
 		if (resultStr.length() > 0)
 			return resultStr.toString();

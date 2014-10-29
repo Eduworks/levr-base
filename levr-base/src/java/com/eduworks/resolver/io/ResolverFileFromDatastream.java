@@ -79,7 +79,6 @@ public class ResolverFileFromDatastream extends Resolver
 			return null;
 		InputStream document = dataStreams.get(nameField);
 		document.reset();
-		String extension = "";
 		InMemoryFile createTempFile = new InMemoryFile();
 		createTempFile.name = nameField;
 		createTempFile.data = IOUtils.toByteArray(document);

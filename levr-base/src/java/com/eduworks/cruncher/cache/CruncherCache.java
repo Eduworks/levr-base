@@ -21,6 +21,11 @@ public class CruncherCache extends Cruncher
 		String cacheName = getAsString("name", parameters, dataStreams);
 		Object result = null;
 		Object lock = null;
+		if (optAsBoolean("removeAllGlobal", false, parameters, dataStreams))
+		{
+			Resolver.clearCache();
+			return null;
+		}
 		synchronized (this.getClass())
 		{
 			lock = obj.get(cacheName);

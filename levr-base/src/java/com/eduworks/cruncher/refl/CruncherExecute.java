@@ -45,8 +45,9 @@ public class CruncherExecute extends Cruncher
 					}
 				}
 			}
-			if (get(key, parameters, dataStreams)!=null)
-				parameterMap.put(key, new String[] { get(key, parameters, dataStreams).toString() });
+			Object object = get(key, parameters, dataStreams);
+			if (object!=null)
+				parameterMap.put(key, new String[] { object.toString() });
 		}
 
 		Map<String, InputStream> dataStreamMap = new EwMap<String, InputStream>(dataStreams);
@@ -61,6 +62,7 @@ public class CruncherExecute extends Cruncher
 			{
 				e.printStackTrace();
 			}
+			parameterMap.put("obj", new String[]{o.toString()});
 		}
 
 		try
