@@ -32,16 +32,20 @@ public class CruncherGetIndex extends Cruncher
 			if (obj.size() > key)
 				return obj.get(key);
 		}
-		JSONArray obj = (JSONArray) objx;
-		if (obj == null)
-			return null;
-		int key = -1;
-		if (get("index", parameters, dataStreams) instanceof Double)
-			key = ((Double) get("index", parameters, dataStreams)).intValue();
-		else
-			key = Integer.parseInt(getAsString("index", parameters, dataStreams));
-		if (obj.length() > key)
-			return obj.get(key);
+		//if the object was a list and did not return, a cast exception would be thrown...TB 10/30/2014
+		else 
+		{
+   		JSONArray obj = (JSONArray) objx;
+   		if (obj == null)
+   			return null;
+   		int key = -1;
+   		if (get("index", parameters, dataStreams) instanceof Double)
+   			key = ((Double) get("index", parameters, dataStreams)).intValue();
+   		else
+   			key = Integer.parseInt(getAsString("index", parameters, dataStreams));
+   		if (obj.length() > key)
+   			return obj.get(key);
+		}
 		return null;
 	}
 
