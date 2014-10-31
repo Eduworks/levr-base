@@ -3,6 +3,7 @@ package com.eduworks.cruncher.io;
 import java.io.InputStream;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,7 +15,12 @@ public class CruncherToString extends Cruncher
 	@Override
 	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		return getObj(parameters,dataStreams).toString();
+		Object obj = getObj(parameters,dataStreams);
+		if (obj instanceof JSONArray)
+			return ((JSONArray)obj).toString(5);
+		else if (obj instanceof JSONObject)
+			return ((JSONObject)obj).toString(5);
+		return obj.toString();
 	}
 
 	@Override
