@@ -17,6 +17,8 @@ public class CruncherPut extends Cruncher
 		JSONObject jo = getObjAsJsonObject(parameters, dataStreams);
 		if (jo == null)
 			jo = new JSONObject();
+		else
+			jo=new JSONObject(jo.toString());
 		for (String key : keySet())
 		{
 			if (isSetting(key))continue;
