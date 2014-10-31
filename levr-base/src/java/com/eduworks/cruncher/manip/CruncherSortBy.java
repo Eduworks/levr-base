@@ -2,6 +2,7 @@ package com.eduworks.cruncher.manip;
 
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,8 +30,13 @@ public class CruncherSortBy extends Cruncher
 		{
 			for (int i = 0;i < ja.size();i++)
 				map.add(new Tuple<Object,Double>(ja.get(i), Double.parseDouble(sortBy.getString(i))));
-			Collections.sort(map);
-			Collections.reverse(map);
+			Collections.sort(map,new Comparator<Tuple<Object,Double>>(){
+
+				@Override
+				public int compare(Tuple<Object, Double> o1, Tuple<Object, Double> o2)
+				{
+					return Double.compare(o2.getSecond(),o1.getSecond());
+				}});
 			results = new JSONArray();
 			for (Tuple<Object,Double> sd : map)
 				results.put(sd.getFirst());
