@@ -37,6 +37,7 @@ public class CruncherSortBy extends Cruncher
 				{
 					return Double.compare(o2.getSecond(),o1.getSecond());
 				}});
+			Collections.reverse(map);
 			results = new JSONArray();
 			for (Tuple<Object,Double> sd : map)
 				results.put(sd.getFirst());
