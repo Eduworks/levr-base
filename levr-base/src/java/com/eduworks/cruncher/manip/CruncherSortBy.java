@@ -22,23 +22,23 @@ public class CruncherSortBy extends Cruncher
 		JSONArray objAsJsonArray = getObjAsJsonArray(parameters, dataStreams);
 		EwList<String> ja = new EwList<String>(objAsJsonArray);
 		JSONArray sortBy = getAsJsonArray("by", parameters, dataStreams);
-		final List<Tuple<String,Double>> map = new EwList<Tuple<String,Double>>();
+		final List<Tuple<Object,Double>> map = new EwList<Tuple<Object,Double>>();
 		
 		JSONArray results = new JSONArray();
 		if (optAsBoolean("byNumbers", false, parameters, dataStreams))
 		{
 			for (int i = 0;i < ja.size();i++)
-				map.add(new Tuple<String,Double>(ja.get(i), Double.parseDouble(sortBy.getString(i))));
+				map.add(new Tuple<Object,Double>(ja.get(i), Double.parseDouble(sortBy.getString(i))));
 			Collections.sort(map);
 			Collections.reverse(map);
 			results = new JSONArray();
-			for (Tuple<String,Double> sd : map)
+			for (Tuple<Object,Double> sd : map)
 				results.put(sd.getFirst());
 		}
 		else
-		for (int i = 0;i < sortBy.length();i++)
-			if (ja.contains(sortBy.getString(i)))
-				results.put(sortBy.getString(i));
+			for (int i = 0;i < sortBy.length();i++)
+				if (ja.contains(sortBy.getString(i)))
+					results.put(sortBy.getString(i));
 		return results;
 	}
 
