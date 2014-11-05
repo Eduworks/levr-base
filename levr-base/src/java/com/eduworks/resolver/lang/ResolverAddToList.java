@@ -17,11 +17,6 @@ public class ResolverAddToList extends ResolverMatcher implements ResolverMerger
 	public static final String AT_FRONT_KEY = "atFront";
 
 	@Override
-	public String[] getResolverNames()
-	{
-		return new String[]{getResolverName(),"listAdd"};
-	}
-	@Override
 	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		resolveAllChildren(parameters, dataStreams);
@@ -30,15 +25,15 @@ public class ResolverAddToList extends ResolverMatcher implements ResolverMerger
 		setMatchCriteria(parameters, true);
 
 		final boolean atFront = optAsBoolean(AT_FRONT_KEY, false, parameters);
-		final boolean unique = optAsBoolean(UNIQUE_KEY, false, parameters);
+		final boolean unique = optAsBoolean("unique", false, parameters);
 
 		final Object item = getItem(parameters, false, false);
 		final EwJsonArray array = getDefaultArray(parameters);
 
 		remove(AT_FRONT_KEY);
-		remove(UNIQUE_KEY);
-		remove(DEFAULT_ARR_KEY);
-		remove(DEFAULT_ITEM_KEY);
+		remove("unique");
+		remove("array");
+		remove("item");
 
 		if (item != null)
 		{
@@ -81,9 +76,9 @@ public class ResolverAddToList extends ResolverMatcher implements ResolverMerger
 	public Object merge(Object mergeTo, String srcKey, String destKey, Map<String,String[]> parameters)
 			throws JSONException
 	{
-		final boolean merge = optAsBoolean(MERGE_KEY, true, parameters);
+		final boolean merge = optAsBoolean("merge", true, parameters);
 
-		remove(MERGE_KEY);
+		remove("merge");
 
 		for (String key : keySet())
 			EwJsonArray.tryMergeAny((JSONArray)mergeTo, get(key, parameters), (merge) ? key : null);
@@ -94,6 +89,11 @@ public class ResolverAddToList extends ResolverMatcher implements ResolverMerger
 	public String getDescription()
 	{
 		return "Adds an item to a list, or creates a list if it does not exist.";
+	}
+	@Override
+	public String[] getResolverNames()
+	{
+		return new String[]{getResolverName(),"listAdd"};
 	}
 	@Override
 	public String getReturn()

@@ -84,7 +84,7 @@ public class CouchBaseClientFactory
 		return null;
 	}
 
-	static String getCacheValue(Cruncher cruncherGetDocument, Map<String, String[]> parameters,
+	public static String getCacheValue(Cruncher cruncherGetDocument, Map<String, String[]> parameters,
 			Map<String, InputStream> dataStreams) throws JSONException
 	{
 		// Set the URIs and get a client

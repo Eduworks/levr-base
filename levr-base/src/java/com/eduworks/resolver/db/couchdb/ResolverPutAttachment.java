@@ -14,11 +14,6 @@ public class ResolverPutAttachment extends ResolverDocument
 {
 
 	@Override
-	public String[] getResolverNames()
-	{
-		return new String[]{getResolverName(),"attachmentPut"};
-	}
-	@Override
 	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		resolveAllChildren(parameters, dataStreams);
@@ -66,6 +61,11 @@ public class ResolverPutAttachment extends ResolverDocument
 				"The document variable is defined by 'name' and the stream to retreive the file from (in the MPM stream) is defined by dataStreamId";
 	}
 
+	@Override
+	public String[] getResolverNames()
+	{
+		return new String[]{getResolverName(),"attachmentPut"};
+	}
 	@Override
 	public String getReturn()
 	{

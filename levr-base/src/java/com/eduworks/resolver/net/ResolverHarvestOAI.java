@@ -31,11 +31,6 @@ public class ResolverHarvestOAI extends Resolver
 	private static String	metadataPrefix	= "oai_dc";
 
 	@Override
-	public String[] getResolverNames()
-	{
-		return new String[]{getResolverName(),"harvestOai"};
-	}
-	@Override
 	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		metadataPrefix = optAsString("metadataPrefix",parameters);
@@ -256,6 +251,11 @@ public class ResolverHarvestOAI extends Resolver
 				"\n\t@dc = Metadata record" +
 				"\n\t@documentId = Identifier of the document (hopefully URL)" +
 				"\n\t@header = Header";
+	}
+	@Override
+	public String[] getResolverNames()
+	{
+		return new String[]{getResolverName(),"harvestOai"};
 	}
 	@Override
 	public String getReturn()

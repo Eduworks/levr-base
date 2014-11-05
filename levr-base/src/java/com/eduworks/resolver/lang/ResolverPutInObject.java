@@ -15,11 +15,6 @@ import com.eduworks.resolver.ResolverMerger;
 public class ResolverPutInObject extends ResolverMatcher implements ResolverMerger
 {
 	@Override
-	public String[] getResolverNames()
-	{
-		return new String[]{getResolverName(),"putInMap"};
-	}
-	@Override
 	public Object resolve(Map<String,String[]> parameters, Map<String,InputStream> dataStreams) throws JSONException
 	{
 		resolveAllChildren(parameters, dataStreams);
@@ -28,9 +23,9 @@ public class ResolverPutInObject extends ResolverMatcher implements ResolverMerg
 		removeAllSettings();
 
 		final Object item = getItem(parameters, false, false);
-		final String dest = optAsString(DEST_KEY, parameters);
+		final String dest = optAsString("dest", parameters);
 		final String destKey = (dest == null || dest.isEmpty()) ? null : dest;
-		final boolean unique = optAsBoolean(UNIQUE_KEY, false, parameters);
+		final boolean unique = optAsBoolean("unique", false, parameters);
 
 		final EwJsonObject obj = getObject(parameters, true, true);
 
@@ -59,7 +54,7 @@ public class ResolverPutInObject extends ResolverMatcher implements ResolverMerg
 		 * otherwise, we are not merging: all keys and values are accumulated at root level.
 		 */
 
-		final boolean merge = optAsBoolean(MERGE_KEY, (destKey == null), parameters);
+		final boolean merge = optAsBoolean("merge", (destKey == null), parameters);
 
 		if (mergeTo != null && length() > 0)
 			for (String key : keySet())
@@ -73,17 +68,22 @@ public class ResolverPutInObject extends ResolverMatcher implements ResolverMerg
 	{
 		return (
 				key == null ||
-				key.equals(DEFAULT_OBJ_KEY) ||
-				key.equals(DEFAULT_ITEM_KEY) ||
-				key.equals(DEST_KEY) ||
-				key.equals(MERGE_KEY) ||
-				key.equals(UNIQUE_KEY)
+				key.equals("obj") ||
+				key.equals("item") ||
+				key.equals("dest") ||
+				key.equals("merge") ||
+				key.equals("unique")
 			);
 	}
 	@Override
 	public String getDescription()
 	{
 		return "Will return an object that has an added variable, defined by 'dest' and 'item'";
+	}
+	@Override
+	public String[] getResolverNames()
+	{
+		return new String[]{getResolverName(),"putInMap"};
 	}
 	@Override
 	public String getReturn()

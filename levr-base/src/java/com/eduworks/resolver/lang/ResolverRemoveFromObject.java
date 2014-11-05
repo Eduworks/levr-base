@@ -13,11 +13,6 @@ import com.eduworks.resolver.enumeration.ResolverMatchOption;
 
 public class ResolverRemoveFromObject extends ResolverMatcher
 {
-	@Override
-	public String[] getResolverNames()
-	{
-		return new String[] { getResolverName(), "remove" };
-	}
 
 	@Override
 	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
@@ -39,7 +34,7 @@ public class ResolverRemoveFromObject extends ResolverMatcher
 		{
 			results = new EwJsonObject();
 
-			remove(DEFAULT_OBJ_KEY);
+			remove("obj");
 
 			// Leave out keys specified in RSL
 			for (String key : object.keySet())
@@ -58,6 +53,11 @@ public class ResolverRemoveFromObject extends ResolverMatcher
 		return "Removes a variable from an object defined by any parameters contained.";
 	}
 
+	@Override
+	public String[] getResolverNames()
+	{
+		return new String[] { getResolverName(), "remove" };
+	}
 	@Override
 	public String getReturn()
 	{

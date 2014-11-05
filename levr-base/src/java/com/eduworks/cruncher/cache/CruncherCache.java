@@ -26,7 +26,7 @@ public class CruncherCache extends Cruncher
 			Resolver.clearCache();
 			return null;
 		}
-		synchronized (this.getClass())
+		synchronized (getClass())
 		{
 			lock = obj.get(cacheName);
 			if (lock == null)

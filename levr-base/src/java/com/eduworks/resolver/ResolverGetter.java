@@ -27,16 +27,11 @@ import com.eduworks.lang.util.EwJson;
 @Deprecated
 public abstract class ResolverGetter extends Resolver
 {
-	public static final String DEFAULT_ITEM_KEY = "item";
-
-	public static final String DEFAULT_ARR_KEY = "array";
-	public static final String DEFAULT_OBJ_KEY = "obj";
-
 	protected Object getItem(Map<String, String[]> parameters, boolean convert, boolean reduce) throws JSONException
 	{
 		final Object item = (reduce)
-			? EwJson.tryReduce(opt(DEFAULT_ITEM_KEY, parameters), false)
-			: opt(DEFAULT_ITEM_KEY, parameters);
+			? EwJson.tryReduce(opt("item", parameters), false)
+			: opt("item", parameters);
 
 		return (convert) ? tryParseJson(item) : item;
 	}
@@ -47,7 +42,7 @@ public abstract class ResolverGetter extends Resolver
 	 */
 	protected EwJsonArray getArray(Map<String, String[]> parameters, boolean convert, boolean reduce) throws JSONException
 	{
-		return getArray(DEFAULT_ARR_KEY, parameters, convert, reduce);
+		return getArray("array", parameters, convert, reduce);
 	}
 
 	/**
@@ -69,7 +64,7 @@ public abstract class ResolverGetter extends Resolver
 	 */
 	protected EwJsonArray getDefaultArray(Map<String, String[]> parameters) throws JSONException
 	{
-		final Object array = opt(DEFAULT_ARR_KEY, parameters);
+		final Object array = opt("array", parameters);
 		final JSONArray wrapped = EwJson.wrapAsArray(array);
 		final boolean notWrapped = (wrapped == null || wrapped.length() == 0);
 
@@ -85,7 +80,7 @@ public abstract class ResolverGetter extends Resolver
 	 */
 	protected EwJsonObject getObject(Map<String, String[]> parameters, boolean convert, boolean reduce) throws JSONException
 	{
-		return getObject(DEFAULT_OBJ_KEY, parameters, convert, reduce);
+		return getObject("obj", parameters, convert, reduce);
 	}
 
 	/**
@@ -167,8 +162,8 @@ public abstract class ResolverGetter extends Resolver
 		return (
 				key == null ||
 				isSetting(key) ||
-				key.equals(DEFAULT_ARR_KEY) ||
-				key.equals(DEFAULT_OBJ_KEY)
+				key.equals("array") ||
+				key.equals("obj")
 			);
 	}
 

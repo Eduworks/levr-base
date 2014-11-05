@@ -21,13 +21,13 @@ public class ResolverObject extends Resolver implements ResolverMerger
 
 		removeAllSettings();
 
-		final String dest = optAsString(DEST_KEY, parameters);
+		final String dest = optAsString("dest", parameters);
 		final String destKey = (dest == null || dest.isEmpty()) ? null : dest;
 
-		final boolean merge = optAsBoolean(MERGE_KEY, false, parameters);
+		final boolean merge = optAsBoolean("merge", false, parameters);
 
-		remove(DEST_KEY);
-		remove(MERGE_KEY);
+		remove("dest");
+		remove("merge");
 
 		final Set<String> keySet = keySet();
 

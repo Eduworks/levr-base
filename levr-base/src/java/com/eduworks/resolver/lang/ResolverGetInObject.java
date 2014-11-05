@@ -13,11 +13,6 @@ public class ResolverGetInObject extends ResolverMatcher
 {
 
 	@Override
-	public String[] getResolverNames()
-	{
-		return new String[]{getResolverName(),"get"};
-	}
-	@Override
 	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		if (optAsString("_param",parameters) != null)
@@ -43,6 +38,11 @@ public class ResolverGetInObject extends ResolverMatcher
 		return "Retreives a variable out of an object based on the parameters." +
 				"\nUse in the following fashion: #object(foo='bar').#get(foo='') to get foo out of the object." +
 				"\nWill return null if variable does not exist.";
+	}
+	@Override
+	public String[] getResolverNames()
+	{
+		return new String[]{getResolverName(),"get"};
 	}
 	@Override
 	public String getReturn()

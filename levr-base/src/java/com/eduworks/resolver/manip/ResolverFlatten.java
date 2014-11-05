@@ -26,7 +26,7 @@ public class ResolverFlatten extends ResolverGetter
 		trim = optAsBoolean("_trim", false, parameters);
 		trimLeadingPunctuation = optAsBoolean("_trimLeadingPunctuation", false, parameters);
 		sb = new StringBuilder();
-		Object o = get(DEFAULT_OBJ_KEY, parameters);
+		Object o = get("obj", parameters);
 		flatten(o);
 		String tostr = sb.toString();
 		if (trimLeadingPunctuation)

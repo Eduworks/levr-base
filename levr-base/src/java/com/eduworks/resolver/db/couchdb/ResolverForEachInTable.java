@@ -23,50 +23,6 @@ public class ResolverForEachInTable extends ResolverDocument
 {
 	private static final Logger	LOGGER	= Logger.getLogger(ResolverForEachInTable.class);
 
-	@Override
-	public String getDescription()
-	{
-		return "Iterates over a CouchDB document store. Performs 'op' over each item in the database." +
-				"\nThe endpoint is defined by _serverHostname, _serverPort, _serverLogin, _serverPassword, _databasePrefix and _databaseName" +
-				"\nparamName - The name of the @parameter to place the key of the document in." +
-				"\nop - The operation to perform on each document." +
-				"\n(Optional)memorySaver - Determines if the results should be saved. Defaults to false." +
-				"\n(Optional)count - Stop executing after this amount." +
-				"\n(Optional)start - Start executing on the document with this Id." +
-				"\n(Optional)startCount - Start executing after this amount." +
-				"\n(Optional)threaded - Operate on multiple items simultaneously. Defaults to false." +
-				"\n(Optional)sequenceI - Operate on items where i % sequenceMod == sequenceI." +
-				"\n(Optional)sequenceMod - See above" +
-				"\n(Optional)aggregation - Aggregate the results in different ways. See below:" +
-				"\n\tmax - Get the maximum value returned." +
-				"\n\tappend - Along with 'delimiter', append the results into a string." +
-				"\n\tvalues - Return only the results of op." +
-				"\n\tkeys - Return only the keys of the documents affected.";
-	}
-
-	@Override
-	public String getReturn()
-	{
-		return "JSONObject|JSONArray";
-	}
-
-	@Override
-	public String getAttribution()
-	{
-		return ATTRIB_NONE;
-	}
-
-	@Override
-	public JSONObject getParameters() throws JSONException
-	{
-		return jo("_serverHostname","String","_serverPort","Number","_serverLogin","String","_serverPassword","String","?_databasePrefix","String","_databaseName","String","paramName","String","op","Resolvable","?aggregation","String","?memorySaver","Boolean","?count","Number","?start","String","?startCount","Number","?threaded","Boolean","?sequenceI","Number","?sequenceMod","Number");
-	}
-
-	@Override
-	public String[] getResolverNames()
-	{
-		return new String[] { getResolverName(), "foreachInTable" };
-	}
 
 	@Override
 	public Object resolve(Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
@@ -231,4 +187,51 @@ public class ResolverForEachInTable extends ResolverDocument
 		}
 		return this;
 	}
+
+	@Override
+	public String getDescription()
+	{
+		return "Iterates over a CouchDB document store. Performs 'op' over each item in the database." +
+				"\nThe endpoint is defined by _serverHostname, _serverPort, _serverLogin, _serverPassword, _databasePrefix and _databaseName" +
+				"\nparamName - The name of the @parameter to place the key of the document in." +
+				"\nop - The operation to perform on each document." +
+				"\n(Optional)memorySaver - Determines if the results should be saved. Defaults to false." +
+				"\n(Optional)count - Stop executing after this amount." +
+				"\n(Optional)start - Start executing on the document with this Id." +
+				"\n(Optional)startCount - Start executing after this amount." +
+				"\n(Optional)threaded - Operate on multiple items simultaneously. Defaults to false." +
+				"\n(Optional)sequenceI - Operate on items where i % sequenceMod == sequenceI." +
+				"\n(Optional)sequenceMod - See above" +
+				"\n(Optional)aggregation - Aggregate the results in different ways. See below:" +
+				"\n\tmax - Get the maximum value returned." +
+				"\n\tappend - Along with 'delimiter', append the results into a string." +
+				"\n\tvalues - Return only the results of op." +
+				"\n\tkeys - Return only the keys of the documents affected.";
+	}
+
+	@Override
+	public String[] getResolverNames()
+	{
+		return new String[] { getResolverName(), "foreachInTable" };
+	}
+	
+	@Override
+	public String getReturn()
+	{
+		return "JSONObject|JSONArray";
+	}
+
+	@Override
+	public String getAttribution()
+	{
+		return ATTRIB_NONE;
+	}
+
+	@Override
+	public JSONObject getParameters() throws JSONException
+	{
+		return jo("_serverHostname","String","_serverPort","Number","_serverLogin","String","_serverPassword","String","?_databasePrefix","String","_databaseName","String","paramName","String","op","Resolvable","?aggregation","String","?memorySaver","Boolean","?count","Number","?start","String","?startCount","Number","?threaded","Boolean","?sequenceI","Number","?sequenceMod","Number");
+	}
+
+	
 }

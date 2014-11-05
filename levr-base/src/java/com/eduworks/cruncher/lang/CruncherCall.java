@@ -16,7 +16,7 @@ public class CruncherCall extends Cruncher
 	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
-		for (String key : this.keySet())
+		for (String key : keySet())
 		{
 			if (key.equals("obj"))
 				continue;

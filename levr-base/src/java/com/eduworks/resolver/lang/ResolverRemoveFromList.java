@@ -15,11 +15,6 @@ import com.eduworks.resolver.enumeration.ResolverMatchOption;
 public class ResolverRemoveFromList extends ResolverMatcher
 {
 	@Override
-	public String[] getResolverNames()
-	{
-		return new String[]{getResolverName(),"listRemove"};
-	}
-	@Override
 	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		resolveAllChildren(parameters, dataStreams);
@@ -54,6 +49,11 @@ public class ResolverRemoveFromList extends ResolverMatcher
 	public String getDescription()
 	{
 		return "Removes one or more objects from an array of objects if they match the criteria defined by this object.";
+	}
+	@Override
+	public String[] getResolverNames()
+	{
+		return new String[]{getResolverName(),"listRemove"};
 	}
 	@Override
 	public String getReturn()

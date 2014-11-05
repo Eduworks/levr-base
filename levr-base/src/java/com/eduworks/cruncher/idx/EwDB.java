@@ -15,7 +15,7 @@ import com.eduworks.lang.threading.EwThreading.MyRunnable;
 
 public class EwDB
 {
-	DB				db;
+	public DB				db;
 	public Object	handleLock	= new Object();
 	public Future<?>   tCleose = null;
 	public AtomicInteger		handles = new AtomicInteger(0);

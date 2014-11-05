@@ -13,11 +13,6 @@ import com.eduworks.resolver.ResolverMatcher;
 public class ResolverGetInList extends ResolverMatcher
 {
 	@Override
-	public String[] getResolverNames()
-	{
-		return new String[]{getResolverName(),"getFromList"};
-	}
-	@Override
 	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		resolveAllChildren(parameters, dataStreams);
@@ -50,6 +45,11 @@ public class ResolverGetInList extends ResolverMatcher
 	{
 		return "Retreives an item from an array that matches some criteria." +
 				"Deprecated. Use getIndex.";
+	}
+	@Override
+	public String[] getResolverNames()
+	{
+		return new String[]{getResolverName(),"getFromList"};
 	}
 	@Override
 	public String getReturn()

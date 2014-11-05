@@ -38,52 +38,6 @@ public class ResolverForEach extends Resolver
 	EwJsonArray						sorted			= new EwJsonArray();
 
 	@Override
-	public String getDescription()
-	{
-		return "Iterates over a list or array. Has many different modes it can operate in, but performs 'op' over each item in the array." +
-				"\nobj - The array or list to iterate over." +
-				"\nparamName - The name of the @parameter to place the value into." +
-				"\nop - The operation to execute." +
-				"\n(Optional) aggregation - The way to aggregate the results. Can be:" +
-				"\n\t<default> Return a JSONObject where the keys are the original values (or keys, if obj is a JSONObject) and the values are the results." +
-				"\n\tmax - Return the highest numeric value." +
-				"\n\tappend - Along with parameter 'delimiter', append the results into a single string." +
-				"\n\tappendArray - Append the results into an array. Preserves ordering." +
-				"\n\tkeys - Return only the keys (ids). Assumes JSONObject as obj." +
-				"\n\tvalues - Return only the values (results) as an array." +
-				"\n\tvaluesSet - Return only the values, but do not duplicate any values." +
-				"\n(Optional) asArray - Wrap obj in an array if it is not an array." +
-				"\n(Optional) prevParamName - Keep track of the last item as well, pass in as this @param." +
-				"\n(Optional) simultaneous - Thread the operation. Defaults to false." +
-				"\n(Optional) memorySaver - Do not keep track of results. Defaults to false.";
-				
-	}
-
-	@Override
-	public String getReturn()
-	{
-		return "JSONObject|JSONArray";
-	}
-
-	@Override
-	public String getAttribution()
-	{
-		return ATTRIB_NONE;
-	}
-
-	@Override
-	public JSONObject getParameters() throws JSONException
-	{
-		return jo("obj","JSONArray|JSONObject","paramName","String","op","Resolvable","?aggregation","String","?asArray","Boolean","?prevParamName","Boolean","?simultaneous","Boolean","?memorySaver","Boolean");
-	}
-
-	@Override
-	public String[] getResolverNames()
-	{
-		return new String[] { getResolverName(), "foreach" };
-	}
-
-	@Override
 	public Object resolve(Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
 			throws JSONException
 	{
@@ -321,6 +275,52 @@ public class ResolverForEach extends Resolver
 			prev = id;
 		}
 		fl.nowPause(true);
+	}
+
+	@Override
+	public String getDescription()
+	{
+		return "Iterates over a list or array. Has many different modes it can operate in, but performs 'op' over each item in the array." +
+				"\nobj - The array or list to iterate over." +
+				"\nparamName - The name of the @parameter to place the value into." +
+				"\nop - The operation to execute." +
+				"\n(Optional) aggregation - The way to aggregate the results. Can be:" +
+				"\n\t<default> Return a JSONObject where the keys are the original values (or keys, if obj is a JSONObject) and the values are the results." +
+				"\n\tmax - Return the highest numeric value." +
+				"\n\tappend - Along with parameter 'delimiter', append the results into a single string." +
+				"\n\tappendArray - Append the results into an array. Preserves ordering." +
+				"\n\tkeys - Return only the keys (ids). Assumes JSONObject as obj." +
+				"\n\tvalues - Return only the values (results) as an array." +
+				"\n\tvaluesSet - Return only the values, but do not duplicate any values." +
+				"\n(Optional) asArray - Wrap obj in an array if it is not an array." +
+				"\n(Optional) prevParamName - Keep track of the last item as well, pass in as this @param." +
+				"\n(Optional) simultaneous - Thread the operation. Defaults to false." +
+				"\n(Optional) memorySaver - Do not keep track of results. Defaults to false.";
+				
+	}
+
+	@Override
+	public String getReturn()
+	{
+		return "JSONObject|JSONArray";
+	}
+
+	@Override
+	public String getAttribution()
+	{
+		return ATTRIB_NONE;
+	}
+
+	@Override
+	public JSONObject getParameters() throws JSONException
+	{
+		return jo("obj","JSONArray|JSONObject","paramName","String","op","Resolvable","?aggregation","String","?asArray","Boolean","?prevParamName","Boolean","?simultaneous","Boolean","?memorySaver","Boolean");
+	}
+
+	@Override
+	public String[] getResolverNames()
+	{
+		return new String[] { getResolverName(), "foreach" };
 	}
 
 }

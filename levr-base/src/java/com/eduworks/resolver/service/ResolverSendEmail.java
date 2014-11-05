@@ -7,6 +7,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.eduworks.lang.json.impl.EwJsonObject;
 import com.eduworks.net.mail.EwMail;
@@ -89,4 +90,27 @@ public class ResolverSendEmail extends ResolverString
 		return obj;
 	}
 
+	@Override
+	public String getDescription()
+	{
+		return "Sends an email (TODO: This)";
+	}
+
+	@Override
+	public String getReturn()
+	{
+		return "JSONObject";
+	}
+
+	@Override
+	public String getAttribution()
+	{
+		return ATTRIB_NONE;
+	}
+
+	@Override
+	public JSONObject getParameters() throws JSONException
+	{
+		return jo();
+	}
 }

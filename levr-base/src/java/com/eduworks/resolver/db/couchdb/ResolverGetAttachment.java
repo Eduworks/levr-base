@@ -15,11 +15,6 @@ public class ResolverGetAttachment extends ResolverDocument
 {
 
 	@Override
-	public String[] getResolverNames()
-	{
-		return new String[]{getResolverName(),"attachmentGet"};
-	}
-	@Override
 	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		resolveAllChildren(parameters, dataStreams);
@@ -66,6 +61,11 @@ public class ResolverGetAttachment extends ResolverDocument
 				"The document variable is defined by 'name' and the resultant filename is defined by 'filename'";
 	}
 
+	@Override
+	public String[] getResolverNames()
+	{
+		return new String[]{getResolverName(),"attachmentGet"};
+	}
 	@Override
 	public String getReturn()
 	{

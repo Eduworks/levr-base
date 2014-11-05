@@ -19,11 +19,6 @@ import com.eduworks.util.io.InMemoryFile;
 public class ResolverFileFromDatastream extends Resolver
 {
 	@Override
-	public String[] getResolverNames()
-	{
-		return new String[]{getResolverName(),"getFileFromPost"};
-	}
-	@Override
 	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		resolveAllChildren(parameters, dataStreams);
@@ -115,6 +110,11 @@ public class ResolverFileFromDatastream extends Resolver
 		return "Retreives the files from the HTTP Multi part post (or simple post) and returns them as a List of InMemoryFiles" +
 				"\nOptional Name = Name of MPP file to retreive." +
 				"\nOptional Except = Retreive everything except the name provided.";
+	}
+	@Override
+	public String[] getResolverNames()
+	{
+		return new String[]{getResolverName(),"getFileFromPost"};
 	}
 	@Override
 	public String getReturn()
