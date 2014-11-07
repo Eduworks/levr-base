@@ -1,4 +1,4 @@
-package com.eduworks.cruncher.io;
+package com.eduworks.cruncher.lang;
 
 import java.io.InputStream;
 import java.util.Map;
