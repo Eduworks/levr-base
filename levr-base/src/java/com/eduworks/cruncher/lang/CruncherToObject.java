@@ -7,15 +7,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.util.EwCache;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherToObject extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		Object obj = getObj(parameters, dataStreams);
+		Object obj = getObj(c, parameters, dataStreams);
 		if (obj instanceof JSONObject) 
 			return obj;
 		if (obj == null)

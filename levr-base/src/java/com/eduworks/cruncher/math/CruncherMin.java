@@ -7,15 +7,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.numerics.EwNumerics;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherMin extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		return EwNumerics.min(getObjAsJsonArray(parameters, dataStreams));
+		return EwNumerics.min(getObjAsJsonArray(c, parameters, dataStreams));
 	}
 
 	@Override

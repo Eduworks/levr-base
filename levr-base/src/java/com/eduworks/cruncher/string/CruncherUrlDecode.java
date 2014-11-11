@@ -7,15 +7,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.util.EwUri;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherUrlDecode extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		return EwUri.decodeValue(getAsString("obj",parameters, dataStreams).toString());
+		return EwUri.decodeValue(getAsString("obj",c, parameters, dataStreams).toString());
 	}
 
 	@Override

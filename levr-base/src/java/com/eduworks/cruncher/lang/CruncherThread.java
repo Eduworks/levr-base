@@ -11,13 +11,14 @@ import com.eduworks.lang.json.impl.EwJsonObject;
 import com.eduworks.lang.threading.EwThreading;
 import com.eduworks.lang.threading.EwThreading.MyFutureList;
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherThread extends Cruncher
 {
 
 	@Override
-	public Object resolve(final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
+	public Object resolve(final Context c, final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
 			throws JSONException
 	{
 		final JSONObject result = new EwJsonObject();
@@ -36,7 +37,7 @@ public class CruncherThread extends Cruncher
 					try
 					{
 						Object value = null;
-						value = get(key, parameters, dataStreams);
+						value = get(key, c, parameters, dataStreams);
 						if (isSetting(key))
 							return;
 						if (value == null)

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.mapdb.HTreeMap;
 
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
 
@@ -15,13 +16,13 @@ public class CruncherIdxPut extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String _databasePath = Resolver.decodeValue(getAsString("indexDir", parameters, dataStreams));
-		String _databaseName = Resolver.decodeValue(getAsString("databaseName", parameters, dataStreams));
-		String index = Resolver.decodeValue(getAsString("index", parameters, dataStreams));
-		boolean optCommit = optAsBoolean("_commit", true, parameters, dataStreams);
-		String key = getAsString("key", parameters, dataStreams);
+		String _databasePath = Resolver.decodeValue(getAsString("indexDir", c, parameters, dataStreams));
+		String _databaseName = Resolver.decodeValue(getAsString("databaseName", c, parameters, dataStreams));
+		String index = Resolver.decodeValue(getAsString("index", c, parameters, dataStreams));
+		boolean optCommit = optAsBoolean("_commit", true, c, parameters, dataStreams);
+		String key = getAsString("key", c, parameters, dataStreams);
 		EwDB ewDB = null;
 		try
 		{
@@ -40,7 +41,7 @@ public class CruncherIdxPut extends Cruncher
 				if (keyx.equals("databaseName")) continue;
 				if (keyx.equals("index")) continue;
 				if (keyx.equals("key")) continue;
-				jo.put(keyx, get(keyx, parameters, dataStreams));
+				jo.put(keyx, get(keyx, c, parameters, dataStreams));
 			}
 			hashMap.put(key,jo.toString());
 			return jo;

@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.threading.EwThreading;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.util.io.InMemoryFile;
 
@@ -24,16 +25,16 @@ public class CruncherXmppSend extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String server = getAsString("serverHostname", parameters, dataStreams);
-		String loginHostname = getAsString("loginHostname", parameters, dataStreams);
-		String port = getAsString("port", parameters, dataStreams);
-		String username = getAsString("username", parameters, dataStreams);
-		String password = getAsString("password", parameters, dataStreams);
-		String recipient = getAsString("recipient", parameters, dataStreams);
-		String message = getObj(parameters, dataStreams).toString();
-		String alt = optAsString("alt","",parameters, dataStreams).toString();
+		String server = getAsString("serverHostname", c, parameters, dataStreams);
+		String loginHostname = getAsString("loginHostname", c, parameters, dataStreams);
+		String port = getAsString("port", c, parameters, dataStreams);
+		String username = getAsString("username", c, parameters, dataStreams);
+		String password = getAsString("password", c, parameters, dataStreams);
+		String recipient = getAsString("recipient", c, parameters, dataStreams);
+		String message = getObj(c, parameters, dataStreams).toString();
+		String alt = optAsString("alt","",c, parameters, dataStreams).toString();
 
 		XMPPConnection connection = XmppManager.get(server, port, loginHostname, username, password);
 		try
@@ -46,7 +47,7 @@ public class CruncherXmppSend extends Cruncher
 			chat.sendMessage(chatMessage);
 			long msDelay = message.split(" ").length * 100+1000;
 			log.debug(recipient + " <-- " + message);
-			Object file = get("file", parameters, dataStreams);
+			Object file = get("file", c, parameters, dataStreams);
 			if (file != null)
 			{
 				InMemoryFile imf = null;
@@ -59,12 +60,12 @@ public class CruncherXmppSend extends Cruncher
 					FileTransferManager manager = XmppManager.getFtm(server, port, loginHostname, username, password);
 					OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer(recipient);
 					transfer.sendStream(imf.getInputStream(), imf.name, imf.data.length,
-							optAsString("description", "", parameters, dataStreams));
+							optAsString("description", "", c, parameters, dataStreams));
 					while (transfer.isDone() == false)
 						EwThreading.sleep(100);
 					if (transfer.getException().getMessage().equals("service-unavailable(503)"))
 					{
-						String altUrl = optAsString("fileUrl", "", parameters, dataStreams);
+						String altUrl = optAsString("fileUrl", "", c, parameters, dataStreams);
 						if (altUrl != null && altUrl.isEmpty() == false && XHTMLManager.isServiceEnabled(connection, chat.getParticipant()))
 						{
 							Message msg = new Message();
@@ -78,12 +79,12 @@ public class CruncherXmppSend extends Cruncher
 						}
 						else
 							chat.sendMessage(
-								optAsString("fileFailed", "File send failed.", parameters, dataStreams));
+								optAsString("fileFailed", "File send failed.", c, parameters, dataStreams));
 					}
 				}
 			}
 			//EwThreading.sleep(Math.max(250, msDelay));
-			if (optAsBoolean("fast",false,parameters,dataStreams))
+			if (optAsBoolean("fast",false,c,parameters, dataStreams))
 				EwThreading.sleep(100);
 			else
 				EwThreading.sleep(Math.max(250, msDelay));

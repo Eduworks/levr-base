@@ -8,17 +8,18 @@ import org.json.JSONML;
 import org.json.JSONObject;
 import org.json.XML;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherParseXml extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String xml = getObj(parameters, dataStreams).toString();
+		String xml = getObj(c, parameters, dataStreams).toString();
 		JSONObject jsonObject = JSONML.toJSONObject(xml);
-		if (optAsString("simple","true", parameters, dataStreams).equals("true"))
+		if (optAsString("simple","true", c, parameters, dataStreams).equals("true"))
 			return XML.toJSONObject(xml);
 		
 		return jsonObject;

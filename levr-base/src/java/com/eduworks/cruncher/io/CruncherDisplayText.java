@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.util.io.InMemoryFile;
 
@@ -14,17 +15,17 @@ public class CruncherDisplayText extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		Object o = getObj(parameters,dataStreams);
+		Object o = getObj(c,parameters, dataStreams);
 		parse(sb,o);
 		
 		InMemoryFile f = new InMemoryFile();
 		f.data = sb.toString().getBytes();
 		f.mime = "text/plain";
-		f.name = getAsString("name", parameters,dataStreams);
+		f.name = getAsString("name", c,parameters, dataStreams);
 		return f;
 	}
 

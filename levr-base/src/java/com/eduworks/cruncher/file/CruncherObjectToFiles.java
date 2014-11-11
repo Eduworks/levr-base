@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherObjectToFiles extends Cruncher
@@ -15,9 +16,9 @@ public class CruncherObjectToFiles extends Cruncher
 	Map<String, String>	documents	= new HashMap<String, String>();
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		JSONObject jo = getObjAsJsonObject(parameters, dataStreams);
+		JSONObject jo = getObjAsJsonObject(c, parameters, dataStreams);
 		for (String key : EwJson.getKeys(jo))
 		{
 			documents.put(key,jo.get(key).toString());

@@ -6,15 +6,16 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherToLower extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String asString = optAsString("obj",null,parameters,dataStreams);
+		String asString = optAsString("obj",null,c,parameters, dataStreams);
 		if (asString == null) return null;
 		return asString.toLowerCase();
 	}

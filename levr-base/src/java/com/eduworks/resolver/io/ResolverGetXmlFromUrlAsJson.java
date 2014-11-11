@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.json.XML;
 
 import com.eduworks.lang.EwList;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Resolver;
 import com.eduworks.resolver.net.ResolverGetFileFromUrl;
 import com.eduworks.util.io.EwFileSystem;
@@ -22,9 +23,9 @@ import com.eduworks.util.io.EwFileSystem;
 public class ResolverGetXmlFromUrlAsJson extends Resolver
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(parameters, dataStreams);
+		resolveAllChildren(c, parameters, dataStreams);
 		int timeout = optAsInteger("timeout", 30000, parameters);
 		boolean optAsBoolean2 = optAsBoolean("array", false, parameters);
 		remove("timeout");

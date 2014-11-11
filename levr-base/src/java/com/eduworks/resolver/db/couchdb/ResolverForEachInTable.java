@@ -16,6 +16,7 @@ import com.eduworks.lang.EwMap;
 import com.eduworks.lang.threading.EwThreading;
 import com.eduworks.lang.threading.EwThreading.MyFutureList;
 import com.eduworks.lang.threading.EwThreading.MyRunnable;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Resolvable;
 import com.eduworks.util.Tuple;
 
@@ -25,13 +26,13 @@ public class ResolverForEachInTable extends ResolverDocument
 
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
+	public Object resolve(final Context c, Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
 			throws JSONException
 	{
 		final boolean memorySaver = optAsBoolean("memorySaver", false, parameters);
 		for (String key : keySet())
 			if (isSetting(key) && !key.equals("op") && !key.equals("_op"))
-				resolveAChild(parameters, dataStreams, key);
+				resolveAChild(c,parameters, dataStreams, key);
 		int count = optAsInteger("count", Integer.MAX_VALUE, parameters);
 		String start = optAsString("start", parameters);
 		int startCount = optAsInteger("startCount", 0, parameters);
@@ -101,7 +102,7 @@ public class ResolverForEachInTable extends ResolverDocument
 									{
 										try
 										{
-											Object resolve = ((Resolvable)thing.clone()).resolve(newParams, dataStreams);
+											Object resolve = ((Resolvable)thing.clone()).resolve(c, newParams, dataStreams);
 											if (!memorySaver)
 												synchronized(me)
 												{

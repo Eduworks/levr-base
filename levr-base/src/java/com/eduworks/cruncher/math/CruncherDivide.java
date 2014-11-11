@@ -6,15 +6,16 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherDivide extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		Object obj = getObj(parameters,dataStreams);
+		Object obj = getObj(c,parameters, dataStreams);
 		
 		Double d = null;
 		if (obj instanceof Double)
@@ -23,12 +24,12 @@ public class CruncherDivide extends Cruncher
 			d = ((Integer)obj).doubleValue();
 		if (has("operator"))
 		{
-			Double operator = Double.parseDouble(getAsString("operator",parameters,dataStreams));
+			Double operator = Double.parseDouble(getAsString("operator",c,parameters, dataStreams));
 			return operator/d;
 		}
 		else if (has("operand"))
 		{
-			Double operand = Double.parseDouble(getAsString("operand",parameters,dataStreams));
+			Double operand = Double.parseDouble(getAsString("operand",c,parameters, dataStreams));
 			return d/operand;
 		}
 		else

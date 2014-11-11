@@ -6,22 +6,23 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherWhile extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		Object result = null;
-		if (getAsString("do", parameters, dataStreams).equals("true"))
-			result = getObj(parameters,dataStreams);
-		Object o = get("condition", parameters, dataStreams);
+		if (getAsString("do", c, parameters, dataStreams).equals("true"))
+			result = getObj(c,parameters, dataStreams);
+		Object o = get("condition", c, parameters, dataStreams);
 		while(o != null && !o.equals("false"))
 		{
-			result = getObj(parameters,dataStreams);
-			o = get("condition", parameters, dataStreams);
+			result = getObj(c,parameters, dataStreams);
+			o = get("condition", c, parameters, dataStreams);
 		}
 		return result;
 	}

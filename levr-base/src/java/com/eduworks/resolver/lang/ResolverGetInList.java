@@ -8,14 +8,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.json.impl.EwJsonArray;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.ResolverMatcher;
 
 public class ResolverGetInList extends ResolverMatcher
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(parameters, dataStreams);
+		resolveAllChildren(c, parameters, dataStreams);
 
 		// Set criteria for call to matchAll()
 		setMatchCriteria(parameters, false);

@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.semanticdesktop.aperture.mime.identifier.MimeTypeIdentifier;
 import org.semanticdesktop.aperture.mime.identifier.magic.MagicMimeTypeIdentifier;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Resolver;
 import com.eduworks.util.io.InMemoryFile;
 
@@ -18,9 +19,9 @@ public class ResolverMimeType extends Resolver
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(parameters, dataStreams);
+		resolveAllChildren(c, parameters, dataStreams);
 		Object obj = get("file", parameters);
 		try
 		{

@@ -9,15 +9,16 @@ import org.json.JSONObject;
 import com.eduworks.lang.EwSet;
 import com.eduworks.lang.json.impl.EwJsonArray;
 import com.eduworks.lang.json.impl.EwJsonObject;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.ResolverGetter;
 
 public class ResolverValues extends ResolverGetter
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(parameters, dataStreams);
+		resolveAllChildren(c, parameters, dataStreams);
 		EwJsonObject object = getObject(parameters, true, false);
 		EwSet<String> matches = new EwSet<String>(getAsStrings("matches", parameters));
 		EwJsonArray out = new EwJsonArray();

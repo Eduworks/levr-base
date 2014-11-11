@@ -5,15 +5,16 @@ import java.io.File;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherFileExists extends Cruncher {
-	public Object resolve(java.util.Map<String, String[]> parameters,
-			java.util.Map<String, java.io.InputStream> dataStreams)
+	public Object resolve(Context c,
+			java.util.Map<String, String[]> parameters, java.util.Map<String, java.io.InputStream> dataStreams)
 			throws org.json.JSONException {
 		
-		String path = getAsString("path", parameters, dataStreams);
-		if (optAsBoolean("safe",true,parameters,dataStreams) && path.contains(".."))
+		String path = getAsString("path", c, parameters, dataStreams);
+		if (optAsBoolean("safe",true,c,parameters, dataStreams) && path.contains(".."))
 			throw new RuntimeException("Cannot go up in filesystem.");
 		File f = new File(path);
 

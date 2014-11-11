@@ -7,30 +7,31 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherHas extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		Object obj = getObj(parameters, dataStreams);
+		Object obj = getObj(c, parameters, dataStreams);
 		if (obj == null)
 			return false;
 		if (obj instanceof String)
-			return obj.toString().indexOf(getAsString("has",parameters,dataStreams)) != -1;
+			return obj.toString().indexOf(getAsString("has",c,parameters, dataStreams)) != -1;
 		if (obj instanceof JSONObject)
 		{
 			JSONObject obje = (JSONObject) obj;
-			String has = getAsString("has", parameters, dataStreams);
+			String has = getAsString("has", c, parameters, dataStreams);
 			if (obje.has(has))
 				return true;
 			return false;
 		}
 		{
 			JSONArray obje = (JSONArray) obj;
-			String has = getAsString("has", parameters, dataStreams);
+			String has = getAsString("has", c, parameters, dataStreams);
 			for (int i = 0; i < obje.length(); i++)
 			{
 				if (obje.get(i).equals(has))

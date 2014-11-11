@@ -6,15 +6,16 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherPut extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		JSONObject jo = getObjAsJsonObject(parameters, dataStreams);
+		JSONObject jo = getObjAsJsonObject(c, parameters, dataStreams);
 		if (jo == null)
 			jo = new JSONObject();
 		else
@@ -23,11 +24,11 @@ public class CruncherPut extends Cruncher
 		{
 			if (isSetting(key))continue;
 			if (key.equals("obj"))continue;
-			jo.put(key,get(key,parameters,dataStreams));
+			jo.put(key,get(key,c,parameters, dataStreams));
 		}
-		String key = optAsString("_key", null, parameters, dataStreams);
+		String key = optAsString("_key", null, c, parameters, dataStreams);
 		if (key != null)
-			jo.put(key,get("_value",parameters,dataStreams));
+			jo.put(key,get("_value",c,parameters, dataStreams));
 		return jo;
 	}
 

@@ -8,16 +8,17 @@ import org.json.JSONObject;
 
 import com.eduworks.lang.json.EwJsonCollection;
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherOpt extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		final boolean optEmpty = optAsBoolean("optEmpty", false, parameters, dataStreams);
-		final Object obj = get("obj", parameters, dataStreams);
+		final boolean optEmpty = optAsBoolean("optEmpty", false, c, parameters, dataStreams);
+		final Object obj = get("obj", c, parameters, dataStreams);
 
 		if (has("opt") == false)
 		{
@@ -29,14 +30,14 @@ public class CruncherOpt extends Cruncher
 		}
 		else if (obj == null)
 		{
-			Object object = get("opt",parameters, dataStreams);
+			Object object = get("opt",c, parameters, dataStreams);
 			return object;
 		}
 		else if (optEmpty && EwJson.isJson(obj))
 		{
 			final EwJsonCollection json = EwJson.tryConvert(obj);
 			if (json != null && json.isEmpty())
-				return get("opt",parameters, dataStreams);
+				return get("opt",c, parameters, dataStreams);
 		}
 
 		return obj;

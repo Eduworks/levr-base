@@ -6,16 +6,17 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherNumberObject extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		int min = Integer.parseInt(getAsString("min",parameters,dataStreams));
-		int max = Integer.parseInt(getAsString("max",parameters,dataStreams));
+		int min = Integer.parseInt(getAsString("min",c,parameters, dataStreams));
+		int max = Integer.parseInt(getAsString("max",c,parameters, dataStreams));
 		JSONObject results = new JSONObject();
 		for (int i = min;i < max;i++)
 		{

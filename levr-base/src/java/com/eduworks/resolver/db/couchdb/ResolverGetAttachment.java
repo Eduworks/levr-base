@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.ace.product.levr.adapter.DocumentDbInterface;
+import com.eduworks.resolver.Context;
 import com.eduworks.util.io.InMemoryFile;
 import com.fourspaces.couchdb.Document;
 
@@ -15,9 +16,9 @@ public class ResolverGetAttachment extends ResolverDocument
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(parameters, dataStreams);
+		resolveAllChildren(c,parameters, dataStreams);
 
 		final String id = getAsString("id", parameters);
 		final String databaseName = getAsString("databaseName", parameters);

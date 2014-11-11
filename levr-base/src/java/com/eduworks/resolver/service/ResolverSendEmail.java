@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import com.eduworks.lang.json.impl.EwJsonObject;
 import com.eduworks.net.mail.EwMail;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.string.ResolverString;
 
 public class ResolverSendEmail extends ResolverString
@@ -28,9 +29,9 @@ public class ResolverSendEmail extends ResolverString
 	 * @return the body of the email sent
 	 */
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(parameters, dataStreams);
+		resolveAllChildren(c, parameters, dataStreams);
 
 		/*
 		 * TODO: This loop is a work-around -- there may be an underlying issue:

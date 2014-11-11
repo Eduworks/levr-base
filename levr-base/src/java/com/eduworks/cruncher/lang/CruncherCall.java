@@ -8,12 +8,13 @@ import org.json.JSONObject;
 
 import com.eduworks.lang.EwMap;
 import com.eduworks.lang.util.EwCache;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherCall extends Cruncher
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 		for (String key : keySet())
@@ -23,7 +24,7 @@ public class CruncherCall extends Cruncher
 			if (isSetting(key))
 				continue;
 			Object value;
-				value = get(key,parameters,dataStreams);
+				value = get(key,c,parameters, dataStreams);
 			if (value != null)
 			{
 				String valueString = value.toString();
@@ -34,7 +35,7 @@ public class CruncherCall extends Cruncher
 			{
 			}
 		}
-		Object result = resolveAChild("obj", newParams, dataStreams);
+		Object result = resolveAChild("obj", c,newParams, dataStreams);
 		return result;
 	}
 

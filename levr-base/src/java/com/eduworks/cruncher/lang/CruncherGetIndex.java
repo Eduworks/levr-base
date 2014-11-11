@@ -8,27 +8,28 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherGetIndex extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		if (optAsString("soft", "false", parameters, dataStreams).equals("true") && !(getObj(parameters, dataStreams) instanceof JSONArray))
+		if (optAsString("soft", "false", c, parameters, dataStreams).equals("true") && !(getObj(c, parameters, dataStreams) instanceof JSONArray))
 			return null;
-		Object objx = getObj(parameters, dataStreams);
+		Object objx = getObj(c, parameters, dataStreams);
 		if (objx instanceof List)
 		{
 			List obj = (List) objx;
 			if (obj == null)
 				return null;
 			int key = -1;
-			if (get("index", parameters, dataStreams) instanceof Double)
-				key = ((Double) get("index", parameters, dataStreams)).intValue();
+			if (get("index", c, parameters, dataStreams) instanceof Double)
+				key = ((Double) get("index", c, parameters, dataStreams)).intValue();
 			else
-				key = Integer.parseInt(getAsString("index", parameters, dataStreams));
+				key = Integer.parseInt(getAsString("index", c, parameters, dataStreams));
 			if (obj.size() > key)
 				return obj.get(key);
 		}
@@ -39,10 +40,10 @@ public class CruncherGetIndex extends Cruncher
    		if (obj == null)
    			return null;
    		int key = -1;
-   		if (get("index", parameters, dataStreams) instanceof Double)
-   			key = ((Double) get("index", parameters, dataStreams)).intValue();
+   		if (get("index", c, parameters, dataStreams) instanceof Double)
+   			key = ((Double) get("index", c, parameters, dataStreams)).intValue();
    		else
-   			key = Integer.parseInt(getAsString("index", parameters, dataStreams));
+   			key = Integer.parseInt(getAsString("index", c, parameters, dataStreams));
    		if (obj.length() > key)
    			return obj.get(key);
 		}

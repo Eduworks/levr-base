@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolvable;
 import com.eduworks.resolver.Resolver;
@@ -16,7 +17,7 @@ public class CruncherReflectionManifest extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		JSONObject results = new JSONObject();
 		try

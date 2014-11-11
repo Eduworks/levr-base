@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import com.eduworks.lang.EwList;
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.util.Tuple;
 
@@ -19,11 +20,11 @@ public class CruncherPivotOrdered extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		JSONObject obj = getObjAsJsonObject(parameters, dataStreams);
-		boolean removeZero = Boolean.parseBoolean(getAsString("removeZero", parameters, dataStreams));
-		int limit = Integer.parseInt(optAsString("limit","500000",parameters,dataStreams));
+		JSONObject obj = getObjAsJsonObject(c, parameters, dataStreams);
+		boolean removeZero = Boolean.parseBoolean(getAsString("removeZero", c, parameters, dataStreams));
+		int limit = Integer.parseInt(optAsString("limit","500000",c,parameters, dataStreams));
 		JSONObject result = new JSONObject();
 		
 		Map<String,EwList<Tuple<String,Double>>> wses = new HashMap<String,EwList<Tuple<String,Double>>>();

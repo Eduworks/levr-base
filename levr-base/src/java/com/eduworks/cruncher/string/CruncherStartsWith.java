@@ -6,15 +6,16 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherStartsWith extends Cruncher {
    
    @Override
-   public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+   public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
    {
-      String s1 = getAsString("string1",parameters,dataStreams).toLowerCase();
-      String s2 = getAsString("string2",parameters,dataStreams).toLowerCase();
+      String s1 = getAsString("string1",c,parameters, dataStreams).toLowerCase();
+      String s2 = getAsString("string2",c,parameters, dataStreams).toLowerCase();
       if (s1 == null || s2 == null) return false;
       return s1.startsWith(s2);
    }

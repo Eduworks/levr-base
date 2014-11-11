@@ -21,6 +21,7 @@ import com.eduworks.lang.threading.EwThreading;
 import com.eduworks.lang.threading.EwThreading.MyFutureList;
 import com.eduworks.lang.threading.EwThreading.MyRunnable;
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Resolvable;
 import com.eduworks.resolver.Resolver;
 
@@ -38,20 +39,20 @@ public class ResolverForEach extends Resolver
 	EwJsonArray						sorted			= new EwJsonArray();
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
+	public Object resolve(Context c, Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
 			throws JSONException
 	{
 		Object item = null;
 		if (opt(ITEM_KEY, parameters) != null)
 		{
-			resolveAChild(parameters, dataStreams, ITEM_KEY);
+			resolveAChild(c,parameters, dataStreams, ITEM_KEY);
 
 			item = (optAsBoolean(ARRAY_KEY, false, parameters)) ? EwJson.wrapAsArray(get(ITEM_KEY, parameters)) : get(
 					ITEM_KEY, parameters);
 		}
 		else if (opt("obj", parameters) != null)
 		{
-			resolveAChild(parameters, dataStreams, "obj");
+			resolveAChild(c,parameters, dataStreams, "obj");
 
 			item = (optAsBoolean(ARRAY_KEY, false, parameters)) ? EwJson.wrapAsArray(get("obj", parameters)) : get(
 					"obj", parameters);
@@ -73,9 +74,9 @@ public class ResolverForEach extends Resolver
 		try
 		{
 			if (simultaneous)
-				resolveSimultaneous(parameters, dataStreams, strings, operation, paramName, prevParamName);
+				resolveSimultaneous(c,parameters, dataStreams, strings, operation, paramName, prevParamName);
 			else
-				resolveSynchronous(parameters, dataStreams, strings, operation, paramName, prevParamName);
+				resolveSynchronous(c,parameters, dataStreams, strings, operation, paramName, prevParamName);
 		}
 		catch (CloneNotSupportedException e)
 		{
@@ -199,7 +200,7 @@ public class ResolverForEach extends Resolver
 		return this;
 	}
 
-	protected void resolveSynchronous(Map<String, String[]> parameters, final Map<String, InputStream> dataStreams,
+	protected void resolveSynchronous(Context c,Map<String, String[]> parameters, final Map<String, InputStream> dataStreams,
 			EwList<String> strings, Resolvable operation, String paramName, String prevParamName)
 			throws CloneNotSupportedException, JSONException
 	{
@@ -222,14 +223,14 @@ public class ResolverForEach extends Resolver
 
 			if (counter % 1000 == 0)
 				System.out.println("On " + counter + "/" + strings.size());
-			put(id, resolveAChild(newParams, dataStreams, id, thing));
+			put(id, resolveAChild(c,newParams, dataStreams, id, thing));
 			sorted.put(id);
 			}
 			prev = id;
 		}
 	}
 
-	protected void resolveSimultaneous(final Map<String, String[]> parameters,
+	protected void resolveSimultaneous(final Context c,final Map<String, String[]> parameters,
 			final Map<String, InputStream> dataStreams, EwList<String> strings, Resolvable operation, String paramName,
 			String prevParamName) throws CloneNotSupportedException, JSONException
 	{
@@ -261,7 +262,7 @@ public class ResolverForEach extends Resolver
 					{
 						try
 						{
-							put(id, resolveAChild(newParams, dataStreams, id, thing));
+							put(id, resolveAChild(c,newParams, dataStreams, id, thing));
 							if (optAsBoolean(MEM_KEY, false, parameters))
 								remove(id);
 						}

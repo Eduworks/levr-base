@@ -7,12 +7,13 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherAdd extends Cruncher
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		double result = 0.0;
 		StringBuilder resultStr = new StringBuilder();
@@ -22,10 +23,10 @@ public class CruncherAdd extends Cruncher
 			String key = i.next();
 			if (isSetting(key))
 				continue;
-			Object o = get(key,parameters,dataStreams);
+			Object o = get(key,c,parameters, dataStreams);
 			if (o == null || o.toString().isEmpty())
 				continue;
-			if (resultStr.length() == 0 && !optAsBoolean("_string",false,parameters,dataStreams))
+			if (resultStr.length() == 0 && !optAsBoolean("_string",false,c,parameters, dataStreams))
 				try
 				{
 					Double value = objectToDouble(o);

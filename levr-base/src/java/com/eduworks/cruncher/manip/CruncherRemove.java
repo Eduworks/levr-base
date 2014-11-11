@@ -7,17 +7,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherRemove extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		JSONArray ja = getObjAsJsonArray(parameters, dataStreams);
+		JSONArray ja = getObjAsJsonArray(c, parameters, dataStreams);
 		JSONArray result = new JSONArray();
-		String asString = getAsString("item", parameters, dataStreams);
+		String asString = getAsString("item", c, parameters, dataStreams);
 		for (int i = 0;i < ja.length();i++)
 		{
 			if (!ja.getString(i).equals(asString))

@@ -17,7 +17,7 @@ import com.eduworks.util.io.InMemoryFile;
 public class ScripterJavascript extends Scripter
 {	
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(com.eduworks.resolver.Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		String expression = (String)get("expression");
 		Context jsContext = Context.enter();

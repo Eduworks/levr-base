@@ -7,23 +7,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.EwMap;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherCatch extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{		
 		Object result;
 		try{	
-			result = resolveAChild("try", parameters, dataStreams);
+			result = resolveAChild("try", c,parameters, dataStreams);
 		}catch(NullPointerException e){
 			if(has("null")){
 				final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 				newParams.put("message", new String[] { e.getMessage() });
 				
-				result = resolveAChild("null", newParams, dataStreams);
+				result = resolveAChild("null", c,newParams, dataStreams);
 			}else{
 				throw e;
 			}
@@ -32,7 +33,7 @@ public class CruncherCatch extends Cruncher
 				final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 				newParams.put("message", new String[] { e.getMessage() });
 				
-				result = resolveAChild("runtime", newParams, dataStreams);
+				result = resolveAChild("runtime", c,newParams, dataStreams);
 			}else{
 				throw e;
 			}
@@ -42,13 +43,13 @@ public class CruncherCatch extends Cruncher
 				final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 				newParams.put("message", new String[] { e.getMessage() });
 				
-				result = resolveAChild("any", newParams, dataStreams);
+				result = resolveAChild("any", c,newParams, dataStreams);
 			}else{
 				throw new RuntimeException(e);
 			}
 		}finally{
 			if(has("finally")){
-				result = resolveAChild("finally", parameters, dataStreams);
+				result = resolveAChild("finally", c,parameters, dataStreams);
 			}
 		}
 		return result;

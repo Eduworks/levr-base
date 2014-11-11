@@ -7,17 +7,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.util.EwCache;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherCacheGet extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		EwCache<Object,Object> cache = EwCache.getCache("CruncherCache", 5000);
 		String threadId = parameters.get("threadId")[0];
-		String name = getAsString("obj", parameters, dataStreams);
+		String name = getAsString("obj", c, parameters, dataStreams);
 		return cache.get(threadId+name);
 	}
 

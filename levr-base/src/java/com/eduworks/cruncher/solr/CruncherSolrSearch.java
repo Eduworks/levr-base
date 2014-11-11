@@ -17,15 +17,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
 
 public class CruncherSolrSearch extends Cruncher
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String solrURL = Resolver.decodeValue(optAsString("solrURL", "http%3A%2F%2Flocalhost%3A8983%2Fsolr%2F", parameters, dataStreams));
+		String solrURL = Resolver.decodeValue(optAsString("solrURL", "http%3A%2F%2Flocalhost%3A8983%2Fsolr%2F", c, parameters, dataStreams));
 		HttpSolrServer solrServer;
 		if (!SolrServer.serverMap.containsKey(solrURL)) {
 			solrServer = new HttpSolrServer(solrURL);
@@ -33,23 +34,23 @@ public class CruncherSolrSearch extends Cruncher
 		} else 
 			solrServer = SolrServer.serverMap.get(solrURL);
 		
-		String query = optAsString("query", "*:*", parameters, dataStreams);
+		String query = optAsString("query", "*:*", c, parameters, dataStreams);
 		if (query.trim().equals(""))
 			query = "*:*";
 		SolrQuery queryParameters = new SolrQuery();
 		
 		//Forces each term to be found for query to be satisfied. orange AND taco VS orange OR taco
-		boolean useMm = optAsBoolean("useMustMatchAll", true, parameters, dataStreams);
+		boolean useMm = optAsBoolean("useMustMatchAll", true, c, parameters, dataStreams);
 		if (useMm) queryParameters.set("mm", "100%");
 		
 		queryParameters.set("q", query);
 		
-		Double start = getAsDouble("start", parameters, dataStreams);
+		Double start = getAsDouble("start", c, parameters, dataStreams);
 		if (start != null) queryParameters.setStart(start.intValue());
 		
 		
-		queryParameters.setRows(Integer.parseInt(optAsString("rows", "10", parameters, dataStreams)));
-		JSONArray defaultFields = getAsJsonArray("fields", parameters, dataStreams);
+		queryParameters.setRows(Integer.parseInt(optAsString("rows", "10", c, parameters, dataStreams)));
+		JSONArray defaultFields = getAsJsonArray("fields", c, parameters, dataStreams);
 		if (defaultFields!=null) {
 			String fieldAccumulator = "";
 			for (int fieldIndex=0; fieldIndex<defaultFields.length(); fieldIndex++) {
@@ -60,7 +61,7 @@ public class CruncherSolrSearch extends Cruncher
 			queryParameters.add("qf", fieldAccumulator);
 		}
 		
-		JSONArray returnFields = getAsJsonArray("returnFields", parameters, dataStreams);
+		JSONArray returnFields = getAsJsonArray("returnFields", c, parameters, dataStreams);
       if (returnFields!=null) {
          String fieldAccumulator = "";
          for (int fieldIndex=0; fieldIndex<returnFields.length(); fieldIndex++) {
@@ -71,7 +72,7 @@ public class CruncherSolrSearch extends Cruncher
          queryParameters.add("fl", fieldAccumulator);
       }
       
-		JSONArray sortFields = getAsJsonArray("sort", parameters, dataStreams);
+		JSONArray sortFields = getAsJsonArray("sort", c, parameters, dataStreams);
 		if (sortFields!=null) {
 			for (int fieldIndex=0; fieldIndex<sortFields.length(); fieldIndex++) {
 				JSONObject sort = (JSONObject) EwJson.tryParseJson(sortFields.getString(fieldIndex), false);
@@ -79,13 +80,13 @@ public class CruncherSolrSearch extends Cruncher
 			}
 		}
 		
-		boolean sortById = optAsBoolean("idSort", true, parameters, dataStreams);				
+		boolean sortById = optAsBoolean("idSort", true, c, parameters, dataStreams);				
 		if (sortById) queryParameters.addSort("id", SolrQuery.ORDER.asc);
 		
 		queryParameters.set("defType", "edismax");
 		
-		boolean useCursor = optAsBoolean("useCursor", true, parameters, dataStreams); 
-		if (useCursor) queryParameters.set("cursorMark", optAsString("cursor", "*", parameters, dataStreams));
+		boolean useCursor = optAsBoolean("useCursor", true, c, parameters, dataStreams); 
+		if (useCursor) queryParameters.set("cursorMark", optAsString("cursor", "*", c, parameters, dataStreams));
 		
 		QueryResponse results;
 		try {

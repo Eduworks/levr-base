@@ -7,16 +7,17 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherBCryptHash extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String password = getAsString("password", parameters, dataStreams);
-		int rounds = Integer.parseInt(optAsString("rounds", "10", parameters, dataStreams));
+		String password = getAsString("password", c, parameters, dataStreams);
+		int rounds = Integer.parseInt(optAsString("rounds", "10", c, parameters, dataStreams));
 		
 		return BCrypt.hashpw(password, BCrypt.gensalt(rounds, new SecureRandom()));
 	}

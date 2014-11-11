@@ -10,6 +10,7 @@ import javax.sound.sampled.AudioFileFormat.Type;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.util.io.InMemoryFile;
 import com.sun.speech.freetts.Voice;
@@ -21,7 +22,7 @@ public class CruncherTextToSpeech extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
 		VoiceManager voiceManager = VoiceManager.getInstance();
@@ -46,11 +47,11 @@ public class CruncherTextToSpeech extends Cruncher
 			AudioPlayer player = new SingleFileAudioPlayer(tempFile2.getAbsolutePath(), Type.WAVE);
 			helloVoice.setAudioPlayer(player);
 			tempFile = new File(tempFile2.getAbsolutePath() + ".wav");
-			helloVoice.speak(getObj(parameters, dataStreams).toString());
+			helloVoice.speak(getObj(c, parameters, dataStreams).toString());
 			player.close();
 			helloVoice.deallocate();
 			file = new InMemoryFile(tempFile);
-			file.name = optAsString("name", tempFile2.getAbsolutePath(), parameters, dataStreams);
+			file.name = optAsString("name", tempFile2.getAbsolutePath(), c, parameters, dataStreams);
 		}
 		catch (IOException e)
 		{

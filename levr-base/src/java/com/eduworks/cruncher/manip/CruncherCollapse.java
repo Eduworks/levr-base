@@ -8,18 +8,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherCollapse extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		Object obj = getObj(parameters, dataStreams);
+		Object obj = getObj(c, parameters, dataStreams);
 
-		String key = getAsString("keyKey", parameters, dataStreams);
-		String value = getAsString("valueKey", parameters, dataStreams);
+		String key = getAsString("keyKey", c, parameters, dataStreams);
+		String value = getAsString("valueKey", c, parameters, dataStreams);
 
 		JSONObject result = new JSONObject();
 		if (obj == null)

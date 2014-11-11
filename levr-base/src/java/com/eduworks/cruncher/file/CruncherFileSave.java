@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.util.io.InMemoryFile;
 
@@ -16,15 +17,15 @@ public class CruncherFileSave extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String path = getAsString("path", parameters, dataStreams);
+		String path = getAsString("path", c, parameters, dataStreams);
 		if (path.contains("..")) throw new RuntimeException("Cannot go up in filesystem.");
 		File f = new File(path);
-		Object o = getObj(parameters, dataStreams);
+		Object o = getObj(c, parameters, dataStreams);
 		try
 		{
-			if (optAsBoolean("overwrite",true,parameters,dataStreams) || f.exists() == false)
+			if (optAsBoolean("overwrite",true,c,parameters, dataStreams) || f.exists() == false)
 			{
 				if (o instanceof InMemoryFile)
 				{

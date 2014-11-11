@@ -27,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.util.io.InMemoryFile;
 
@@ -34,15 +35,15 @@ public class CruncherHttpPost extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		final Object o = getObj(parameters, dataStreams);
-		String url = getAsString("url", parameters, dataStreams);
-		String name = getAsString("name", parameters, dataStreams);
-		String contentType = getAsString("contentType", parameters, dataStreams);
+		final Object o = getObj(c, parameters, dataStreams);
+		String url = getAsString("url", c, parameters, dataStreams);
+		String name = getAsString("name", c, parameters, dataStreams);
+		String contentType = getAsString("contentType", c, parameters, dataStreams);
 //		String accept = getAsString("accept", parameters, dataStreams);
-		boolean multiPart = optAsBoolean("multipart", true, parameters, dataStreams);
-		String authToken = getAsString("authToken", parameters, dataStreams);
+		boolean multiPart = optAsBoolean("multipart", true, c, parameters, dataStreams);
+		String authToken = getAsString("authToken", c, parameters, dataStreams);
 		HttpPost post = new HttpPost(url);
 		
 		HttpEntity entity = new MultipartEntity( HttpMultipartMode.BROWSER_COMPATIBLE );
@@ -94,7 +95,7 @@ public class CruncherHttpPost extends Cruncher
 			if (key.equals("multipart")) continue;
 			if (key.equals("name")) continue;
 			if (key.equals("contentType")) continue;
-			post.setHeader(key,getAsString(key, parameters, dataStreams));
+			post.setHeader(key,getAsString(key, c, parameters, dataStreams));
 		}
 		
 		post.setEntity(entity);

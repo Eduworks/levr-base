@@ -6,15 +6,16 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherIf extends Cruncher
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		Object operator = getOpValue("operator", parameters,dataStreams);
-		Object operand = getOpValue("operand", parameters,dataStreams);
+		Object operator = getOpValue("operator", c,parameters,dataStreams);
+		Object operand = getOpValue("operand", c,parameters,dataStreams);
 		if (operator instanceof Double && operand instanceof Integer)
 			operand = new Double((Integer)operand);
 		if (operand instanceof Double && operator instanceof Integer)
@@ -33,16 +34,16 @@ public class CruncherIf extends Cruncher
 		}
 
 		if (has("eq"))
-			evaluate("eq",resultO, operator.equals(operand), parameters, dataStreams);
+			evaluate("eq",resultO, operator.equals(operand), c,parameters, dataStreams);
 
 		if (has("ne"))
-			evaluate("ne",resultO, !operator.equals(operand), parameters, dataStreams);
+			evaluate("ne",resultO, !operator.equals(operand),c, parameters, dataStreams);
 
 		if (has("eqi") && operator instanceof String && operand instanceof String)
-			evaluate("eqi",resultO, ((String)operator).equalsIgnoreCase((String)operand), parameters, dataStreams);
+			evaluate("eqi",resultO, ((String)operator).equalsIgnoreCase((String)operand), c,parameters, dataStreams);
 
 		if (has("nei") && operator instanceof String && operand instanceof String)
-			evaluate("nei",resultO, !((String)operator).equalsIgnoreCase((String)operand), parameters, dataStreams);
+			evaluate("nei",resultO, !((String)operator).equalsIgnoreCase((String)operand),c, parameters, dataStreams);
 
 		if (operator instanceof Comparable<?> && operand instanceof Comparable<?>)
 		{
@@ -50,20 +51,20 @@ public class CruncherIf extends Cruncher
 			final int result = ((Comparable<Object>) operator).compareTo(operand);
 
 			if (has("lt"))
-				evaluate("lt",resultO,(result < 0), parameters, dataStreams);
+				evaluate("lt",resultO,(result < 0),c, parameters, dataStreams);
 
 			if (has("gt"))
-				evaluate("gt",resultO,(result > 0), parameters, dataStreams);
+				evaluate("gt",resultO,(result > 0),c, parameters, dataStreams);
 
 			if (has("le"))
-				evaluate("le",resultO,(result <= 0), parameters, dataStreams);
+				evaluate("le",resultO,(result <= 0),c, parameters, dataStreams);
 
 			if (has("ge"))
-				evaluate("ge",resultO,(result >= 0), parameters, dataStreams);
+				evaluate("ge",resultO,(result >= 0),c, parameters, dataStreams);
 		}
 
 		if (has("else"))
-			resultO.put("else", get("else",parameters,dataStreams));
+			resultO.put("else", get("else",c,parameters, dataStreams));
 
 		switch (resultO.length())
 		{
@@ -76,20 +77,20 @@ public class CruncherIf extends Cruncher
 		}
 	}
 
-	protected void evaluate(String key, JSONObject result,boolean evaluates, Map<String, String[]> parameters, Map<String, InputStream> dataStreams)
+	protected void evaluate(String key, JSONObject result,boolean evaluates,Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams)
 			throws JSONException
 	{
 		if (!evaluates)
 			return;
 		else
 		{
-			result.put(key,get(key,parameters,dataStreams));
+			result.put(key,get(key,c,parameters, dataStreams));
 		}
 	}
 
-	private Object getOpValue(String key, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	private Object getOpValue(String key, Context c,Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		Object opValue = get(key, parameters,dataStreams);
+		Object opValue = get(key, c,parameters, dataStreams);
 
 		if (opValue == null) opValue = "";
 

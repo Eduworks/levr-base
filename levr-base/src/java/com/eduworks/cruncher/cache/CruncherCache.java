@@ -8,6 +8,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
 
@@ -16,12 +17,12 @@ public class CruncherCache extends Cruncher
 	public static Map<String, Object> obj = Collections.synchronizedMap(new HashMap<String, Object>());
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String cacheName = getAsString("name", parameters, dataStreams);
+		String cacheName = getAsString("name", c, parameters, dataStreams);
 		Object result = null;
 		Object lock = null;
-		if (optAsBoolean("removeAllGlobal", false, parameters, dataStreams))
+		if (optAsBoolean("removeAllGlobal", false, c, parameters, dataStreams))
 		{
 			Resolver.clearCache();
 			return null;
@@ -36,23 +37,23 @@ public class CruncherCache extends Cruncher
 		}
 		synchronized (lock)
 		{
-			if (optAsBoolean("remove", false, parameters, dataStreams))
+			if (optAsBoolean("remove", false, c, parameters, dataStreams))
 			{
-				if (optAsBoolean("global", false, parameters, dataStreams))
+				if (optAsBoolean("global", false, c, parameters, dataStreams))
 					Resolver.putCache(cacheName, null);
 				else
 					Resolver.putThreadCache(cacheName, null);
 			}
 			else
 			{
-				if (optAsBoolean("global", false, parameters, dataStreams))
+				if (optAsBoolean("global", false, c, parameters, dataStreams))
 					result = Resolver.getCache(cacheName);
 				else
 					result = Resolver.getThreadCache(cacheName);
 				if (result == null)
 				{
-					result = getObj(parameters, dataStreams);
-					if (optAsBoolean("global", false, parameters, dataStreams))
+					result = getObj(c, parameters, dataStreams);
+					if (optAsBoolean("global", false, c, parameters, dataStreams))
 						Resolver.putCache(cacheName, result);
 					else
 						Resolver.putThreadCache(cacheName, result);

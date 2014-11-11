@@ -10,16 +10,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherGetTableFromCsv extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		CSVParser csvp = new CSVParser(new StringReader(getObj(parameters,dataStreams).toString()));
-		boolean ignoreFirstLine = optAsBoolean("ignoreFirstLine", false, parameters, dataStreams);
+		CSVParser csvp = new CSVParser(new StringReader(getObj(c,parameters, dataStreams).toString()));
+		boolean ignoreFirstLine = optAsBoolean("ignoreFirstLine", false, c, parameters, dataStreams);
 		
 		String[][] allValues;
 		try

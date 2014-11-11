@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import com.eduworks.lang.EwList;
 import com.eduworks.lang.threading.EwThreading;
 import com.eduworks.lang.threading.EwThreading.MyRunnable;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Resolver;
 import com.eduworks.util.io.EwFileSystem;
 
@@ -36,9 +37,9 @@ public class ResolverGetFileFromUrl extends Resolver
 	}
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(parameters, dataStreams);
+		resolveAllChildren(c, parameters, dataStreams);
 		final int timeout = optAsInteger("timeout",30000, parameters);
 		final EwList<Object> results = new EwList<Object>();
 		EwThreading.foreach(getAsStrings("url", parameters), new MyRunnable()

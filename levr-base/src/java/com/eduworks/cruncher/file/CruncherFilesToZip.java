@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.util.io.EwFileSystem;
 import com.eduworks.util.io.InMemoryFile;
@@ -37,9 +38,9 @@ public class CruncherFilesToZip extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		Object obj = getObj(parameters, dataStreams);
+		Object obj = getObj(c, parameters, dataStreams);
 		Map<String, ?> files = null;
 		if (obj instanceof Map)
 			files = (Map<String, ?>) obj;
@@ -133,7 +134,7 @@ public class CruncherFilesToZip extends Cruncher
 			e.printStackTrace();
 		}
 		fi.mime = "application/zip";
-		fi.name = getAsString("name", parameters, dataStreams);
+		fi.name = getAsString("name", c, parameters, dataStreams);
 		EwFileSystem.deleteEventually(f);
 		return fi;
 	}

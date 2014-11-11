@@ -5,15 +5,16 @@ import java.util.Map;
 
 import org.json.JSONException;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.string.ResolverString;
 
 public class ResolverError extends ResolverString
 {
 
 	@Override
-	public Object resolve(Map<String,String[]> parameters, Map<String,InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String,String[]> parameters, Map<String,InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(parameters, dataStreams);
+		resolveAllChildren(c, parameters, dataStreams);
 
 		final String msgKey = "msg";
 		Object object = get(msgKey, parameters);

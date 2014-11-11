@@ -8,16 +8,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherGetKeysByValuesCompareByToString extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		JSONObject object = getObjAsJsonObject(parameters, dataStreams);
-		String matches = getAsString("matches", parameters, dataStreams);
+		JSONObject object = getObjAsJsonObject(c, parameters, dataStreams);
+		String matches = getAsString("matches", c, parameters, dataStreams);
 		JSONArray out = new JSONArray();
 
 		Iterator<String> keys = object.keys();

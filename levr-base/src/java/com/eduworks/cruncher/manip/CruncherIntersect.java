@@ -8,14 +8,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.EwList;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherIntersect extends Cruncher
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		EwList<Object> ja = new EwList<Object>(getObjAsJsonArray(parameters, dataStreams));
+		EwList<Object> ja = new EwList<Object>(getObjAsJsonArray(c, parameters, dataStreams));
 		EwList<Object> results = new EwList<Object>();
 		for (String key : keySet())
 		{
@@ -23,9 +24,9 @@ public class CruncherIntersect extends Cruncher
 				continue;
 			if (key.equals("contains"))
 				continue;
-			if (optAsBoolean("contains", false, parameters, dataStreams))
+			if (optAsBoolean("contains", false, c, parameters, dataStreams))
 			{
-				String text = getAsString(key, parameters, dataStreams).toLowerCase();
+				String text = getAsString(key, c, parameters, dataStreams).toLowerCase();
 				EwList<Object> janew = new EwList<Object>();
 				for (Object s : ja)
 					if (s.toString().contains(text))
@@ -33,7 +34,7 @@ public class CruncherIntersect extends Cruncher
 			}
 			else
 			{
-				EwList<Object> organizations = new EwList<Object>(getAsJsonArray(key, parameters, dataStreams));
+				EwList<Object> organizations = new EwList<Object>(getAsJsonArray(key, c, parameters, dataStreams));
 				ja = ja.intersect(organizations);
 				results = ja;
 			}

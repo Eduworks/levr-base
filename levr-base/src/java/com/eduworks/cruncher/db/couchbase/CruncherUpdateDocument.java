@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import com.couchbase.client.CouchbaseClient;
 import com.eduworks.lang.threading.EwThreading;
 import com.eduworks.lang.util.EwCache;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.exception.SoftException;
 
@@ -19,12 +20,12 @@ public class CruncherUpdateDocument extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String id = getAsString("_id", parameters, dataStreams);
+		String id = getAsString("_id", c, parameters, dataStreams);
 		String error = "";
-		String cbCache = CouchBaseClientFactory.getCacheValue(this, parameters, dataStreams) + id;
-		CouchbaseClient client = CouchBaseClientFactory.get(this, parameters, dataStreams);
+		String cbCache = CouchBaseClientFactory.getCacheValue(this, c, parameters, dataStreams) + id;
+		CouchbaseClient client = CouchBaseClientFactory.get(this, c, parameters, dataStreams);
 
 		try
 		{
@@ -50,14 +51,14 @@ public class CruncherUpdateDocument extends Cruncher
 			{
 				if (isSetting(key))
 					continue;
-				Object object = get(key, parameters, dataStreams);
+				Object object = get(key, c, parameters, dataStreams);
 				if (object != null)
 				jo.put(key, object);
 			}
-			String paramName = getAsString("_paramName", parameters, dataStreams);
+			String paramName = getAsString("_paramName", c, parameters, dataStreams);
 			if (paramName != null)
 			{
-				jo.put(paramName, get("_paramValue", parameters, dataStreams).toString());
+				jo.put(paramName, get("_paramValue", c, parameters, dataStreams).toString());
 			}
 			CASResponse cas = null;
 			synchronized (client)

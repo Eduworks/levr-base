@@ -9,24 +9,25 @@ import org.json.JSONObject;
 
 import com.eduworks.lang.json.impl.EwJsonObject;
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherObject extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		JSONObject result = new EwJsonObject();
 		Iterator<String> keySet = sortedKeys();
-		if (optAsBoolean("_ordered",false,parameters,dataStreams))
+		if (optAsBoolean("_ordered",false,c,parameters, dataStreams))
 			keySet = keySet().iterator();
 
 		while (keySet.hasNext())
 		{
 			String key = keySet.next();
 
-			final Object value = get(key, parameters, dataStreams);
+			final Object value = get(key, c, parameters, dataStreams);
 
 			if (isSetting(key))
 				continue;

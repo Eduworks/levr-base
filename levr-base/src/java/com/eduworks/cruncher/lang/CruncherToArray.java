@@ -10,15 +10,16 @@ import org.json.JSONObject;
 
 import com.eduworks.lang.EwList;
 import com.eduworks.lang.util.EwCache;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherToArray extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		Object obj = getObj(parameters, dataStreams);
+		Object obj = getObj(c, parameters, dataStreams);
 		if (obj == null)
 			return null;
 		if (obj instanceof String[])
@@ -31,7 +32,7 @@ public class CruncherToArray extends Cruncher
 		{
 			try
 			{
-				String asString = getAsString("obj", parameters, dataStreams);
+				String asString = getAsString("obj", c, parameters, dataStreams);
 				Object result = EwCache.getCache("callCache").get(asString);
 				if (result == null)
 					return new JSONArray(asString);
@@ -48,11 +49,11 @@ public class CruncherToArray extends Cruncher
 			catch (Exception ex)
 			{
 				JSONArray ary = new JSONArray();
-				ary.put(getAsString("obj", parameters, dataStreams));
+				ary.put(getAsString("obj", c, parameters, dataStreams));
 				return ary;
 			}
 		}
-		if (obj instanceof JSONObject && optAsBoolean("wrap", false, parameters, dataStreams))
+		if (obj instanceof JSONObject && optAsBoolean("wrap", false, c, parameters, dataStreams))
 		{
 			JSONArray ja = new JSONArray();
 			ja.put(obj);
@@ -64,7 +65,7 @@ public class CruncherToArray extends Cruncher
 			ja.put(obj);
 			return ja;
 		}
-		Object o = getObj(parameters, dataStreams);
+		Object o = getObj(c, parameters, dataStreams);
 		JSONArray ja = new JSONArray();
 		ja.put(o);
 		return ja;

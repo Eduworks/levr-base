@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.json.impl.EwJsonArray;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.util.io.InMemoryFile;
 
@@ -24,12 +25,12 @@ public class CruncherZipToFiles extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException {
-		Object obj = getObj(parameters, dataStreams);
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException {
+		Object obj = getObj(c, parameters, dataStreams);
 		EwJsonArray files = new EwJsonArray();
 		InMemoryFile f = null;
 		ZipInputStream in = null;
-		JSONObject filters = getAsJsonObject("filter", parameters, dataStreams);
+		JSONObject filters = getAsJsonObject("filter", c, parameters, dataStreams);
 		try
 		{
 			if (obj instanceof File)

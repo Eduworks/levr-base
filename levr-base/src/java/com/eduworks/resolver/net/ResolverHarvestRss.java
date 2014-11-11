@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.EwMap;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Resolver;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -21,7 +22,7 @@ public class ResolverHarvestRss extends Resolver
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		String url = getAsString("url", parameters);
 		XmlReader reader = null;
@@ -39,9 +40,9 @@ public class ResolverHarvestRss extends Resolver
 				SyndEntry entry = i.next();
 				System.out.println(entry.getTitle());
 				System.out.println(entry.getLink());
-				execute(feed, entry, index++, parameters, dataStreams);
+				execute(feed, entry, index++, c,parameters, dataStreams);
 			}
-			feedOp(feed,parameters,dataStreams);
+			feedOp(feed,c,parameters,dataStreams);
 		}
 		catch (IOException ex)
 		{
@@ -72,7 +73,7 @@ public class ResolverHarvestRss extends Resolver
 		return this;
 	}
 
-	private void feedOp(SyndFeed feed, Map<String, String[]> parameters, Map<String, InputStream> dataStreams)
+	private void feedOp(SyndFeed feed, Context c,Map<String, String[]> parameters, Map<String, InputStream> dataStreams)
 	{
 		Resolver operation = (Resolver) opt("feedOp");
 		if (operation == null) return;
@@ -85,7 +86,7 @@ public class ResolverHarvestRss extends Resolver
 			newParams.put("link", new String[] { feed.getLink() });
 			try
 			{
-				thing.resolve(newParams, dataStreams);
+				thing.resolve(c, newParams, dataStreams);
 			}
 			catch (JSONException e)
 			{
@@ -102,7 +103,7 @@ public class ResolverHarvestRss extends Resolver
 		}
 	}
 
-	private void execute(SyndFeed feed, SyndEntry entry, int i, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	private void execute(SyndFeed feed, SyndEntry entry, int i, Context c,Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		String id = entry.getLink();
 		String title = entry.getTitle();
@@ -118,7 +119,7 @@ public class ResolverHarvestRss extends Resolver
 				newParams.put("link", new String[] { id });
 				try
 				{
-					put(id,thing.resolve(newParams, dataStreams));
+					put(id,thing.resolve(c,  newParams, dataStreams));
 				}
 				catch (JSONException e)
 				{

@@ -6,17 +6,18 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherGetByParam extends Cruncher
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams)
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams)
 			throws JSONException
 	{
-		JSONObject obj = getObjAsJsonObject(parameters,dataStreams);
+		JSONObject obj = getObjAsJsonObject(c,parameters, dataStreams);
 		if (obj == null) return null;
-		String key = getAsString("param",parameters,dataStreams);
+		String key = getAsString("param",c,parameters, dataStreams);
 		if (!obj.has(key))
 			return null;
 		return obj.get(key);

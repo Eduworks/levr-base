@@ -13,15 +13,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
 
 public class CruncherSolrDeleteDocument extends Cruncher
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String solrURL = Resolver.decodeValue(optAsString("solrURL", "http%3A%2F%2Flocalhost%3A8983%2Fsolr%2F", parameters, dataStreams));
+		String solrURL = Resolver.decodeValue(optAsString("solrURL", "http%3A%2F%2Flocalhost%3A8983%2Fsolr%2F", c, parameters, dataStreams));
 		HttpSolrServer solrServer;
 		if (!SolrServer.serverMap.containsKey(solrURL)) {
 			solrServer = new HttpSolrServer(solrURL);
@@ -29,7 +30,7 @@ public class CruncherSolrDeleteDocument extends Cruncher
 		} else 
 			solrServer = SolrServer.serverMap.get(solrURL);
 		
-		JSONArray idArray = getAsJsonArray("ids", parameters, dataStreams);
+		JSONArray idArray = getAsJsonArray("ids", c, parameters, dataStreams);
 		
 		List<String> idList = new LinkedList<String>();
 		for (int idIndex=0;idIndex<idArray.length();idIndex++) {

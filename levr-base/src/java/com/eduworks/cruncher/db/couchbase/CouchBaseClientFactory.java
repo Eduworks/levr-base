@@ -14,6 +14,7 @@ import org.json.JSONException;
 
 import com.couchbase.client.CouchbaseClient;
 import com.eduworks.lang.util.EwCache;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CouchBaseClientFactory
@@ -38,20 +39,20 @@ public class CouchBaseClientFactory
 		}
 	}
 
-	public static CouchbaseClient get(Cruncher cruncherGetDocument, Map<String, String[]> parameters,
-			Map<String, InputStream> dataStreams) throws JSONException
+	public static CouchbaseClient get(Cruncher cruncherGetDocument, Context c,
+			Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		// Set the URIs and get a client
 		List<URI> uris = new ArrayList<URI>();
 
 		// Connect to localhost or to the appropriate URI(s)
-		for (String s : cruncherGetDocument.getAsString("_serverUri", parameters, dataStreams).split(","))
+		for (String s : cruncherGetDocument.getAsString("_serverUri", c, parameters, dataStreams).split(","))
 			uris.add(URI.create(s));
-		String databaseName = cruncherGetDocument.getAsString("_databaseName", parameters, dataStreams);
-		String username = cruncherGetDocument.getAsString("_serverUsername", parameters, dataStreams);
-		String password = cruncherGetDocument.getAsString("_serverPassword", parameters, dataStreams);
+		String databaseName = cruncherGetDocument.getAsString("_databaseName", c, parameters, dataStreams);
+		String username = cruncherGetDocument.getAsString("_serverUsername", c, parameters, dataStreams);
+		String password = cruncherGetDocument.getAsString("_serverPassword", c, parameters, dataStreams);
 
-		String cbCache = getCacheValue(cruncherGetDocument, parameters, dataStreams);
+		String cbCache = getCacheValue(cruncherGetDocument, c, parameters, dataStreams);
 
 		EwCache<Object, Object> theCache = EwCache.getCache("CouchbaseClient");
 		CouchbaseClient cache = (CouchbaseClient) theCache.get(cbCache);
@@ -84,18 +85,18 @@ public class CouchBaseClientFactory
 		return null;
 	}
 
-	public static String getCacheValue(Cruncher cruncherGetDocument, Map<String, String[]> parameters,
-			Map<String, InputStream> dataStreams) throws JSONException
+	public static String getCacheValue(Cruncher cruncherGetDocument, Context c,
+			Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		// Set the URIs and get a client
 		List<URI> uris = new ArrayList<URI>();
 
 		// Connect to localhost or to the appropriate URI(s)
-		for (String s : cruncherGetDocument.getAsString("_serverUri", parameters, dataStreams).split(","))
+		for (String s : cruncherGetDocument.getAsString("_serverUri", c, parameters, dataStreams).split(","))
 			uris.add(URI.create(s));
-		String databaseName = cruncherGetDocument.getAsString("_databaseName", parameters, dataStreams);
-		String username = cruncherGetDocument.getAsString("_serverUsername", parameters, dataStreams);
-		String password = cruncherGetDocument.getAsString("_serverPassword", parameters, dataStreams);
+		String databaseName = cruncherGetDocument.getAsString("_databaseName", c, parameters, dataStreams);
+		String username = cruncherGetDocument.getAsString("_serverUsername", c, parameters, dataStreams);
+		String password = cruncherGetDocument.getAsString("_serverPassword", c, parameters, dataStreams);
 		return uris.toString() + databaseName + username + password;
 	}
 

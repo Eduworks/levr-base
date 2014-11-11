@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import com.eduworks.lang.EwMap;
 import com.eduworks.lang.util.EwJson;
 import com.eduworks.levr.servlet.impl.LevrResolverServlet;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.util.io.InMemoryFile;
 
@@ -19,10 +20,10 @@ public class CruncherExecute extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String ws = getAsString("service", parameters, dataStreams);
-		boolean soft = optAsBoolean("soft",true,parameters,dataStreams);
+		String ws = getAsString("service", c, parameters, dataStreams);
+		boolean soft = optAsBoolean("soft",true,c,parameters, dataStreams);
 
 		Map<String, String[]> parameterMap = new EwMap<String, String[]>(parameters);
 
@@ -37,7 +38,7 @@ public class CruncherExecute extends Cruncher
 			if (key.equals("soft"))
 				continue;
 			if (key.equals("paramObj")){
-				JSONObject paramObj = getAsJsonObject(key, parameters, dataStreams);
+				JSONObject paramObj = getAsJsonObject(key, c, parameters, dataStreams);
 				
 				for(String paramName : EwJson.getKeys(paramObj)){
 					if(!parameterMap.containsKey(paramName)){
@@ -45,7 +46,7 @@ public class CruncherExecute extends Cruncher
 					}
 				}
 			}
-			Object object = get(key, parameters, dataStreams);
+			Object object = get(key, c, parameters, dataStreams);
 			if (object!=null)
 				parameterMap.put(key, new String[] { object.toString() });
 		}
@@ -53,7 +54,7 @@ public class CruncherExecute extends Cruncher
 		Map<String, InputStream> dataStreamMap = new EwMap<String, InputStream>(dataStreams);
 		if (has("obj"))
 		{
-			Object o = get("obj", parameters, dataStreams);
+			Object o = get("obj", c, parameters, dataStreams);
 			try
 			{
 				accmDataStream(dataStreamMap, o);
@@ -67,7 +68,7 @@ public class CruncherExecute extends Cruncher
 
 		try
 		{
-			return LevrResolverServlet.execute(log, true, ws, parameterMap, dataStreams,false);
+			return LevrResolverServlet.execute(log, true, ws, c, parameterMap,dataStreams, false);
 		}
 		catch (RuntimeException e)
 		{

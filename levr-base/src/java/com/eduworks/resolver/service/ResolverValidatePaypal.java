@@ -15,13 +15,14 @@ import org.apache.http.params.BasicHttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Resolver;
 
 public class ResolverValidatePaypal extends Resolver
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		StringBuilder paramString = new StringBuilder();
 		boolean first = true;
@@ -37,9 +38,9 @@ public class ResolverValidatePaypal extends Resolver
 		valid = valid & parameters.get("payment_status")[0].equals("Completed");
 		System.out.println("Payment valid: " + valid);
 		if (valid)
-			resolveAChild(parameters, dataStreams, "success");
+			resolveAChild(c,parameters, dataStreams, "success");
 		else
-			resolveAChild(parameters, dataStreams, "failure");
+			resolveAChild(c,parameters, dataStreams, "failure");
 		
 		return null;
 	}

@@ -9,14 +9,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.interfaces.EwJsonSerializable;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Resolver;
 
 public class ResolverDisplayXml extends Resolver
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(parameters, dataStreams);
+		resolveAllChildren(c, parameters, dataStreams);
 		String name = "result";
 
 		for (String key : keySet())

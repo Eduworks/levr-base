@@ -15,6 +15,7 @@ import com.eduworks.lang.threading.EwDistributedThreading;
 import com.eduworks.mapreduce.JobStatus;
 import com.eduworks.mapreduce.MapReduceClient;
 import com.eduworks.mapreduce.MapReduceListener;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolvable;
 import com.eduworks.resolver.ResolverFactory;
@@ -36,12 +37,12 @@ public class CruncherDistribute extends Cruncher
 	}
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		EwDistributedThreading.heartbeat();
 
 		Resolvable call = (Resolvable) get("obj");
-		int numberOfSlices = Integer.parseInt(optAsString("slices","1", parameters, dataStreams));
+		int numberOfSlices = Integer.parseInt(optAsString("slices","1", c, parameters, dataStreams));
 
 		String serialized = call.toOriginalJson();
 		try
@@ -95,6 +96,7 @@ public class CruncherDistribute extends Cruncher
 				@Override
 				public Object go(JobStatus key) throws RemoteException
 				{
+					Context c = new Context();
 					try
 					{
 						DistributePacket p = (DistributePacket) key.getObject();
@@ -102,14 +104,18 @@ public class CruncherDistribute extends Cruncher
 						Map<String, String[]> params = p.parameters;
 						params.put("i", new String[] { Integer.toString(key.getI()) });
 						params.put("mod", new String[] { Integer.toString(key.getMod()) });
-						Object resolve = r.resolve(params, new HashMap<String, InputStream>());
+						Object resolve = r.resolve(c, params, new HashMap<String, InputStream>());
 						if (resolve instanceof Resolvable)
 							resolve = ((Resolvable) resolve).toJson();
+						c.success();
+						c.finish();
 						return resolve;
 					}
 					catch (JSONException e)
 					{
+						c.failure();
 						e.printStackTrace();
+						c.finish();
 						throw new SoftException(e.getMessage());
 					}
 				}

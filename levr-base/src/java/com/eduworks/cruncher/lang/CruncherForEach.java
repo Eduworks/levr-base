@@ -16,6 +16,7 @@ import com.eduworks.lang.threading.EwThreading;
 import com.eduworks.lang.threading.EwThreading.MyFutureList;
 import com.eduworks.lang.threading.EwThreading.MyRunnable;
 import com.eduworks.lang.util.EwCache;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
 import com.eduworks.resolver.exception.SoftException;
@@ -24,45 +25,45 @@ public class CruncherForEach extends Cruncher
 {
 
 	@Override
-	public Object resolve(final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
+	public Object resolve(Context c, final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
 			throws JSONException
 	{
-		boolean threaded = optAsBoolean("threaded", true, parameters, dataStreams);
-		Object obj = getObj(parameters, dataStreams);
+		boolean threaded = optAsBoolean("threaded", true, c, parameters, dataStreams);
+		Object obj = getObj(c, parameters, dataStreams);
 		verifyCloneMode(this);
-		final String paramName = optAsString("paramName", "eachId", parameters, dataStreams);
-		final String prevParamName = optAsString("prevParamName", null, parameters, dataStreams);
-		final String valueName = getAsString("valueName", parameters, dataStreams);
-		final String extraParamName = optAsString("extraParamName", null, parameters, dataStreams);
-		final boolean memorySaver = optAsBoolean("memorySaver", false, parameters, dataStreams);
-		final Integer cap = Integer.parseInt(optAsString("cap", "-1", parameters, dataStreams));
+		final String paramName = optAsString("paramName", "eachId", c, parameters, dataStreams);
+		final String prevParamName = optAsString("prevParamName", null, c, parameters, dataStreams);
+		final String valueName = getAsString("valueName", c, parameters, dataStreams);
+		final String extraParamName = optAsString("extraParamName", null, c, parameters, dataStreams);
+		final boolean memorySaver = optAsBoolean("memorySaver", false, c, parameters, dataStreams);
+		final Integer cap = Integer.parseInt(optAsString("cap", "-1", c, parameters, dataStreams));
 		if (cap > 0)
 			threaded = false;
-		final boolean rethrow = optAsBoolean("rethrow", false, parameters, dataStreams);
+		final boolean rethrow = optAsBoolean("rethrow", false, c, parameters, dataStreams);
 		String extraParam = null;
 		if (extraParamName != null)
-			extraParam = get("extraParam", parameters, dataStreams).toString();
+			extraParam = get("extraParam", c, parameters, dataStreams).toString();
 
 		if (obj instanceof JSONObject)
 		{
-			return executeJsonObject(parameters, dataStreams, threaded, obj, paramName, valueName, prevParamName,
+			return executeJsonObject(c,parameters, dataStreams, threaded, obj, paramName, valueName, prevParamName,
 					extraParamName, extraParam, memorySaver, rethrow,cap);
 		}
 		else if (obj instanceof JSONArray)
 		{
-			return executeJsonArray(parameters, dataStreams, threaded, obj, paramName, prevParamName, extraParamName,
+			return executeJsonArray(c,parameters, dataStreams, threaded, obj, paramName, prevParamName, extraParamName,
 					extraParam, memorySaver, rethrow,cap);
 		}
 		else if (obj instanceof EwList)
 		{
 			obj = new JSONArray((EwList) obj);
-			return executeJsonArray(parameters, dataStreams, threaded, obj, paramName, prevParamName, extraParamName,
+			return executeJsonArray(c,parameters, dataStreams, threaded, obj, paramName, prevParamName, extraParamName,
 					extraParam, memorySaver, rethrow,cap);
 		}
 		return null;
 	}
 
-	public Object executeJsonObject(final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams,
+	public Object executeJsonObject(final Context c,final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams,
 			final boolean threaded, Object obj, final String paramName, final String valueName, final String prevParamName,
 			final String extraParamName, final String extraParam, final boolean memorySaver, final boolean rethrow,final Integer cap)
 			throws JSONException
@@ -74,8 +75,8 @@ public class CruncherForEach extends Cruncher
 		Iterator<String> keys = json.keys();
 		String prevId = null;
 		int counter = 0;
-		int sequenceI = Integer.parseInt(optAsString("sequenceI", "-1", parameters, dataStreams));
-		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", parameters, dataStreams));
+		int sequenceI = Integer.parseInt(optAsString("sequenceI", "-1", c, parameters, dataStreams));
+		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", c, parameters, dataStreams));
 		while (keys.hasNext() && (cap == -1 || output.length() < cap))
 		{
 			final String key = keys.next();
@@ -107,7 +108,7 @@ public class CruncherForEach extends Cruncher
 						}
 						if (extraParamName != null)
 							newParams.put(extraParamName, new String[] { extraParam });
-						Object result = resolveAChild("op", newParams, dataStreams);
+						Object result = resolveAChild("op", c,newParams, dataStreams);
 						if (result instanceof EwJsonSerializable)
 							result = ((EwJsonSerializable) result).toJsonObject();
 						if (!memorySaver)
@@ -147,7 +148,7 @@ public class CruncherForEach extends Cruncher
 			prevId = key;
 		}
 		fl.nowPause(true);
-		if (optAsBoolean("array", false, parameters, dataStreams))
+		if (optAsBoolean("array", false, c, parameters, dataStreams))
 		{
 			JSONArray ja = new JSONArray();
 			for (int i = 0;i < outputArray.length();i++)
@@ -155,13 +156,13 @@ public class CruncherForEach extends Cruncher
 					ja.put(outputArray.get(i));
 			return ja;
 		}
-		if (optAsBoolean("soft", false, parameters, dataStreams))
+		if (optAsBoolean("soft", false, c, parameters, dataStreams))
 			if (output.length() == 0)
 				return null;
 		return output;
 	}
 
-	public Object executeJsonArray(final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams,
+	public Object executeJsonArray(final Context c,final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams,
 			boolean threaded, Object obj, final String paramName, final String prevParamName,
 			final String extraParamName, final String extraParam, final boolean memorySaver, final boolean rethrow,final Integer cap)
 			throws JSONException
@@ -171,8 +172,8 @@ public class CruncherForEach extends Cruncher
 		MyFutureList fl = new MyFutureList();
 		JSONArray json = (JSONArray) obj;
 		String prevId = null;
-		int sequenceI = Integer.parseInt(optAsString("sequenceI", "-1", parameters, dataStreams));
-		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", parameters, dataStreams));
+		int sequenceI = Integer.parseInt(optAsString("sequenceI", "-1", c, parameters, dataStreams));
+		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", c, parameters, dataStreams));
 		for (int i = 0; i < json.length() && (cap == -1 || output.length() < cap); i++)
 		{
 			final String key = json.getString(i);
@@ -206,7 +207,7 @@ public class CruncherForEach extends Cruncher
 									try
 									{
 										keepTrying = false;
-										result = resolveAChild("op", newParams, dataStreams);
+										result = resolveAChild("op", c,newParams, dataStreams);
 									}
 									catch (SoftException ex)
 									{
@@ -219,7 +220,7 @@ public class CruncherForEach extends Cruncher
 								if (!memorySaver)
 									synchronized (output)
 									{
-										if (optAsString("countInstances", "false", parameters, dataStreams).equals(
+										if (optAsString("countInstances", "false", c, parameters, dataStreams).equals(
 												"true"))
 										{
 											if (result instanceof JSONObject)
@@ -263,11 +264,11 @@ public class CruncherForEach extends Cruncher
 						if (extraParamName != null)
 							newParams.put(extraParamName, new String[] { extraParam });
 						newParams.put("i", new String[] { Integer.toString(index) });
-						Object result = resolveAChild("op", newParams, dataStreams);
+						Object result = resolveAChild("op", c,newParams, dataStreams);
 
 						if (!memorySaver)
 						{
-							if (optAsString("countInstances", "false", parameters, dataStreams).equals("true"))
+							if (optAsString("countInstances", "false", c, parameters, dataStreams).equals("true"))
 							{
 								if (result instanceof JSONObject)
 								{
@@ -295,7 +296,7 @@ public class CruncherForEach extends Cruncher
 		}
 		fl.nowPause(true);
 
-		if (optAsBoolean("array", false, parameters, dataStreams))
+		if (optAsBoolean("array", false, c, parameters, dataStreams))
 		{
 			JSONArray results = new JSONArray();
 			for (int i = 0; i < outputArray.length(); i++)
@@ -304,7 +305,7 @@ public class CruncherForEach extends Cruncher
 			return results;
 
 		}
-		if (optAsBoolean("soft", false, parameters, dataStreams))
+		if (optAsBoolean("soft", false, c, parameters, dataStreams))
 			if (output.length() == 0)
 				return null;
 		return output;

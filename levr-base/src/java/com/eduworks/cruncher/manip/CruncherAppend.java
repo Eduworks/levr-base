@@ -7,15 +7,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherAppend extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		Object obj = getObj(parameters,dataStreams);
+		Object obj = getObj(c,parameters, dataStreams);
 		JSONArray ja = null;
 		if (obj instanceof JSONArray)
 			ja = (JSONArray) obj;
@@ -31,7 +32,7 @@ public class CruncherAppend extends Cruncher
 		{
 			if (key.equals("obj"))
 				continue;
-			ja.put(get(key, parameters, dataStreams));
+			ja.put(get(key, c, parameters, dataStreams));
 		}
 		return ja;
 	}

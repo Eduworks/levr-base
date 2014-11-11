@@ -12,14 +12,15 @@ import org.json.JSONObject;
 import com.eduworks.interfaces.EwDisplayable;
 import com.eduworks.lang.json.EwJsonCollection;
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Resolver;
 
 public class ResolverDisplayJson extends Resolver
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(parameters, dataStreams);
+		resolveAllChildren(c, parameters, dataStreams);
 
 		final boolean collapse = optAsBoolean("collapse", false, parameters);
 		final boolean asArray = optAsBoolean("asArray", false, parameters);

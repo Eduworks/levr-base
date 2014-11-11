@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 //Takes a JSON Object of Arrays, and creates a pivot table, where the elements of the array are the new keys of the JSON Objects, and the original keys are in the array.
@@ -15,9 +16,9 @@ public class CruncherPivot extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		JSONObject obj = getObjAsJsonObject(parameters, dataStreams);
+		JSONObject obj = getObjAsJsonObject(c, parameters, dataStreams);
 		if (obj == null)
 			return null;
 		JSONObject result = new JSONObject();

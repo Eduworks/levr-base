@@ -12,6 +12,7 @@ import org.jivesoftware.smack.packet.Message;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolvable;
 
@@ -34,6 +35,7 @@ public class CruncherXmppListen extends Cruncher
 		@Override
 		public void processMessage(Chat chat2, Message arg1)
 		{
+			Context c = new Context();
 			try
 			{
 				if (arg1.getBody() == null) 
@@ -42,35 +44,38 @@ public class CruncherXmppListen extends Cruncher
 				newParameters.put("message", new String[]{arg1.getBody()});
 				newParameters.put("sender", new String[]{chat2.getParticipant().split("/")[0]});
 				log.debug(chat2.getParticipant() + " --> " + arg1.getBody());
-				((Resolvable)op.clone()).resolve(newParameters, dataStreams);
+				((Resolvable)op.clone()).resolve(c, newParameters, dataStreams);
+				c.success();
 			}
 			catch (Throwable e)
 			{
+				c.failure();
 				if (!(e instanceof RuntimeException))
 					e.printStackTrace();
 				else if (e.getMessage() != null && !e.getMessage().isEmpty())
 					System.out.println(e.getMessage());
 			}
+			c.finish();
 		}
 	}
 
 	@Override
-	public Object resolve(final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String server = getAsString("serverHostname", parameters, dataStreams);
-		String loginHostname = getAsString("loginHostname", parameters, dataStreams);
-		String port = getAsString("port", parameters, dataStreams);
-		String username = getAsString("username", parameters, dataStreams);
-		String password = getAsString("password", parameters, dataStreams);
+		String server = getAsString("serverHostname", c, parameters, dataStreams);
+		String loginHostname = getAsString("loginHostname", c, parameters, dataStreams);
+		String port = getAsString("port", c, parameters, dataStreams);
+		String username = getAsString("username", c, parameters, dataStreams);
+		String password = getAsString("password", c, parameters, dataStreams);
 		XMPPConnection connection = XmppManager.get(server,port,loginHostname, username, password);
 		
 		final Resolvable op = (Resolvable) get("messageReceived");
 		log.debug("Unregistering chat listeners.");
 		for (ChatManagerListener cml : connection.getChatManager().getChatListeners())
 			connection.getChatManager().removeChatListener(cml);
-		for (Chat c : XmppManager.chats.values())
+		for (Chat ch : XmppManager.chats.values())
 		{
-			for (MessageListener l : c.getListeners())
+			for (MessageListener l : ch.getListeners())
 			{
 				((MessageListenerImplementation)l).op = op;
 			}

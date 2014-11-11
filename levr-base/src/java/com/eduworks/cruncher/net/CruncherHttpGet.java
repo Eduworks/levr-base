@@ -17,25 +17,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherHttpGet extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		final String url = getObj(parameters, dataStreams).toString();
+		final String url = getObj(c, parameters, dataStreams).toString();
 		HttpGet get = new HttpGet(url);
 
 		HttpParams httpParameters = new BasicHttpParams();
 		// Set the timeout in milliseconds until a connection is established.
 		// The default value is zero, that means the timeout is not used. 
-		int timeoutConnection = Integer.parseInt(optAsString("timeout","60000",parameters,dataStreams));
+		int timeoutConnection = Integer.parseInt(optAsString("timeout","60000",c,parameters, dataStreams));
 		HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
 		// Set the default socket timeout (SO_TIMEOUT) 
 		// in milliseconds which is the timeout for waiting for data.
-		int timeoutSocket = Integer.parseInt(optAsString("timeout","60000",parameters,dataStreams));;
+		int timeoutSocket = Integer.parseInt(optAsString("timeout","60000",c,parameters, dataStreams));;
 		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 		HttpClient hc = new DefaultHttpClient(httpParameters);
 		

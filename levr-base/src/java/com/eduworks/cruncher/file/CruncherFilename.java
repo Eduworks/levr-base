@@ -6,6 +6,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.util.io.InMemoryFile;
 
@@ -13,9 +14,9 @@ public class CruncherFilename extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		return ((InMemoryFile)getObj(parameters, dataStreams)).name;
+		return ((InMemoryFile)getObj(c, parameters, dataStreams)).name;
 	}
 
 	@Override

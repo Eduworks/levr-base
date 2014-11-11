@@ -6,16 +6,17 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherBCryptCompareHash extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String password = getAsString("password", parameters, dataStreams);
-		String passwordHash = getAsString("passwordHash", parameters, dataStreams);
+		String password = getAsString("password", c, parameters, dataStreams);
+		String passwordHash = getAsString("passwordHash", c, parameters, dataStreams);
 		
 		return BCrypt.checkpw(password, passwordHash);
 	}

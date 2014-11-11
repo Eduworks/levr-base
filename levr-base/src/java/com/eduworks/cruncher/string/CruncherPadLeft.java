@@ -6,17 +6,18 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherPadLeft extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String str = getAsString("obj",parameters, dataStreams);
-		int pad = getAsDouble("pad", parameters, dataStreams).intValue();
-		String with = getAsString("with",parameters,dataStreams);
+		String str = getAsString("obj",c, parameters, dataStreams);
+		int pad = getAsDouble("pad", c, parameters, dataStreams).intValue();
+		String with = getAsString("with",c,parameters, dataStreams);
 		while (str.length() < pad)
 			str = with + str;
 		return str;

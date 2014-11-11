@@ -9,14 +9,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherRemoveDuplicates extends Cruncher
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		JSONArray ja = getObjAsJsonArray(parameters,dataStreams);
+		JSONArray ja = getObjAsJsonArray(c,parameters, dataStreams);
 		if (ja == null) return null;
 		HashMap<String,Object> hs = new LinkedHashMap<String,Object>();
 		

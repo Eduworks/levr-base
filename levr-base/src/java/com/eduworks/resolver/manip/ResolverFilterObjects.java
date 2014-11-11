@@ -9,15 +9,16 @@ import org.json.JSONObject;
 
 import com.eduworks.lang.json.impl.EwJsonArray;
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Resolver;
 
 public class ResolverFilterObjects extends Resolver
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(parameters, dataStreams);
+		resolveAllChildren(c, parameters, dataStreams);
 
 		final boolean requireAll = optAsBoolean("requireAll", false, parameters);
 		JSONArray ja = optAsArray("array", parameters);

@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.levr.servlet.impl.LevrResolverServlet;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 
@@ -16,15 +17,15 @@ public class CruncherReflectionCommit extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		try
 		{
 			for (File f : LevrResolverServlet.codeFiles)
 			{
-				if (!f.getName().equals(getAsString("filename", parameters, dataStreams)))
+				if (!f.getName().equals(getAsString("filename", c, parameters, dataStreams)))
 					continue;
-				FileUtils.writeStringToFile(f, getObj(parameters, dataStreams).toString());
+				FileUtils.writeStringToFile(f, getObj(c, parameters, dataStreams).toString());
 				LevrResolverServlet.lastChecked -= 5000;
 			}
 		}

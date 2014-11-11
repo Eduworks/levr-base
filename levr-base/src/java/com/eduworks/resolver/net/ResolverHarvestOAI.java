@@ -20,6 +20,7 @@ import org.json.XML;
 
 import com.eduworks.lang.EwMap;
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Resolvable;
 import com.eduworks.resolver.Resolver;
 import com.eduworks.util.io.EwFileSystem;
@@ -31,7 +32,7 @@ public class ResolverHarvestOAI extends Resolver
 	private static String	metadataPrefix	= "oai_dc";
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		metadataPrefix = optAsString("metadataPrefix",parameters);
 		if (metadataPrefix == null || metadataPrefix.isEmpty())
@@ -61,9 +62,9 @@ public class ResolverHarvestOAI extends Resolver
 				//all += IOUtils.toString(input);
 				input.close();
 				for (Object n : xPath(xml, "//oai:record").selectNodes(xml))
-					resolveRecord((Node) n, parameters, dataStreams);
+					resolveRecord((Node) n, c,parameters, dataStreams);
 				for (Object n : xPath(xml, "//record").selectNodes(xml))
-					resolveRecord((Node) n, parameters, dataStreams);
+					resolveRecord((Node) n, c,parameters, dataStreams);
 				url = createResumptionToken(xPath(xml, "//oai:resumptionToken").selectSingleNode(xml), baseUrl,parameters);
 				
 			}
@@ -111,15 +112,15 @@ public class ResolverHarvestOAI extends Resolver
 		return url;
 	}
 
-	private void resolveRecord(Node item, Map<String, String[]> parameters, Map<String, InputStream> dataStreams)
+	private void resolveRecord(Node item, Context c,Map<String, String[]> parameters, Map<String, InputStream> dataStreams)
 	{
-		resolveRecord(item.asXML(), parameters, dataStreams);
+		resolveRecord(item.asXML(), c,parameters, dataStreams);
 	}
 
 	int	i	= 0;
 	int	max	= 0;
 
-	private void resolveRecord(String record, Map<String, String[]> parameters, Map<String, InputStream> dataStreams)
+	private void resolveRecord(String record, Context c,Map<String, String[]> parameters, Map<String, InputStream> dataStreams)
 	{
 		try
 		{
@@ -197,7 +198,7 @@ public class ResolverHarvestOAI extends Resolver
 						newParams.put("about", new String[] { recordObj.get("about").toString() });
 					try
 					{
-						Object o = thing.resolve(newParams, dataStreams);
+						Object o = thing.resolve(c, newParams, dataStreams);
 						if (!optAsBoolean("memorySaver", true, parameters))
 							put(id,o);
 					}

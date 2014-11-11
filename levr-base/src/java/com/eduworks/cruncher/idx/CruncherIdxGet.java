@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.mapdb.Fun;
 
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
 
@@ -17,16 +18,16 @@ public class CruncherIdxGet extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String _databasePath = Resolver.decodeValue(getAsString("indexDir", parameters, dataStreams));
-		String _databaseName = Resolver.decodeValue(getAsString("databaseName", parameters, dataStreams));
-		boolean optCommit = optAsBoolean("_commit", true, parameters, dataStreams);
-		String index = Resolver.decodeValue(getAsString("index", parameters, dataStreams));
-		String key = getAsString("key", parameters, dataStreams);
+		String _databasePath = Resolver.decodeValue(getAsString("indexDir", c, parameters, dataStreams));
+		String _databaseName = Resolver.decodeValue(getAsString("databaseName", c, parameters, dataStreams));
+		boolean optCommit = optAsBoolean("_commit", true, c, parameters, dataStreams);
+		String index = Resolver.decodeValue(getAsString("index", c, parameters, dataStreams));
+		String key = getAsString("key", c, parameters, dataStreams);
 		if (key == null)
 		{
-			Object obj = getObj(parameters, dataStreams);
+			Object obj = getObj(c, parameters, dataStreams);
 			if (obj != null)
 				key = obj.toString();
 		}
@@ -38,7 +39,7 @@ public class CruncherIdxGet extends Cruncher
 
 			if (optCommit)
 				ewDB.db.commit();
-			if (optAsString("multi", "false", parameters, dataStreams).equals("false"))
+			if (optAsString("multi", "false", c, parameters, dataStreams).equals("false"))
 			{
 				Object object = ewDB.db.getHashMap(index).get(key);
 				return object;

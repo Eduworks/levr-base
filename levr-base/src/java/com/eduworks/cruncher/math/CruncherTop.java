@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import com.eduworks.lang.EwList;
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.util.Tuple;
 
@@ -17,15 +18,15 @@ public class CruncherTop extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		int count = Integer.parseInt(getAsString("top", parameters, dataStreams));
-		Object obj = getObj(parameters, dataStreams);
+		int count = Integer.parseInt(getAsString("top", c, parameters, dataStreams));
+		Object obj = getObj(c, parameters, dataStreams);
 		if (obj == null)
 			return null;
 		if (obj instanceof JSONObject)
 		{
-			JSONObject source = getObjAsJsonObject(parameters, dataStreams);
+			JSONObject source = getObjAsJsonObject(c, parameters, dataStreams);
 			EwList<Tuple<String, Double>> wses = new EwList<Tuple<String, Double>>();
 			for (String key : EwJson.getKeys(source))
 				wses.add(new Tuple<String, Double>(key, source.getDouble(key)));
@@ -56,7 +57,7 @@ public class CruncherTop extends Cruncher
 		}
 		else if (obj instanceof JSONArray)
 		{
-			JSONArray array = getObjAsJsonArray(parameters, dataStreams);
+			JSONArray array = getObjAsJsonArray(c, parameters, dataStreams);
 			JSONArray results = new JSONArray();
 			for (int i = 0; i < count && i < array.length(); i++)
 			{

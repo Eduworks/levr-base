@@ -9,15 +9,16 @@ import org.json.JSONObject;
 
 import com.eduworks.lang.EwList;
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherUnion extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		EwList<Object> ja = new EwList<Object>(getObjAsJsonArray(parameters, dataStreams));
+		EwList<Object> ja = new EwList<Object>(getObjAsJsonArray(c, parameters, dataStreams));
 		JSONObject jo = new JSONObject();
 		if (keySet().size() == 1)
 		{
@@ -38,7 +39,7 @@ public class CruncherUnion extends Cruncher
 			{
 				if (key.equals("obj"))
 					continue;
-				EwList<Object> organizations = new EwList<Object>(getAsJsonArray(key, parameters, dataStreams));
+				EwList<Object> organizations = new EwList<Object>(getAsJsonArray(key, c, parameters, dataStreams));
 				ja = ja.union(organizations);
 			}
 		}

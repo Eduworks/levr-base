@@ -15,6 +15,7 @@ import com.couchbase.client.protocol.views.ViewResponse;
 import com.couchbase.client.protocol.views.ViewRow;
 import com.eduworks.interfaces.EwJsonSerializable;
 import com.eduworks.lang.EwMap;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.exception.SoftException;
 
@@ -22,12 +23,12 @@ public class CruncherForEachInTable extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		final String paramName = optAsString("paramName", "eachId", parameters, dataStreams);
-		final String prevParamName = optAsString("prevParamName", null, parameters, dataStreams);
+		final String paramName = optAsString("paramName", "eachId", c, parameters, dataStreams);
+		final String prevParamName = optAsString("prevParamName", null, c, parameters, dataStreams);
 
-		CouchbaseClient client = CouchBaseClientFactory.get(this, parameters, dataStreams);
+		CouchbaseClient client = CouchBaseClientFactory.get(this, c, parameters, dataStreams);
 
 		View view = client.getView("dev_all", "all");
 		final JSONObject output = new JSONObject();
@@ -49,7 +50,7 @@ public class CruncherForEachInTable extends Cruncher
 					try
 					{
 						keepTrying = false;
-						result = resolveAChild("op", newParams, dataStreams);
+						result = resolveAChild("op", c,newParams, dataStreams);
 					}
 					catch (SoftException ex)
 					{
@@ -61,7 +62,7 @@ public class CruncherForEachInTable extends Cruncher
 					result = ((EwJsonSerializable) result).toJsonObject();
 				synchronized (output)
 				{
-					if (optAsString("countInstances", "false", parameters, dataStreams).equals("true"))
+					if (optAsString("countInstances", "false", c, parameters, dataStreams).equals("true"))
 					{
 						if (result instanceof JSONObject)
 						{

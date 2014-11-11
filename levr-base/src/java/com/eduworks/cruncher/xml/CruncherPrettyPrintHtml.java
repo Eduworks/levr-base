@@ -21,13 +21,14 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherPrettyPrintHtml extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		try
 		{
@@ -35,8 +36,8 @@ public class CruncherPrettyPrintHtml extends Cruncher
 			factory.setNamespaceAware(false);
 			factory.setValidating(false);
 			XMLReader reader = factory.newSAXParser().getXMLReader();
-			String asString = getAsString("obj", parameters,
-					dataStreams);
+			String asString = getAsString("obj", c,
+					parameters, dataStreams);
 			Source xmlInput = new SAXSource(reader, new InputSource(new StringReader(asString)));
 
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();

@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.EwList;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolvable;
 
@@ -19,16 +20,16 @@ public class CruncherSort extends Cruncher
 {
 
 	@Override
-	public Object resolve(final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
+	public Object resolve(final Context c, final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
 			throws JSONException
 	{
-		JSONArray ja = getObjAsJsonArray(parameters, dataStreams);
+		JSONArray ja = getObjAsJsonArray(c, parameters, dataStreams);
 		if (ja == null) return null;
 		if (ja.length() < 2) return ja;
 
-		final Boolean desc = optAsBoolean("desc", false, parameters, dataStreams);
+		final Boolean desc = optAsBoolean("desc", false, c, parameters, dataStreams);
 
-		final String paramName = getAsString("paramName", parameters, dataStreams);
+		final String paramName = getAsString("paramName", c, parameters, dataStreams);
 
 		final Resolvable op = (Resolvable) get("op");
 
@@ -47,7 +48,7 @@ public class CruncherSort extends Cruncher
 					{
 						Map<String, String[]> newParameters = new HashMap<String, String[]>(parameters);
 						newParameters.put(paramName, new String[] { o1.toString() });
-						Object resolve = ((Resolvable) op.clone()).resolve(newParameters, dataStreams);
+						Object resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
 						if (resolve != null)
 						s1 = (Number) Double.parseDouble(resolve.toString());
 					}
@@ -56,7 +57,7 @@ public class CruncherSort extends Cruncher
 					{
 						Map<String, String[]> newParameters = new HashMap<String, String[]>(parameters);
 						newParameters.put(paramName, new String[] { o2.toString() });
-						Object resolve = ((Resolvable) op.clone()).resolve(newParameters, dataStreams);
+						Object resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
 						if (resolve != null)
 						s2 = (Number) Double.parseDouble(resolve.toString());
 					}

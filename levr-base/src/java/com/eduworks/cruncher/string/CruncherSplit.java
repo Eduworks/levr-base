@@ -8,20 +8,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherSplit extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String asString = getAsString("obj",parameters, dataStreams);
+		String asString = getAsString("obj",c, parameters, dataStreams);
 		if (asString == null) return null;
 		if (asString.isEmpty()) return new JSONArray();
-		if (optAsBoolean("newline",false,parameters,dataStreams))
+		if (optAsBoolean("newline",false,c,parameters, dataStreams))
 			return new JSONArray(asString.split("\r?\n"));
-		String[] split = asString.toString().split(Pattern.quote(getAsString("split",parameters,dataStreams)));
+		String[] split = asString.toString().split(Pattern.quote(getAsString("split",c,parameters, dataStreams)));
 		return new JSONArray(split);
 	}
 

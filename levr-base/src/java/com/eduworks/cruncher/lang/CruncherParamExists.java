@@ -6,19 +6,20 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherParamExists extends Cruncher
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String paramName = getAsString("paramName", parameters, dataStreams);
+		String paramName = getAsString("paramName", c, parameters, dataStreams);
 		
 		if(parameters.containsKey(paramName)){
-			return get("true", parameters, dataStreams);
+			return get("true", c, parameters, dataStreams);
 		}else{
-			return get("false", parameters, dataStreams);
+			return get("false", c, parameters, dataStreams);
 		}
 	}
 

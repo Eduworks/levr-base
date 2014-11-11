@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import com.eduworks.ace.product.levr.adapter.DocumentDbInterface;
 import com.eduworks.lang.json.impl.EwJsonObject;
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.exception.SoftException;
 import com.fourspaces.couchdb.Document;
 
@@ -22,9 +23,9 @@ public class ResolverGetFromDocument extends ResolverDocument
 		return URIUtil.encodePath(value);
 	}
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(parameters, dataStreams);
+		resolveAllChildren(c,parameters, dataStreams);
 
 		final boolean doNotShorten = optAsBoolean("_doNotShorten", false, parameters);
 		final boolean nullify = optAsBoolean("_canNull", false, parameters);

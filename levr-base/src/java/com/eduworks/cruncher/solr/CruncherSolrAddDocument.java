@@ -15,15 +15,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
 
 public class CruncherSolrAddDocument extends Cruncher
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String solrURL = Resolver.decodeValue(optAsString("solrURL", "http%3A%2F%2Flocalhost%3A8983%2Fsolr%2F", parameters, dataStreams));
+		String solrURL = Resolver.decodeValue(optAsString("solrURL", "http%3A%2F%2Flocalhost%3A8983%2Fsolr%2F", c, parameters, dataStreams));
 		HttpSolrServer solrServer;
 		if (!SolrServer.serverMap.containsKey(solrURL)) {
 			solrServer = new HttpSolrServer(solrURL);
@@ -31,7 +32,7 @@ public class CruncherSolrAddDocument extends Cruncher
 		} else 
 			solrServer = SolrServer.serverMap.get(solrURL);
 		
-		JSONArray rawDocuments = getAsJsonArray("documents", parameters, dataStreams);
+		JSONArray rawDocuments = getAsJsonArray("documents", c, parameters, dataStreams);
 		
 		Collection<SolrInputDocument> documentSet = new ArrayList<SolrInputDocument>();
 		SolrInputDocument document;

@@ -9,12 +9,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.python.util.PythonInterpreter;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Scripter;
 
 public class ScripterPython extends Scripter
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		String expression = (String)get("expression");
 		PythonInterpreter interpreter = new PythonInterpreter();

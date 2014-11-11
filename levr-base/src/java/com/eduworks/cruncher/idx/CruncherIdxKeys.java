@@ -7,18 +7,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
 
 public class CruncherIdxKeys extends Cruncher
 {
 
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String _databasePath = Resolver.decodeValue(getAsString("indexDir", parameters, dataStreams));
-		String _databaseName = Resolver.decodeValue(getAsString("databaseName", parameters, dataStreams));
-		String index = Resolver.decodeValue(getAsString("index", parameters, dataStreams));
-		boolean optCommit = optAsBoolean("_commit", true, parameters, dataStreams);
+		String _databasePath = Resolver.decodeValue(getAsString("indexDir", c, parameters, dataStreams));
+		String _databaseName = Resolver.decodeValue(getAsString("databaseName", c, parameters, dataStreams));
+		String index = Resolver.decodeValue(getAsString("index", c, parameters, dataStreams));
+		boolean optCommit = optAsBoolean("_commit", true, c, parameters, dataStreams);
 		EwDB ewDB = null;
 		try
 		{

@@ -9,15 +9,16 @@ import org.json.JSONObject;
 import com.eduworks.lang.json.EwJsonCollection;
 import com.eduworks.lang.json.impl.EwJsonArray;
 import com.eduworks.lang.util.EwJson;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.ResolverMatcher;
 import com.eduworks.resolver.enumeration.ResolverMatchOption;
 
 public class ResolverRemoveFromList extends ResolverMatcher
 {
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(parameters, dataStreams);
+		resolveAllChildren(c, parameters, dataStreams);
 
 		final EwJsonArray array = getDefaultArray(parameters);
 		final Object item = getItem(parameters, true, false);

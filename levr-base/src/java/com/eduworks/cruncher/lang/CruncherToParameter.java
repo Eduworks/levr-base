@@ -7,20 +7,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.EwMap;
+import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
 public class CruncherToParameter extends Cruncher
 {
 
 	@Override
-	public Object resolve(Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String paramName=getAsString("paramName",parameters,dataStreams);
-		Object o = getObj(parameters,dataStreams);
+		String paramName=getAsString("paramName",c,parameters, dataStreams);
+		Object o = getObj(c,parameters, dataStreams);
 
 		final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 		newParams.put(paramName, new String[] { o.toString() });
-		Object result = resolveAChild("op", newParams, dataStreams);
+		Object result = resolveAChild("op",c, newParams, dataStreams);
 		return result;
 	}
 
