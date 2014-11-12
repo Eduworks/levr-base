@@ -55,7 +55,10 @@ public class CruncherXmppListen extends Cruncher
 				else if (e.getMessage() != null && !e.getMessage().isEmpty())
 					System.out.println(e.getMessage());
 			}
-			c.finish();
+			finally
+			{
+				c.finish();
+			}
 		}
 	}
 

@@ -115,8 +115,11 @@ public class CruncherDistribute extends Cruncher
 					{
 						c.failure();
 						e.printStackTrace();
-						c.finish();
 						throw new SoftException(e.getMessage());
+					}
+					finally
+					{
+						c.finish();
 					}
 				}
 			});
