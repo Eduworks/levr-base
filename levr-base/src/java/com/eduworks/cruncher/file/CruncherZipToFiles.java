@@ -45,17 +45,18 @@ public class CruncherZipToFiles extends Cruncher
 			
 			while ((ze=in.getNextEntry())!=null) {
 				if (!ze.isDirectory()) {
-					JSONObject zipEntry = new JSONObject();
+					InMemoryFile zipEntry = new InMemoryFile();
 					if (ze.getName().lastIndexOf("/")!=-1)
-						zipEntry.put("name", ze.getName().substring(ze.getName().lastIndexOf("/")+1));
+						zipEntry.name=ze.getName().substring(ze.getName().lastIndexOf("/")+1);
 					else
-						zipEntry.put("name", ze.getName());
+						zipEntry.name= ze.getName();
+					zipEntry.path=ze.getName();
 					ByteArrayOutputStream zipEntryStream = new ByteArrayOutputStream();
 					int readLength = 0;
 					while ((readLength=in.read(buf))>0) {
 						zipEntryStream.write(buf, 0, readLength);
 					}
-					zipEntry.put("data", Base64.encode(zipEntryStream.toByteArray()));
+					zipEntry.data=zipEntryStream.toByteArray();
 					IOUtils.closeQuietly(zipEntryStream);
 					if (filters!=null&&checkExtension(filters, zipEntry, zipEntryStream.toByteArray().length))
 						files.put(zipEntry);
@@ -71,16 +72,12 @@ public class CruncherZipToFiles extends Cruncher
 		return files;
 	}
 
-	private Boolean checkExtension(JSONObject filters, JSONObject file, Integer fs) {
+	private Boolean checkExtension(JSONObject filters, InMemoryFile file, Integer fs) {
 		Boolean valid = false;
 		long filesize = Math.round(fs / 1024.0);
 		String fileExtension = "";
-		try {
-			if (file.getString("name").lastIndexOf(".")!=-1)
-				fileExtension = file.getString("name").substring(file.getString("name").lastIndexOf(".")+1);
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
+			if (file.name.lastIndexOf(".")!=-1)
+				fileExtension = file.name.substring(file.name.lastIndexOf(".")+1);
 		
 		for (Iterator<String> filterPointer = filters.keys(); filterPointer.hasNext() && !valid;) {
 			String filterKey = filterPointer.next();
