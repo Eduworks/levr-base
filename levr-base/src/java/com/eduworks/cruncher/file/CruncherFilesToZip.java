@@ -61,8 +61,17 @@ public class CruncherFilesToZip extends Cruncher
 			Map<String, Object> m = new HashMap<String, Object>();
 			for (int i = 0;i < ja.length();i++)
 			{
-				InMemoryFile imf = (InMemoryFile) ja.get(i);
+				Object object = ja.get(i);
+				if (object instanceof InMemoryFile)
+				{
+				InMemoryFile imf = (InMemoryFile) object;
 				m.put(imf.name, imf);
+				}
+				else if (object instanceof File)
+				{
+					File f = (File) object;
+					m.put(f.getName(),f);
+				}
 			}
 			files = m;
 		}
