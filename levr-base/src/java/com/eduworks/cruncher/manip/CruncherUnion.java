@@ -27,9 +27,12 @@ public class CruncherUnion extends Cruncher
 			{
 				if (o instanceof JSONArray)
 					results=results.union(new EwList<Object>(o));
-				if (o instanceof JSONObject)
+				else if (o instanceof JSONObject)
 					for (String key : EwJson.getKeys((JSONObject)o))
 						jo.accumulate(key, ((JSONObject)o).get(key));
+				else
+					if (!results.contains(o))
+						results.add(o);
 			}
 			ja = results;
 		}
