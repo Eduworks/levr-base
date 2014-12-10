@@ -14,13 +14,16 @@ public class CruncherEndsWith extends Cruncher
 	  @Override
 	   public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	   {
-	      String s1 = getAsString("string1",c,parameters, dataStreams).toLowerCase();
+	      String s1 = getAsString("string1",c,parameters, dataStreams);
 	      if (s1 == null)
 	    	  s1 = getObj(c, parameters, dataStreams).toString();
-	      String s2 = getAsString("string2",c,parameters, dataStreams).toLowerCase();
+	      if (s1 == null) return false;
+	      s1 = s1.toLowerCase();
+	      String s2 = getAsString("string2",c,parameters, dataStreams);
 	      if (s2 == null)
-	    	  s2=getAsString("with",c,parameters, dataStreams).toLowerCase();
-	      if (s1 == null || s2 == null) return false;
+	    	  s2=getAsString("with",c,parameters, dataStreams);
+	      if (s2 == null) return false;
+	      s2 = s2.toLowerCase();
 	      return s1.endsWith(s2);
 	   }
 
