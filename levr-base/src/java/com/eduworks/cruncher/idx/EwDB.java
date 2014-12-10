@@ -1,7 +1,6 @@
 package com.eduworks.cruncher.idx;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -13,7 +12,6 @@ import org.mapdb.DBMaker;
 
 import com.eduworks.lang.threading.EwThreading;
 import com.eduworks.lang.threading.EwThreading.MyRunnable;
-import com.eduworks.util.io.EwFileSystem;
 
 public class EwDB
 {
