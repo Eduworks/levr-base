@@ -15,7 +15,11 @@ public class CruncherStartsWith extends Cruncher {
    public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
    {
       String s1 = getAsString("string1",c,parameters, dataStreams).toLowerCase();
+      if (s1 == null)
+    	  s1 = getObj(c, parameters, dataStreams).toString();
       String s2 = getAsString("string2",c,parameters, dataStreams).toLowerCase();
+      if (s2 == null)
+    	  s2=getAsString("with",c,parameters, dataStreams).toLowerCase();
       if (s1 == null || s2 == null) return false;
       return s1.startsWith(s2);
    }
