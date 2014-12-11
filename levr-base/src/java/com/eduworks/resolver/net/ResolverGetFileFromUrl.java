@@ -17,10 +17,10 @@ import com.eduworks.util.io.EwFileSystem;
 
 public class ResolverGetFileFromUrl extends Resolver
 {
-	public static File operate(String url, int timeout) throws IOException
+	public static File operate(Context c,String url, int timeout) throws IOException
 	{
 		String cacheUrl = ResolverGetFileFromUrl.class.getName() + ":" + url;
-		Object cacheResult = getCache(cacheUrl);
+		Object cacheResult = getCache(c,cacheUrl);
 		if (cacheResult != null)
 		{
 			return (File) cacheResult;
@@ -28,7 +28,7 @@ public class ResolverGetFileFromUrl extends Resolver
 		try
 		{
 			File f = EwFileSystem.downloadFile(url, timeout);
-			putCache(cacheUrl, f);
+			putCache(c,cacheUrl, f);
 			return f;
 		}
 		finally
@@ -37,7 +37,7 @@ public class ResolverGetFileFromUrl extends Resolver
 	}
 
 	@Override
-	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(final Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		resolveAllChildren(c, parameters, dataStreams);
 		final int timeout = optAsInteger("timeout",30000, parameters);
@@ -49,7 +49,7 @@ public class ResolverGetFileFromUrl extends Resolver
 			{
 				try
 				{
-					File operate = operate(o.toString(),timeout);
+					File operate = operate(c,o.toString(),timeout);
 					if (operate != null)
 						results.add(operate);
 				}

@@ -8,6 +8,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.lang.util.EwCache;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
@@ -40,21 +41,21 @@ public class CruncherCache extends Cruncher
 			if (optAsBoolean("remove", false, c, parameters, dataStreams))
 			{
 				if (optAsBoolean("global", false, c, parameters, dataStreams))
-					Resolver.putCache(cacheName, null);
+					EwCache.getCache("GlobalCache").put(cacheName, null);
 				else
 					c.put(cacheName, null);
 			}
 			else
 			{
 				if (optAsBoolean("global", false, c, parameters, dataStreams))
-					result = Resolver.getCache(cacheName);
+					result = EwCache.getCache("GlobalCache").get(cacheName);
 				else
 					result = c.get(cacheName);
 				if (result == null)
 				{
 					result = getObj(c, parameters, dataStreams);
 					if (optAsBoolean("global", false, c, parameters, dataStreams))
-						Resolver.putCache(cacheName, result);
+						EwCache.getCache("GlobalCache").put(cacheName, result);
 					else
 						c.put(cacheName, result);
 				}

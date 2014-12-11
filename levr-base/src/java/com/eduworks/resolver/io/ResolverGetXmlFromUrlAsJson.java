@@ -47,12 +47,12 @@ public class ResolverGetXmlFromUrlAsJson extends Resolver
 				}
 				Object text;
 				if (optAsBoolean2)
-					text = operateArray(url, timeout);
+					text = operateArray(c,url, timeout);
 				else
-					text = operate(url, timeout);
+					text = operate(c,url, timeout);
 				if (text == null)
 					continue;
-				putCache(cacheKey, text);
+				putCache(c,cacheKey, text);
 				put(url, text);
 			}
 			catch (JSONException e)
@@ -65,22 +65,22 @@ public class ResolverGetXmlFromUrlAsJson extends Resolver
 	}
 
 
-	public static Object operate(String url, int timeout)
+	public static Object operate(Context c, String url, int timeout)
 	{
 		FileReader fileReader = null;
 		try
 		{
 			String cacheUrl = ResolverGetXmlFromUrlAsJson.class.getName() + ":" + url;
-			Object cacheResult = getCache(cacheUrl);
+			Object cacheResult = getCache(c,cacheUrl);
 			if (cacheResult != null)
 				return (JSONObject) cacheResult;
-			File f = ResolverGetFileFromUrl.operate(url, timeout);
+			File f = ResolverGetFileFromUrl.operate(c,url, timeout);
 
 			{
 				fileReader = new FileReader(f);
 				String string = IOUtils.toString(fileReader);
 				JSONObject result = XML.toJSONObject(string);
-				putCache(cacheUrl,result);
+				putCache(c,cacheUrl,result);
 				return result;
 			}
 		}
@@ -100,12 +100,12 @@ public class ResolverGetXmlFromUrlAsJson extends Resolver
 		}
 	}
 
-	public static JSONArray operateArray(String url, int timeout)
+	public static JSONArray operateArray(Context c,String url, int timeout)
 	{
 		FileReader fileReader = null;
 		try
 		{
-			File f = ResolverGetFileFromUrl.operate(url, timeout);
+			File f = ResolverGetFileFromUrl.operate(c,url, timeout);
 			fileReader = new FileReader(f);
 			return JSONML.toJSONArray(IOUtils.toString(fileReader));
 		}
