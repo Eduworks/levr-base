@@ -41,6 +41,7 @@ public class CruncherOntologyCreateDataProperty extends CruncherOntology
 			}
 			catch (ClosedException e)
 			{
+				c.remove(TDB_ONTOLOGY);
 				return resolve(c,parameters, dataStreams);
 			}
 

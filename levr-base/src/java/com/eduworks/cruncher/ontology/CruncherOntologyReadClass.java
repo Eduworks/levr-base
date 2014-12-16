@@ -29,7 +29,7 @@ public class CruncherOntologyReadClass extends CruncherOntology
 
 		Ontology o = null;
 		JSONObject jsonRepresentation = null;
-		Dataset tdbDataset = getDataSet(directory,ReadWrite.READ,c);
+		Dataset tdbDataset = getDataSet(directory, ReadWrite.READ, c);
 
 		try
 		{
@@ -38,7 +38,9 @@ public class CruncherOntologyReadClass extends CruncherOntology
 				o = getOntology(ontologyId, tdbDataset, c);
 			}
 			catch (ClosedException e)
-			{return resolve(c,parameters, dataStreams);
+			{
+				c.remove(TDB_ONTOLOGY);
+				return resolve(c, parameters, dataStreams);
 			}
 
 			jsonRepresentation = o.getClass(classId).getJSONRepresentation();

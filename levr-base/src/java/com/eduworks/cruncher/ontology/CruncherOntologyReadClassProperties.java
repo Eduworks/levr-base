@@ -37,7 +37,7 @@ public class CruncherOntologyReadClassProperties extends CruncherOntology
 
 		Ontology o = null;
 		JSONArray arr = new JSONArray();
-		Dataset tdbDataset = getDataSet(directory,ReadWrite.READ,c);
+		Dataset tdbDataset = getDataSet(directory, ReadWrite.READ, c);
 
 		try
 		{
@@ -46,7 +46,9 @@ public class CruncherOntologyReadClassProperties extends CruncherOntology
 				o = getOntology(ontologyId, tdbDataset, c);
 			}
 			catch (ClosedException e)
-			{return resolve(c,parameters, dataStreams);
+			{
+				c.remove(TDB_ONTOLOGY);
+				return resolve(c, parameters, dataStreams);
 			}
 
 			OntologyClass cls = o.getClass(classId);

@@ -31,7 +31,7 @@ public class CruncherOntologyUpdateInstance extends CruncherOntology
 		JSONObject vals = new JSONObject(Resolver.decodeValue(optAsString("vals", "{}", c, parameters, dataStreams)));
 
 		Ontology o = null;
-		Dataset tdbDataset = getDataSet(directory,ReadWrite.WRITE,c);
+		Dataset tdbDataset = getDataSet(directory, ReadWrite.WRITE, c);
 
 		try
 		{
@@ -40,7 +40,9 @@ public class CruncherOntologyUpdateInstance extends CruncherOntology
 				o = getOntology(ontologyId, tdbDataset, c);
 			}
 			catch (ClosedException e)
-			{return resolve(c,parameters, dataStreams);
+			{
+				c.remove(TDB_ONTOLOGY);
+				return resolve(c, parameters, dataStreams);
 			}
 
 			OntologyInstance ins = o.getInstance(instanceId, true);

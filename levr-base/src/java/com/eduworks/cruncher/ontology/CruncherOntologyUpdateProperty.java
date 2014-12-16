@@ -13,6 +13,7 @@ import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
+import com.hp.hpl.jena.shared.ClosedException;
 
 public class CruncherOntologyUpdateProperty extends CruncherOntology
 {
@@ -37,7 +38,15 @@ public class CruncherOntologyUpdateProperty extends CruncherOntology
 	
 		try
 		{
-			o = getOntology(ontologyId, tdbDataset, c);
+			try
+			{
+				o = getOntology(ontologyId, tdbDataset, c);
+			}
+			catch (ClosedException e)
+			{
+				c.remove(TDB_ONTOLOGY);
+				return resolve(c, parameters, dataStreams);
+			}
 
 			prop = o.getProperty(propertyId);
 

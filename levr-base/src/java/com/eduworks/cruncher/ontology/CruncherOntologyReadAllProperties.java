@@ -28,7 +28,7 @@ public class CruncherOntologyReadAllProperties extends CruncherOntology
 
 		Ontology o = null;
 		JSONObject allPropObj = new JSONObject();
-		Dataset tdbDataset = getDataSet(directory,ReadWrite.READ,c);
+		Dataset tdbDataset = getDataSet(directory, ReadWrite.READ, c);
 
 		try
 		{
@@ -37,7 +37,10 @@ public class CruncherOntologyReadAllProperties extends CruncherOntology
 				o = getOntology(ontologyId, tdbDataset, c);
 			}
 			catch (ClosedException e)
-			{return resolve(c,parameters, dataStreams);
+			{
+
+				c.remove(TDB_ONTOLOGY);
+				return resolve(c, parameters, dataStreams);
 			}
 
 			Map<String, OntologyProperty> allProps = o.getAllProperties();
