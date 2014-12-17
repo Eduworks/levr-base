@@ -19,7 +19,7 @@ public class CruncherDebug extends Cruncher
 		Object obj = getObj(c,parameters, dataStreams);
 		if (obj == null)
 			System.out.println("NULL");
-		if (obj instanceof JSONArray)
+		else if (obj instanceof JSONArray)
 			System.out.println(((JSONArray)obj).toString(5));
 		else if (obj instanceof JSONObject)
 			System.out.println(((JSONObject)obj).toString(5));
