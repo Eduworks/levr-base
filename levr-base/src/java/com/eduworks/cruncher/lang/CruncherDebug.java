@@ -17,6 +17,8 @@ public class CruncherDebug extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		Object obj = getObj(c,parameters, dataStreams);
+		if (obj == null)
+			System.out.println("NULL");
 		if (obj instanceof JSONArray)
 			System.out.println(((JSONArray)obj).toString(5));
 		else if (obj instanceof JSONObject)
