@@ -52,12 +52,15 @@ public abstract class CruncherOntology extends Cruncher {
 		{
 			if (trw == ReadWrite.WRITE)
 				d.commit();
+			d.end();
 			
 			Ontology o = (Ontology)c.get("tdbOntology");
 			o.getJenaModel().close();
 			
 			c.remove("tdbOntology");
 			c.remove("tdbOntologyId");
+			c.remove("tdbDataset");
+			c.remove("tdbReadWrite");
 			
 			d = null;
 		}
@@ -104,7 +107,9 @@ public abstract class CruncherOntology extends Cruncher {
 			@Override
 			public void go()
 			{
-				//e.close();
+				if (e.isInTransaction())
+					e.end();
+				e.close();
 			}
 		});
 		return e;

@@ -40,6 +40,7 @@ public class CruncherOntologyReadClassInstances extends CruncherOntology {
 			try{
 				o = getOntology(ontologyId, tdbDataset, c);
 			}catch(ClosedException e){
+				e.printStackTrace();
 				resolve(c,parameters, dataStreams);
 			}
 			
