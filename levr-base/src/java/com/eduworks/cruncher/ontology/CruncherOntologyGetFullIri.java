@@ -36,7 +36,6 @@ public class CruncherOntologyGetFullIri extends CruncherOntology {
 		try{
 			o = getOntology(ontologyId, tdbDataset, c);
 		}catch(ClosedException e){
-			c.remove(TDB_ONTOLOGY);
 			return resolve(c,parameters, dataStreams);
 		}
 		

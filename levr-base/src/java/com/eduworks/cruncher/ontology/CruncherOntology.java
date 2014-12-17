@@ -6,49 +6,40 @@ import com.eduworks.resolver.ContextEvent;
 import com.eduworks.resolver.Cruncher;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
-import com.hp.hpl.jena.tdb.TDB;
 
-public abstract class CruncherOntology extends Cruncher
-{
+public abstract class CruncherOntology extends Cruncher {
 
-	protected static final String TDB_ONTOLOGY = "tdbOntology";
 	static ReadWrite lastRW;
-
+	
 	static synchronized Ontology getOntology(String ontologyId, Dataset tdbDataset, Context c)
 	{
 		Ontology o = null;
 		String cId = (String) c.get("tdbOntologyId");
-
-		o = (Ontology) c.get(TDB_ONTOLOGY);
-		if (cId != null && cId.equals(ontologyId))
-		{
-			if (o != null && !o.getJenaModel().isClosed())
-			{
+		
+		o = (Ontology) c.get("tdbOntology");
+		if(cId != null && cId.equals(ontologyId)){
+			if (o != null && !o.getJenaModel().isClosed()){
 				return o;
 			}
 		}
-
+		
 		o = Ontology.loadOntology(tdbDataset, ontologyId);
-
+	
 		c.put("tdbOntologyId", ontologyId);
-		c.put(TDB_ONTOLOGY, o);
-
+		c.put("tdbOntology", o);
+		
 		final Ontology ont = o;
-
-		if (lastRW == ReadWrite.WRITE)
+		
+		if(lastRW == ReadWrite.WRITE)
 			c.onFinally(new ContextEvent()
 			{
 				@Override
 				public void go()
 				{
-					synchronized (ont)
-					{
-						if (!ont.getJenaModel().isClosed())
-							ont.getJenaModel().close();
-					}
+					ont.getJenaModel().close();
 				}
 			});
-
+		
 		return o;
 	}
 
@@ -61,34 +52,32 @@ public abstract class CruncherOntology extends Cruncher
 		{
 			if (trw == ReadWrite.WRITE)
 				d.commit();
-			d.end();
-
-			c.remove(TDB_ONTOLOGY);
+			
+			Ontology o = (Ontology)c.get("tdbOntology");
+			o.getJenaModel().close();
+			
+			c.remove("tdbOntology");
 			c.remove("tdbOntologyId");
 			
-			Ontology o = (Ontology) c.get(TDB_ONTOLOGY);
-
 			d = null;
 		}
-		if (d != null)
-		{
-			if (!d.isInTransaction())
-			{
+		if (d != null){
+			if(!d.isInTransaction()){
 				d.begin(rw);
 				lastRW = rw;
 			}
-
+			
 			return d;
 		}
-
+			
 		d = Ontology.setTDBLocation(directory);
 		d.begin(rw);
 		lastRW = rw;
-
+		
 		final Dataset e = d;
 		c.put("tdbDataset", d);
 		c.put("tdbReadWrite", rw);
-
+	
 		if (rw == ReadWrite.WRITE)
 			c.onSuccess(new ContextEvent()
 			{
@@ -110,16 +99,14 @@ public abstract class CruncherOntology extends Cruncher
 				}
 			});
 		if (rw == ReadWrite.WRITE)
-			c.onFinally(new ContextEvent()
+		c.onFinally(new ContextEvent()
+		{
+			@Override
+			public void go()
 			{
-				@Override
-				public void go()
-				{
-					if (e.isInTransaction())
-						e.end();
-					e.close();
-				}
-			});
+				//e.close();
+			}
+		});
 		return e;
 	}
 
