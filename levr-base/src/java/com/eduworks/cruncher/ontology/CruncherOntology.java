@@ -66,6 +66,7 @@ public abstract class CruncherOntology extends Cruncher {
 			if(!d.isInTransaction()){
 				d.begin(rw);
 				lastRW = rw;
+				c.put("tdbReadWrite", rw);
 			}
 			
 			return d;
