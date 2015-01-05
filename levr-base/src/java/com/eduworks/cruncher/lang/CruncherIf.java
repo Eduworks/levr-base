@@ -136,7 +136,7 @@ public class CruncherIf extends Cruncher
 	{
 		return "Provides branching functionality. Will return one or more of possible branches of the following types if the condition is true, comparing operator and operand\n" +
 				"eq - Equals, ne - Not Equal, eqi - Equals (ignore Case), nei - Not Equal (ignore Case), lt - Less Than,\n" +
-				"gt - Greater Than, le - Less Than or Equal, gt - Greater Than or Equal, else - None executed.";
+				"gt - Greater Than, le - Less Than or Equal, ge - Greater Than or Equal, else - None executed.";
 	}
 
 	@Override
