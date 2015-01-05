@@ -6,6 +6,7 @@ import com.eduworks.resolver.ContextEvent;
 import com.eduworks.resolver.Cruncher;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
+import com.hp.hpl.jena.tdb.TDB;
 
 public abstract class CruncherOntology extends Cruncher {
 
@@ -52,10 +53,11 @@ public abstract class CruncherOntology extends Cruncher {
 		{
 			if (trw == ReadWrite.WRITE)
 				d.commit();
-//			d.end();
 			
-//			Ontology o = (Ontology)c.get("tdbOntology");
-//			o.getJenaModel().close();
+			Ontology o = (Ontology)c.get("tdbOntology");
+			
+			if(o != null)
+			o.getJenaModel().close();
 			
 			c.remove("tdbOntology");
 			c.remove("tdbOntologyId");
@@ -100,16 +102,15 @@ public abstract class CruncherOntology extends Cruncher {
 						e.abort();
 				}
 			});
-		c.onFinally(new ContextEvent()
-		{
-			@Override
-			public void go()
+		if (rw == ReadWrite.WRITE)
+			c.onFinally(new ContextEvent()
 			{
-				if (e.isInTransaction())
-					e.end();
-				e.close();
-			}
-		});
+				@Override
+				public void go()
+				{
+				//e.close();
+				}
+			});
 		return e;
 	}
 
