@@ -3,9 +3,11 @@ package com.eduworks.cruncher.file;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.SerializationUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,12 +22,13 @@ public class CruncherFileSave extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		String path = getAsString("path", c, parameters, dataStreams);
-		if (path.contains("..")) throw new RuntimeException("Cannot go up in filesystem.");
+		if (path.contains(".."))
+			throw new RuntimeException("Cannot go up in filesystem.");
 		File f = new File(path);
 		Object o = getObj(c, parameters, dataStreams);
 		try
 		{
-			if (optAsBoolean("overwrite",true,c,parameters, dataStreams) || f.exists() == false)
+			if (optAsBoolean("overwrite", true, c, parameters, dataStreams) || f.exists() == false)
 			{
 				if (o instanceof InMemoryFile)
 				{
@@ -37,6 +40,10 @@ public class CruncherFileSave extends Cruncher
 				else if (o instanceof String)
 				{
 					FileUtils.writeStringToFile(f, o.toString());
+				}
+				else
+				{
+					FileUtils.writeByteArrayToFile(f, SerializationUtils.serialize((Serializable) o));
 				}
 			}
 		}
@@ -68,7 +75,7 @@ public class CruncherFileSave extends Cruncher
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("obj","InMemoryFile|String","path","String");
+		return jo("obj", "InMemoryFile|String", "path", "String");
 	}
 
 }

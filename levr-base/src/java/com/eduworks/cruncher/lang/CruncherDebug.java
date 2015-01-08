@@ -16,15 +16,22 @@ public class CruncherDebug extends Cruncher
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		Object obj = getObj(c,parameters, dataStreams);
-		if (obj == null)
-			System.out.println("NULL");
-		else if (obj instanceof JSONArray)
-			System.out.println(((JSONArray)obj).toString(5));
-		else if (obj instanceof JSONObject)
-			System.out.println(((JSONObject)obj).toString(5));
-		else
-			System.out.println(obj.toString());
+		Object obj = getObj(c, parameters, dataStreams);
+		try
+		{
+			if (obj == null)
+				System.out.println("NULL");
+			else if (obj instanceof JSONArray)
+				System.out.println(((JSONArray) obj).toString(5));
+			else if (obj instanceof JSONObject)
+				System.out.println(((JSONObject) obj).toString(5));
+			else
+				System.out.println(obj.toString());
+		}
+		catch (Throwable t)
+		{
+
+		}
 		return obj;
 	}
 
@@ -49,7 +56,7 @@ public class CruncherDebug extends Cruncher
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("obj","Object");
+		return jo("obj", "Object");
 	}
 
 }

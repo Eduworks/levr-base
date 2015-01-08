@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.string.ResolverString;
@@ -25,4 +26,27 @@ public class ResolverError extends ResolverString
 		throw new RuntimeException(format(message, parameters, msgKey));
 	}
 
+	@Override
+	public String getDescription()
+	{
+		return "Throws an error";
+	}
+
+	@Override
+	public String getReturn()
+	{
+		return "String";
+	}
+
+	@Override
+	public String getAttribution()
+	{
+		return ATTRIB_NONE;
+	}
+
+	@Override
+	public JSONObject getParameters() throws JSONException
+	{
+		return jo("msg","String","?<any>","String|Number");
+	}
 }
