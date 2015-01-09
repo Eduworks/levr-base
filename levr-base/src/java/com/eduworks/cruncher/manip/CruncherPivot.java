@@ -34,7 +34,7 @@ public class CruncherPivot extends Cruncher
 				array = new JSONArray(new Object[] { obj.get(key) });
 			for (int i = 0; i < array.length(); i++)
 			{
-				String element = array.getString(i);
+				String element = array.get(i).toString();
 				result.append(element, key);
 			}
 		}
