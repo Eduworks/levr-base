@@ -3,6 +3,7 @@
   </description>
 
 	<property name="levr.base.name" value="levr-base" />
+	<property name="levr.scripts.dir" value="../levr-scripts" />
 	<property name="levr.base.build.dir" value="../levr-base/web/WEB-INF/classes" />
 	<property name="levr.base.src" value="../levr-base/src/java" />
 	<property name="levr.base.base.src" value="../levr-base-base/src/java" />
@@ -29,6 +30,16 @@
 		</copy>
 		<copy todir="${levr.base.etc}">
 			<fileset dir="${levr.base.src}">
+				<include name="*.json" />
+				<include name="*.rsl" />
+				<include name="*.rs2" />
+				<include name="**/*.json" />
+				<include name="**/*.rsl" />
+				<include name="**/*.rs2" />
+			</fileset>
+		</copy>
+		<copy todir="${levr.base.etc}">
+			<fileset dir="${levr.scripts.dir}">
 				<include name="*.json" />
 				<include name="*.rsl" />
 				<include name="*.rs2" />
