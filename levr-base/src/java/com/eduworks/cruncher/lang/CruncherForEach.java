@@ -176,7 +176,7 @@ public class CruncherForEach extends Cruncher
 		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", c, parameters, dataStreams));
 		for (int i = 0; i < json.length() && (cap == -1 || output.length() < cap); i++)
 		{
-			final String key = json.getString(i);
+			final String key = json.get(i).toString();
 			final Object value = json.get(i);
 			final String prevIdFinal = prevId;
 			final int index = i;
