@@ -19,6 +19,7 @@ public class CruncherUnion extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		EwList<Object> ja = new EwList<Object>(getObjAsJsonArray(c, parameters, dataStreams));
+		Boolean accumulate = optAsBoolean("accumulate", true, c, parameters, dataStreams);
 		JSONObject jo = new JSONObject();
 		if (keySet().size() == 1)
 		{
@@ -29,7 +30,10 @@ public class CruncherUnion extends Cruncher
 					results=results.union(new EwList<Object>(o));
 				else if (o instanceof JSONObject)
 					for (String key : EwJson.getKeys((JSONObject)o))
+						if (accumulate)
 						jo.accumulate(key, ((JSONObject)o).get(key));
+						else
+							jo.put(key, ((JSONObject)o).get(key));
 				else
 					if (!results.contains(o))
 						results.add(o);

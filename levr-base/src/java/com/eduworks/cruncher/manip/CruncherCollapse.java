@@ -21,6 +21,7 @@ public class CruncherCollapse extends Cruncher
 
 		String key = getAsString("keyKey", c, parameters, dataStreams);
 		String value = getAsString("valueKey", c, parameters, dataStreams);
+		Boolean accumulate = optAsBoolean("accumulate", true, c, parameters, dataStreams);
 
 		JSONObject result = new JSONObject();
 		if (obj == null)
@@ -39,11 +40,17 @@ public class CruncherCollapse extends Cruncher
 				{
 					if (!jo.isNull(value) && jo.get(value) != null)
 						if (!jo.isNull(key) && jo.get(key) != null)
-						result.accumulate(jo.getString(key), jo.get(value));
+							if (accumulate)
+								result.accumulate(jo.getString(key), jo.get(value));
+							else
+								result.put(jo.getString(key), jo.get(value));
 				}
 				else
 				{
-					result.accumulate(jo.getString(key), jo);
+					if (accumulate)
+						result.accumulate(jo.getString(key), jo);
+					else
+						result.put(jo.getString(key), jo);
 					jo.remove(key);
 				}
 			}
@@ -60,11 +67,17 @@ public class CruncherCollapse extends Cruncher
 				{
 					if (!jo2.isNull(value) && jo2.get(value) != null)
 						if (!jo2.isNull(key) && jo2.get(key) != null)
-						result.accumulate(jo2.getString(key), jo2.get(value));
+							if (accumulate)
+								result.accumulate(jo2.getString(key), jo2.get(value));
+							else
+								result.put(jo2.getString(key), jo2.get(value));
 				}
 				else
 				{
-					result.accumulate(jo2.getString(key), jo2);
+					if (accumulate)
+						result.accumulate(jo2.getString(key), jo2);
+					else
+						result.put(jo2.getString(key), jo2);
 					jo2.remove(key);
 				}
 			}
