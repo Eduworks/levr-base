@@ -2,19 +2,16 @@ package com.eduworks.cruncher.file;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.SerializationUtils;
+import org.apache.jena.atlas.json.JsonArray;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.eduworks.util.io.InMemoryFile;
 
-public class CruncherFileLoad extends Cruncher
+public class CruncherFileList extends Cruncher
 {
 	public Object resolve(Context c, java.util.Map<String, String[]> parameters, java.util.Map<String, java.io.InputStream> dataStreams)
 			throws org.json.JSONException
@@ -23,26 +20,19 @@ public class CruncherFileLoad extends Cruncher
 		if (path.contains(".."))
 			throw new RuntimeException("Cannot go up in filesystem.");
 		File f = new File(path);
-		try
-		{
-			InMemoryFile imf = new InMemoryFile(f);
-			if (optAsBoolean("text", false, c, parameters, dataStreams))
-				return IOUtils.toString(imf.getInputStream());
-			return imf;
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-
+		JSONArray paths = new JSONArray();
+		File dir = new File(path);
+		if (dir.isDirectory() == false)
+			throw new RuntimeException("Path does not refer to a directory.");
+		for (String s : dir.list())
+			paths.put(s);
+		return paths;
 	}
 
 	@Override
 	public String getDescription()
 	{
-		return "Loads a file in the filesystem.";
+		return "Returns paths to all files referred to by path.";
 	}
 
 	@Override

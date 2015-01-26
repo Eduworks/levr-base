@@ -51,7 +51,7 @@ public class CruncherFileSave extends Cruncher
 		{
 			e.printStackTrace();
 		}
-		return null;
+		return o;
 	}
 
 	@Override
