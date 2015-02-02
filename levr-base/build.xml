@@ -93,7 +93,7 @@
 			</fileset>
 		</path>
 	    
-		<javac srcdir="${levr.base.src}" destdir="${levr.base.build.dir}" debug="${compile.debug}" source="1.5" classpathref="levr-base-classpath" />
+		<javac srcdir="${levr.base.src}" destdir="${levr.base.build.dir}" debug="true" source="1.5" classpathref="levr-base-classpath" />
 		<copy todir="${levr.base.build.dir}">
 			<fileset dir="${levr.base.src}">
 				<include name="*.xml" />
