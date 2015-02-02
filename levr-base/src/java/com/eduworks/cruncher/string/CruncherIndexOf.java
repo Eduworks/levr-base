@@ -23,13 +23,13 @@ public class CruncherIndexOf extends Cruncher
 	   @Override
 	   public String getDescription()
 	   {
-	      return "Returns true if string1 ends with string2.  Returns false otherwise.";
+	      return "Returns the index of the where the first character in substr appears in str, or -1 if it doesn't substr is not in str";
 	   }
 
 	   @Override
 	   public String getReturn()
 	   {
-	      return "boolean";
+	      return "int";
 	   }
 
 	   @Override
@@ -41,7 +41,7 @@ public class CruncherIndexOf extends Cruncher
 	   @Override
 	   public JSONObject getParameters() throws JSONException
 	   {
-	      return jo("string1","String","string2","String");
+	      return jo("str","String","substr","String");
 	   }
 
 }
