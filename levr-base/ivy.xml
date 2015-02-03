@@ -7,6 +7,7 @@
    <extends organisation="com.eduworks" module="levr-core" revision="latest.integration" location="../levr-core/ivy.xml" extendType="configurations,dependencies"/>
   </info>
   <dependencies>
+  	<dependency org="joda-time" name="joda-time" rev="2.3"/>
   	<dependency org="org.mozilla" name="rhino" rev="1.7R4"/>
 	<dependency org="org.python" name="jython" rev="2.7-b1"/>
   	<dependency org="oauth.signpost" name="signpost-core" rev="1.2.1.1"/>

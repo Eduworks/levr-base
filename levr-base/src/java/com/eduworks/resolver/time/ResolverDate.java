@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,10 +21,14 @@ public class ResolverDate extends Resolver
 	{
 		resolveAllChildren(c, parameters, dataStreams);
 		Calendar d = Calendar.getInstance();
+		String dateFormat = getAsString("dateFormat",parameters);
 		if (opt("input") != null)
 			try
 			{
-				d.setTimeInMillis(new SimpleDateFormat(getAsString("dateFormat",parameters)).parse(getAsString("input", parameters)).getTime());
+				if (dateFormat == null)
+					d.setTimeInMillis(DateTime.parse(getAsString("input", parameters)).getMillis());
+				else
+					d.setTimeInMillis(new SimpleDateFormat(dateFormat).parse(getAsString("input", parameters)).getTime());
 			}
 			catch (ParseException e)
 			{
@@ -45,7 +50,7 @@ public class ResolverDate extends Resolver
 			return d.get(Calendar.DAY_OF_WEEK);
 		else if (optAsBoolean("timeOfDay", false, parameters))
 			return Integer.parseInt(String.valueOf(((d.get(Calendar.HOUR_OF_DAY)==0)?12:d.get(Calendar.HOUR_OF_DAY)) + String.valueOf(d.get(Calendar.MINUTE))));
-		return new SimpleDateFormat(getAsString("dateFormat",parameters)).format(d.getTime());
+		return new SimpleDateFormat(dateFormat).format(d.getTime());
 	}
 
 	@Override
