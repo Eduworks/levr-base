@@ -25,7 +25,7 @@ public class ResolverDate extends Resolver
 		if (opt("input") != null)
 			try
 			{
-				if (dateFormat == null)
+				if (dateFormat == null || dateFormat.isEmpty())
 					d.setTimeInMillis(DateTime.parse(getAsString("input", parameters)).getMillis());
 				else
 					d.setTimeInMillis(new SimpleDateFormat(dateFormat).parse(getAsString("input", parameters)).getTime());
