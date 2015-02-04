@@ -32,7 +32,6 @@ public class ResolverDate extends Resolver
 			}
 			catch (ParseException e)
 			{
-				e.printStackTrace();
 			}
 		else if (opt("inputMillis") != null)
 			d.setTimeInMillis(Long.parseLong(getAsString("inputMillis", parameters)));
