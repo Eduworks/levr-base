@@ -1,15 +1,19 @@
 package com.eduworks.cruncher.file;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONWriter;
+import org.python.antlr.PythonParser.or_test_return;
 
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
@@ -43,7 +47,15 @@ public class CruncherFileSave extends Cruncher
 				}
 				else
 				{
-					FileUtils.writeByteArrayToFile(f, SerializationUtils.serialize((Serializable) o));
+					FileOutputStream openOutputStream = FileUtils.openOutputStream(f);
+					try
+					{
+						SerializationUtils.serialize((Serializable) o, openOutputStream);
+					}
+					finally
+					{
+						IOUtils.closeQuietly(openOutputStream);
+					}
 				}
 			}
 		}

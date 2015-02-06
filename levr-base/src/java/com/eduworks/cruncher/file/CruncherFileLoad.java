@@ -23,6 +23,8 @@ public class CruncherFileLoad extends Cruncher
 		if (path.contains(".."))
 			throw new RuntimeException("Cannot go up in filesystem.");
 		File f = new File(path);
+		if (optAsBoolean("file",false,c,parameters,dataStreams))
+			return f;
 		try
 		{
 			InMemoryFile imf = new InMemoryFile(f);
