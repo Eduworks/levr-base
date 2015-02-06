@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.lang.json.impl.EwJsonArray;
 import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
@@ -36,12 +37,16 @@ public class CruncherSolrAddDocument extends Cruncher
 		
 		Collection<SolrInputDocument> documentSet = new ArrayList<SolrInputDocument>();
 		SolrInputDocument document;
+		Object docValue;
 		for (int rawDocumentIndex = 0; rawDocumentIndex < rawDocuments.length(); rawDocumentIndex++) {
 			document = new SolrInputDocument();
 			JSONObject currentRawDocument = (JSONObject) EwJson.tryParseJson(rawDocuments.get(rawDocumentIndex), false);
 			for (Iterator<String> rawDocumentKeys = currentRawDocument.keys(); rawDocumentKeys.hasNext();) {
 				String rawDocumentKey = rawDocumentKeys.next();
-				document.setField(rawDocumentKey, currentRawDocument.get(rawDocumentKey));
+				docValue = currentRawDocument.get(rawDocumentKey);
+				//T. Buskirk: added check here for mutlivalued fields...otherwise arrays are just getting inserted as strings.  2/6/2015
+				if (docValue instanceof EwJsonArray) setMutlivaluedField(document,rawDocumentKey,(EwJsonArray)docValue);
+				else document.setField(rawDocumentKey,docValue);
 			}
 			documentSet.add(document);
 		}
@@ -60,6 +65,12 @@ public class CruncherSolrAddDocument extends Cruncher
 		}
 		
 		return documentSet.size();
+	}
+	
+	private void setMutlivaluedField(SolrInputDocument document, String docKey, EwJsonArray ja) {
+	   if (ja.length() <= 0) return;
+	   document.setField(docKey,ja.get(0));
+	   for (int i=1;i<ja.length();i++) document.addField(docKey,ja.get(i));
 	}
 	
 	@Override
