@@ -51,10 +51,20 @@ public class CruncherPivotOrdered extends Cruncher
 		{
 			EwList<Tuple<String,Double>> scores = wses.get(topic);
 			Collections.sort(scores);
+			if (optAsBoolean("includeScores",false,c,parameters,dataStreams))
+			{
+				JSONObject jas = new JSONObject();
+				for (Tuple<String,Double> ws : scores.first(limit))
+					jas.put(ws.getFirst(),ws.getSecond());
+				result.put(topic, jas);
+			}
+			else
+			{
 			JSONArray jas = new JSONArray();
 			for (Tuple<String,Double> ws : scores.first(limit))
 				jas.put(ws.getFirst());
 			result.put(topic, jas);
+			}
 		}
 		return result;
 	}
