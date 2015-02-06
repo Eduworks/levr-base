@@ -67,7 +67,7 @@ public class CruncherSolrAddDocument extends Cruncher
 		return documentSet.size();
 	}
 	
-	private void setMutlivaluedField(SolrInputDocument document, String docKey, EwJsonArray ja) {
+	private void setMutlivaluedField(SolrInputDocument document, String docKey, EwJsonArray ja) throws JSONException {
 	   if (ja.length() <= 0) return;
 	   document.setField(docKey,ja.get(0));
 	   for (int i=1;i<ja.length();i++) document.addField(docKey,ja.get(i));
