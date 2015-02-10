@@ -99,6 +99,7 @@ public class ResolverDisplayJson extends Resolver
 
 			for (int i = 0; i < jo.length(); i++)
 			{
+				if (jo.isNull(i)) continue;
 				Object object = jo.get(i);
 				Object repl = dismantleInfiniteLoops(object);
 				if (repl != null)
