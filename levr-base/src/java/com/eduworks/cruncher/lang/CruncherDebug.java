@@ -22,11 +22,11 @@ public class CruncherDebug extends Cruncher
 			if (obj == null)
 				System.out.println("NULL");
 			else if (obj instanceof JSONArray)
-				System.out.println(((JSONArray) obj).toString(5));
+				System.out.println(((JSONArray) obj).toString(5) + obj.getClass().getSimpleName());
 			else if (obj instanceof JSONObject)
-				System.out.println(((JSONObject) obj).toString(5));
+				System.out.println(((JSONObject) obj).toString(5) + obj.getClass().getSimpleName());
 			else
-				System.out.println(obj.toString());
+				System.out.println(obj.toString() + obj.getClass().getSimpleName());
 		}
 		catch (Throwable t)
 		{

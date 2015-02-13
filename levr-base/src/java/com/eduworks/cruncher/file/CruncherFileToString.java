@@ -1,4 +1,4 @@
-package com.eduworks.resolver.file;
+package com.eduworks.cruncher.file;
 
 import java.io.IOException;
 import java.io.InputStream;

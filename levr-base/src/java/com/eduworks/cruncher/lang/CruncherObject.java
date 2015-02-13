@@ -18,10 +18,10 @@ public class CruncherObject extends Cruncher
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		JSONObject result = new EwJsonObject();
+		JSONObject result = new JSONObject();
 		Iterator<String> keySet = sortedKeys();
-		if (optAsBoolean("_ordered",false,c,parameters, dataStreams))
-			keySet = keySet().iterator();
+//		if (optAsBoolean("_ordered",false,c,parameters, dataStreams))
+//			keySet = sortedKeys();
 
 		while (keySet.hasNext())
 		{

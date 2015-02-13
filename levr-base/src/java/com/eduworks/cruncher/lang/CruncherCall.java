@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import com.eduworks.lang.EwMap;
 import com.eduworks.lang.util.EwCache;
+import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
@@ -31,8 +32,18 @@ public class CruncherCall extends Cruncher
 				EwCache.getCache("callCache").put(valueString, value);
 				newParams.put(key, new String[] { valueString });
 			}
-			else
+		}
+		JSONObject paramsObject = getAsJsonObject("_params", c, parameters, dataStreams);
+		if (paramsObject != null)
+		for (String key : EwJson.getKeys(paramsObject))
+		{
+			Object value;
+			value = paramsObject.get(key);
+			if (value != null)
 			{
+				String valueString = value.toString();
+				EwCache.getCache("callCache").put(valueString, value);
+				newParams.put(key, new String[] { valueString });
 			}
 		}
 		Object result = resolveAChild("obj", c,newParams, dataStreams);
