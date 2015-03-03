@@ -6,6 +6,7 @@
   <display-name>Resolver Servlet</display-name>
   <servlet-name>resolver</servlet-name>
   <servlet-class>com.eduworks.levr.servlet.impl.LevrResolverServlet</servlet-class>
+  <load-on-startup>5</load-on-startup>
  </servlet>
  <servlet-mapping>
   <servlet-name>resolver</servlet-name>
