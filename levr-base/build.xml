@@ -68,6 +68,7 @@
 		<mkdir dir="${levr.base.build.dir}" />
 		<mkdir dir="${levr.base.dist}" />
 		<mkdir dir="web/WEB-INF/classes" />
+		<copy file="web/WEB-INF/logback.xml" todir="web/WEB-INF/classes"/>
 		<mkdir dir="web/WEB-INF/lib" />
 	</target>
 
