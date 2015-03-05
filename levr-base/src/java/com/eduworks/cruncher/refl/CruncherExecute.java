@@ -41,8 +41,9 @@ public class CruncherExecute extends Cruncher
 				JSONObject paramObj = getAsJsonObject(key, c, parameters, dataStreams);
 				
 				for(String paramName : EwJson.getKeys(paramObj)){
+					
 					if(!parameterMap.containsKey(paramName)){
-						parameterMap.put(paramName, new String[] { paramObj.getString(paramName) });
+							parameterMap.put(paramName, new String[] { paramObj.get(paramName).toString() });
 					}
 				}
 			}
