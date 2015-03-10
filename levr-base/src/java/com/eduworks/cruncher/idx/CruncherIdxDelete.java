@@ -2,10 +2,14 @@ package com.eduworks.cruncher.idx;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.NavigableSet;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mapdb.Fun;
 
+import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
@@ -21,13 +25,31 @@ public class CruncherIdxDelete extends Cruncher
 		boolean optCommit = optAsBoolean("_commit", true, c, parameters, dataStreams);
 		String index = Resolver.decodeValue(getAsString("index", c, parameters, dataStreams));
 		String key = getAsString("key", c, parameters, dataStreams);
+		Object value = get("value", c, parameters, dataStreams);
 		EwDB ewDB = null;
 		try
 		{
 			ewDB = EwDB.get(_databasePath, _databaseName);
 
 			ewDB.compact = true;
-			return ewDB.db.getHashMap(index).remove(key);
+			
+			if (optAsString("multi", "false", c, parameters, dataStreams).equals("false")){
+				return ewDB.db.getHashMap(index).remove(key);
+			}else{
+				NavigableSet<Fun.Tuple2<String, Object>> multiMap = ewDB.db.getTreeSet(index);
+				
+				if(multiMap.remove(Fun.t2(key, value.toString())))
+					ewDB.writeCount.decrementAndGet();
+				
+				JSONArray ja = new JSONArray();
+				for (Object l : Fun.filter(multiMap, key))
+				{
+					ja.put(EwJson.tryParseJson(l,false));
+				}
+				if (ja.length() > 0)
+					return ja;
+				return null;
+			}
 		}
 		finally
 		{
