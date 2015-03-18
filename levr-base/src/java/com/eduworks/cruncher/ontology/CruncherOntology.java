@@ -51,13 +51,9 @@ public abstract class CruncherOntology extends Cruncher {
 		ReadWrite trw = (ReadWrite) c.get("tdbReadWrite");
 		if (d != null && trw != null && trw.equals(rw) == false)
 		{
-			if (trw == ReadWrite.WRITE)
+			if (trw == ReadWrite.WRITE && d.isInTransaction())
 				d.commit();
 			
-			Ontology o = (Ontology)c.get("tdbOntology");
-			
-			if(o != null)
-			o.getJenaModel().close();
 			
 			c.remove("tdbOntology");
 			c.remove("tdbOntologyId");

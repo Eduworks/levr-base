@@ -59,6 +59,8 @@ public class CruncherOntologyCreateInstance extends CruncherOntology
 		}
 		finally
 		{
+			tdbDataset.commit();
+			
 			if (o != null)
 				o.close(false);
 		}

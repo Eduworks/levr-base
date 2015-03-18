@@ -1,6 +1,7 @@
 package com.eduworks.cruncher.ontology;
 
 import java.io.InputStream;
+import java.util.ConcurrentModificationException;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -41,7 +42,7 @@ public class CruncherOntologyReadClassInstances extends CruncherOntology {
 				o = getOntology(ontologyId, tdbDataset, c);
 			}catch(ClosedException e){
 				e.printStackTrace();
-				resolve(c,parameters, dataStreams);
+				return resolve(c,parameters, dataStreams);
 			}
 			
 			OntologyClass cls = o.getClass(classId);
@@ -57,6 +58,10 @@ public class CruncherOntologyReadClassInstances extends CruncherOntology {
 					all.put(k, instances.get(k).getJSONRepresentation());
 				}
 			}
+		}
+		catch(ConcurrentModificationException e){
+			e.printStackTrace();
+			return resolve(c, parameters, dataStreams);
 		}
 		finally
 		{
