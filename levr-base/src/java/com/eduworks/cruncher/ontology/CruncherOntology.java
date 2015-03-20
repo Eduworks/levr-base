@@ -29,18 +29,6 @@ public abstract class CruncherOntology extends Cruncher {
 		c.put("tdbOntologyId", ontologyId);
 		c.put("tdbOntology", o);
 		
-		final Ontology ont = o;
-		
-		if(lastRW == ReadWrite.WRITE)
-			c.onFinally(new ContextEvent()
-			{
-				@Override
-				public void go()
-				{
-					ont.getJenaModel().close();
-				}
-			});
-		
 		return o;
 	}
 
@@ -51,9 +39,10 @@ public abstract class CruncherOntology extends Cruncher {
 		ReadWrite trw = (ReadWrite) c.get("tdbReadWrite");
 		if (d != null && trw != null && trw.equals(rw) == false)
 		{
-			if (trw == ReadWrite.WRITE && d.isInTransaction())
+			if (trw == ReadWrite.WRITE && d.isInTransaction()){
 				d.commit();
-			
+				d.end();
+			}
 			
 			c.remove("tdbOntology");
 			c.remove("tdbOntologyId");
@@ -84,8 +73,10 @@ public abstract class CruncherOntology extends Cruncher {
 				@Override
 				public void go()
 				{
-					if (e.isInTransaction())
+					if (e.isInTransaction()){
 						e.commit();
+						e.end();
+					}
 				}
 			});
 		if (rw == ReadWrite.WRITE)
