@@ -22,6 +22,8 @@ public class CruncherRemoveFromArray extends Cruncher
       JSONArray ja = (JSONArray) obj;
       EwJsonArray returnArray = new EwJsonArray();
       String item = getAsString("item", c, parameters, dataStreams);
+      if (item == null)
+    	  item = getAsString("remove", c, parameters, dataStreams);
       for (int i=0; i < ja.length(); i++) 
       {
          if (!ja.get(i).equals(item)) returnArray.put(ja.get(i));

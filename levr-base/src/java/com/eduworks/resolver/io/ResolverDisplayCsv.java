@@ -67,7 +67,7 @@ public class ResolverDisplayCsv extends Resolver
 	private void listCentricAccumulate(Map<String, String[]> parameters, StringBuilder accmData, JSONObject a)
 			throws JSONException
 	{
-		List<String> indexKeys = EwJson.getKeysUnsorted(a);
+		List<String> indexKeys = EwJson.getKeys(a);
 		for (String key : indexKeys)
 		{
 			JSONArray ja = null;

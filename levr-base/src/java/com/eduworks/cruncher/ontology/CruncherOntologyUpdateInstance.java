@@ -41,6 +41,7 @@ public class CruncherOntologyUpdateInstance extends CruncherOntology
 			}
 			catch (ClosedException e)
 			{
+				clearContextData(c);
 				return resolve(c, parameters, dataStreams);
 			}
 

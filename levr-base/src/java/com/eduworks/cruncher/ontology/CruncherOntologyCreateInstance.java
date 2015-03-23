@@ -42,7 +42,7 @@ public class CruncherOntologyCreateInstance extends CruncherOntology
 			}
 			catch (ClosedException e)
 			{
-				e.printStackTrace();
+				clearContextData(c);
 				return resolve(c,parameters, dataStreams);
 			}
 

@@ -42,6 +42,7 @@ public class CruncherOntologyGetShortestPath extends CruncherOntology {
 			try{
 				o = getOntology(ontologyId, tdbDataset, c);
 			}catch(ClosedException e){
+				clearContextData(c);
 				return resolve(c,parameters, dataStreams);
 			}
 			

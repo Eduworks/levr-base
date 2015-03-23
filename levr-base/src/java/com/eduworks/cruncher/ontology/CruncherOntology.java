@@ -6,6 +6,7 @@ import com.eduworks.resolver.ContextEvent;
 import com.eduworks.resolver.Cruncher;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
+import com.hp.hpl.jena.shared.ClosedException;
 import com.hp.hpl.jena.tdb.TDB;
 
 public abstract class CruncherOntology extends Cruncher {
@@ -44,6 +45,39 @@ public abstract class CruncherOntology extends Cruncher {
 		return o;
 	}
 
+	static synchronized void clearContextData(Context c)
+	{
+		if (c.get("tdbOntology") != null)
+		{
+			Ontology o = null;
+			String cId = (String) c.get("tdbOntologyId");
+			
+			o = (Ontology) c.get("tdbOntology");
+			o.close(false);
+		}
+		c.remove("tdbOntology");
+		c.remove("tdbOntologyId");
+		
+		if (c.get("tdbDataset") != null)
+			try
+			{
+				Dataset d = null;
+				d = (Dataset) c.get("tdbDataset");
+				ReadWrite trw = (ReadWrite) c.get("tdbReadWrite");
+				if (trw == ReadWrite.WRITE && d.isInTransaction()){
+					d.commit();
+					d.end();
+				}
+				d.close();			
+			}
+			catch (ClosedException ex)
+			{
+				ex.printStackTrace();
+			}
+		c.remove("tdbDataset");
+		c.remove("tdbReadWrite");
+	}
+	
 	static synchronized Dataset getDataSet(String directory, ReadWrite rw, Context c)
 	{
 		Dataset d = null;

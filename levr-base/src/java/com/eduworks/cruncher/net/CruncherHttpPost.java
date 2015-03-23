@@ -102,7 +102,7 @@ public class CruncherHttpPost extends Cruncher
 		
 		HttpClient hc = new DefaultHttpClient();
 		
-		HttpResponse execute;
+		HttpResponse execute; 
 		try
 		{
 			execute = hc.execute(post);

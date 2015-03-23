@@ -29,23 +29,38 @@ public class CruncherGetIndex extends Cruncher
 			if (get("index", c, parameters, dataStreams) instanceof Double)
 				key = ((Double) get("index", c, parameters, dataStreams)).intValue();
 			else
-				key = Integer.parseInt(getAsString("index", c, parameters, dataStreams));
+				try
+				{
+					key = Integer.parseInt(getAsString("index", c, parameters, dataStreams));
+				}
+				catch (NumberFormatException ex)
+				{
+					return null;
+				}
 			if (obj.size() > key)
 				return obj.get(key);
 		}
-		//if the object was a list and did not return, a cast exception would be thrown...TB 10/30/2014
-		else 
+		// if the object was a list and did not return, a cast exception would
+		// be thrown...TB 10/30/2014
+		else
 		{
-   		JSONArray obj = (JSONArray) objx;
-   		if (obj == null)
-   			return null;
-   		int key = -1;
-   		if (get("index", c, parameters, dataStreams) instanceof Double)
-   			key = ((Double) get("index", c, parameters, dataStreams)).intValue();
-   		else
-   			key = Integer.parseInt(getAsString("index", c, parameters, dataStreams));
-   		if (obj.length() > key)
-   			return obj.get(key);
+			JSONArray obj = (JSONArray) objx;
+			if (obj == null)
+				return null;
+			int key = -1;
+			if (get("index", c, parameters, dataStreams) instanceof Double)
+				key = ((Double) get("index", c, parameters, dataStreams)).intValue();
+			else
+				try
+				{
+					key = Integer.parseInt(getAsString("index", c, parameters, dataStreams));
+				}
+				catch (NumberFormatException ex)
+				{
+					return null;
+				}
+			if (obj.length() > key)
+				return obj.get(key);
 		}
 		return null;
 	}

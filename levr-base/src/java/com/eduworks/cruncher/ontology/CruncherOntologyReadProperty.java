@@ -39,6 +39,7 @@ public class CruncherOntologyReadProperty extends CruncherOntology
 			}
 			catch (ClosedException e)
 			{
+				clearContextData(c);
 				return resolve(c, parameters, dataStreams);
 			}
 

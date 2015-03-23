@@ -42,6 +42,7 @@ public class CruncherOntologyAddImport extends CruncherOntology
 			}
 			catch (ClosedException e)
 			{
+				clearContextData(c);
 				return resolve(c, parameters, dataStreams);
 			}
 			o.addOntology(tdbDataset, importId);

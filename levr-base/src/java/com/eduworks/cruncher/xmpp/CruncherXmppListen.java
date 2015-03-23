@@ -1,5 +1,6 @@
 package com.eduworks.cruncher.xmpp;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +13,11 @@ import org.jivesoftware.smack.packet.Message;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.levr.servlet.impl.LevrResolverServlet;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolvable;
+import com.eduworks.util.io.EwFileSystem;
 
 public class CruncherXmppListen extends Cruncher
 {
@@ -44,6 +47,7 @@ public class CruncherXmppListen extends Cruncher
 				newParameters.put("message", new String[]{arg1.getBody()});
 				newParameters.put("sender", new String[]{chat2.getParticipant().split("/")[0]});
 				log.debug(chat2.getParticipant() + " --> " + arg1.getBody());
+				LevrResolverServlet.initConfig(System.out);
 				((Resolvable)op.clone()).resolve(c, newParameters, dataStreams);
 				c.success();
 			}
