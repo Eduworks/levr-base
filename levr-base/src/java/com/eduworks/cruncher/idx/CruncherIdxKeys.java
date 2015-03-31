@@ -1,12 +1,17 @@
 package com.eduworks.cruncher.idx;
 
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.NavigableSet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mapdb.Fun;
+import org.mapdb.Fun.Tuple2;
 
+import com.eduworks.lang.json.impl.EwJsonArray;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
@@ -28,6 +33,20 @@ public class CruncherIdxKeys extends Cruncher
 			if (optCommit)
 				ewDB.db.commit();
 			return new JSONArray(ewDB.db.getHashMap(index).keySet());
+		}catch(ClassCastException e){
+			NavigableSet<Fun.Tuple2<String,String>> multiMap = ewDB.db.getTreeSet(index);
+			
+			EwJsonArray arr = new EwJsonArray();
+			
+			Iterator<Tuple2<String, String>> it = multiMap.iterator();
+			while(it.hasNext()){
+				Tuple2<String, String> t = it.next();
+				
+				if(!arr.contains(t.a))
+					arr.put(t.a);
+			}
+			
+			return arr;
 		}
 		finally
 		{
