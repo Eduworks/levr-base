@@ -15,7 +15,7 @@ public class CruncherVariableGet extends Cruncher
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		return CruncherVariableSet.cache.get(getAsString("key",c,parameters, dataStreams));
+		return CruncherVariableSet.store.get(getAsString("key",c,parameters, dataStreams));
 	}
 
 	@Override

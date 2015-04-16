@@ -20,6 +20,7 @@ public class ResolverObject extends Resolver implements ResolverMerger
 	{
 		resolveAllChildren(c, parameters, dataStreams);
 
+		boolean optAsBoolean = optAsBoolean("_soft", false, parameters);
 		removeAllSettings();
 
 		final String dest = optAsString("dest", parameters);
@@ -32,6 +33,7 @@ public class ResolverObject extends Resolver implements ResolverMerger
 
 		final Set<String> keySet = keySet();
 
+		int count = 0;
 		for (String key : keySet)
 		{
 			final Object value = get(key, parameters);
@@ -40,16 +42,26 @@ public class ResolverObject extends Resolver implements ResolverMerger
 				continue;
 
 			else if (merge)
+			{
+				count++;
 				merge(this, key, destKey, parameters);
+			}
 
 			else if (!value.equals(get(key)))
+			{
+				count++;
 				put(key, value);
+			}
 		}
 
 		// Unwrap (reduce) a single non-json value at dest
 		if (destKey != null) 
 			put(destKey, EwJson.tryReduce(get(destKey, parameters), false));
 
+		if (optAsBoolean)
+			if (count == 0)
+				return null;
+		
 		return this;
 	}
 

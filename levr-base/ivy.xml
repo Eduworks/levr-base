@@ -29,10 +29,16 @@
   	<dependency org="jivesoftware" name="smack" rev="3.1.0"/>
   	<dependency org="jivesoftware" name="smackx" rev="3.1.0"/>
   	<dependency org="ch.qos.logback" name="logback-classic" rev="1.1.2"/>
-  	            
+  	                
 	<exclude org="javax.servlet"/> 
 	<exclude org="com.ibm.icu"/>
-	<exclude org="com.cloudera.hadoop"/>
+	<exclude org="javax.sql"/>
+	<exclude org="javax.servlet"/>
+	<exclude org="javax.transaction"/>
+	<exclude org="commons-daemon"/>
+	<exclude org="groovy"/>
+	<exclude org="jwnl"/>
+    
 	<exclude module="slf4j-log4j12"/>
 	<exclude module="slf4j-simple"/>
 	<exclude module="google-collections"/>

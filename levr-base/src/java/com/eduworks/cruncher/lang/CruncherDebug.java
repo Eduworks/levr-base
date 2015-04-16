@@ -19,6 +19,9 @@ public class CruncherDebug extends Cruncher
 		Object obj = getObj(c, parameters, dataStreams);
 		try
 		{
+			String optAsString = optAsString("prefix", "", c, parameters, dataStreams);
+			if (!optAsString.isEmpty())
+				System.out.print(optAsString);
 			if (obj == null)
 				System.out.println("NULL");
 			else if (obj instanceof JSONArray)

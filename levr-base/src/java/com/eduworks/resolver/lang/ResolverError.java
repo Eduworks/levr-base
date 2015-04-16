@@ -17,13 +17,12 @@ public class ResolverError extends ResolverString
 	{
 		resolveAllChildren(c, parameters, dataStreams);
 
-		final String msgKey = "msg";
-		Object object = get(msgKey, parameters);
+		Object object = get("msg", parameters);
 		String message = "";
 		if (object != null)
 			message = object.toString();
 
-		throw new RuntimeException(format(message, parameters, msgKey));
+		throw new RuntimeException(message);
 	}
 
 	@Override
