@@ -29,11 +29,11 @@ public class CruncherIdxKeys extends Cruncher
 		try
 		{
 			ewDB = EwDB.get(_databasePath, _databaseName);
-
+			
 			if (optCommit)
 				ewDB.db.commit();
 			return new JSONArray(ewDB.db.getHashMap(index).keySet());
-		}catch(ClassCastException e){
+		}catch(RuntimeException e){
 			NavigableSet<Fun.Tuple2<String,String>> multiMap = ewDB.db.getTreeSet(index);
 			
 			EwJsonArray arr = new EwJsonArray();
