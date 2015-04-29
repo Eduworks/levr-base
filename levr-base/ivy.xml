@@ -29,6 +29,8 @@
   	<dependency org="jivesoftware" name="smack" rev="3.1.0"/>
   	<dependency org="jivesoftware" name="smackx" rev="3.1.0"/>
   	<dependency org="ch.qos.logback" name="logback-classic" rev="1.1.2"/>
+  	
+  	<dependency org="org.jsoup" name="jsoup" rev="1.8.2"/>
   	                
 	<exclude org="javax.servlet"/> 
 	<exclude org="com.ibm.icu"/>
