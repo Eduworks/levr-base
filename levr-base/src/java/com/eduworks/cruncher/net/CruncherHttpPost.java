@@ -12,6 +12,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
@@ -46,10 +47,8 @@ public class CruncherHttpPost extends Cruncher
 		String authToken = getAsString("authToken", c, parameters, dataStreams);
 		HttpPost post = new HttpPost(url);
 		
-		HttpEntity entity = new MultipartEntity( HttpMultipartMode.BROWSER_COMPATIBLE );
-		 
+		HttpEntity entity = new MultipartEntity( HttpMultipartMode.BROWSER_COMPATIBLE,null,Charset.forName("UTF-8"));
 		if (multiPart)
-		try
 		{
 			AbstractContentBody contentBody = null;
 			if (o instanceof File)
@@ -57,12 +56,8 @@ public class CruncherHttpPost extends Cruncher
 			else if (o instanceof InMemoryFile)
 				contentBody = new InputStreamBody(((InMemoryFile) o).getInputStream(),contentType);
 			else
-				contentBody = new StringBody(o.toString(), contentType,Charset.defaultCharset());
+				contentBody = new StringBody(o.toString(),ContentType.create(contentType,Charset.forName("UTF-8")));
 			((MultipartEntity) entity).addPart(name, contentBody);
-		}
-		catch (UnsupportedEncodingException e1)
-		{
-			e1.printStackTrace();
 		}
 		else
 		{
