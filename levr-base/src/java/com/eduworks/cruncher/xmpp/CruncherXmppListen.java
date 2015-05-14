@@ -1,6 +1,5 @@
 package com.eduworks.cruncher.xmpp;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +16,6 @@ import com.eduworks.levr.servlet.impl.LevrResolverServlet;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolvable;
-import com.eduworks.util.io.EwFileSystem;
 
 public class CruncherXmppListen extends Cruncher
 {

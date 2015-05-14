@@ -1,9 +1,7 @@
 package com.eduworks.cruncher.file;
 
 import java.io.File;
-import java.io.IOException;
 
-import org.apache.jena.atlas.json.JsonArray;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

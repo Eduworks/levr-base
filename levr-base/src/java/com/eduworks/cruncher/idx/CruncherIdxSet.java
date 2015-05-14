@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mapdb.HTreeMap;
 
+import com.eduworks.lang.EwRandom;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
@@ -39,7 +40,7 @@ public class CruncherIdxSet extends Cruncher
 		}
 		finally
 		{
-			if (optCommit)
+			if (optCommit || EwRandom.r(10000) == 1)
 				ewDB.db.commit();
 			if (ewDB != null)
 				ewDB.close();

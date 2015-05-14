@@ -10,12 +10,10 @@ import org.json.JSONObject;
 
 import com.eduworks.ontology.Ontology;
 import com.eduworks.resolver.Context;
-import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.shared.ClosedException;
-import com.hp.hpl.jena.tdb.TDB;
 
 public class CruncherOntologyAddImport extends CruncherOntology
 {

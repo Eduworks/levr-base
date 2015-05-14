@@ -1,14 +1,9 @@
 package com.eduworks.scripter;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,10 +12,7 @@ import org.json.XML;
 import rcaller.RCaller;
 import rcaller.RCode;
 
-import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.eduworks.resolver.Scripter;
-import com.eduworks.util.io.InMemoryFile;
 
 public class CruncherR extends Cruncher
 {

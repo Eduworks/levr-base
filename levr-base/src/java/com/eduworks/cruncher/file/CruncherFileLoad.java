@@ -2,11 +2,8 @@ package com.eduworks.cruncher.file;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.SerializationUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
