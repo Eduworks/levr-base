@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.threading.EwDistributedThreading;
+import com.eduworks.lang.threading.EwThreading;
 import com.eduworks.mapreduce.JobStatus;
 import com.eduworks.mapreduce.MapReduceClient;
 import com.eduworks.mapreduce.MapReduceListener;
@@ -25,8 +26,8 @@ public class CruncherDistribute extends Cruncher
 {
 	public static class DistributePacket implements Serializable
 	{
-		public String					json;
-		public Map<String, String[]>	parameters;
+		public String json;
+		public Map<String, String[]> parameters;
 	}
 
 	static
@@ -42,7 +43,9 @@ public class CruncherDistribute extends Cruncher
 		EwDistributedThreading.heartbeat();
 
 		Resolvable call = (Resolvable) get("obj");
-		int numberOfSlices = Integer.parseInt(optAsString("slices","1", c, parameters, dataStreams));
+		int threadBoost = optAsInteger("threadBoost",-1,c,parameters,dataStreams);
+		if (threadBoost != -1)
+			EwThreading.setThreadCount(threadBoost);
 
 		String serialized = call.toOriginalJson();
 		try
@@ -51,42 +54,52 @@ public class CruncherDistribute extends Cruncher
 			DistributePacket dp = new DistributePacket();
 			dp.json = serialized;
 			dp.parameters = parameters;
-			List<Object> mapReduce = workforce.mapReduce(dp);
-			for (int i = 0;i < mapReduce.size();i++)
+			Object result = workforce.mapReduce(dp);
+
+			if (result instanceof List)
 			{
-				if (mapReduce.get(i).toString().isEmpty()) continue;
-				if (mapReduce.get(i).toString().startsWith("{"))
-				try
+				List<Object> mapReduce = (List<Object>) result;
+				for (int i = 0; i < mapReduce.size(); i++)
 				{
-					mapReduce.set(i,mapReduce.get(i));
+					if (mapReduce.get(i).toString().isEmpty())
+						continue;
+					if (mapReduce.get(i).toString().startsWith("{"))
+						try
+						{
+							mapReduce.set(i, mapReduce.get(i));
+						}
+						catch (Exception e)
+						{
+
+						}
+					if (mapReduce.get(i).toString().startsWith("["))
+						try
+						{
+							mapReduce.set(i, mapReduce.get(i));
+						}
+						catch (Exception ex)
+						{
+
+						}
 				}
-				catch (Exception e)
-				{
-					
-				}
-				if (mapReduce.get(i).toString().startsWith("["))
-				try
-				{
-					mapReduce.set(i,mapReduce.get(i));
-				}
-				catch (Exception ex)
-				{
-					
-				}
+				return new JSONArray(mapReduce);
 			}
-			return new JSONArray(mapReduce);
+			else
+				return result;
 		}
 		catch (Exception e)
 		{
-			throw new SoftException(e.getMessage());
+			throw new RuntimeException(e.getMessage());
 		}
-
+finally{}
 	}
 
 	public static boolean hasInit = false;
+
 	public static synchronized void init()
 	{
-		if (hasInit) return;
+		if (hasInit)
+			return;
 		hasInit = true;
 		try
 		{
@@ -129,28 +142,31 @@ public class CruncherDistribute extends Cruncher
 			e.printStackTrace();
 		}
 	}
+
 	@Override
 	public String getDescription()
 	{
-		return "Performs some gargantuan operation over many machines, using i and mod parameters and remote method invocations. " +
-				"Returns the various slice results from each machine." +
-				"\nslices - Number of pieces to divide the problem into." +
-				"\nobj - Resolver to transmit and invoke.";
+		return "Performs some gargantuan operation over many machines, using i and mod parameters and remote method invocations. "
+				+ "Returns the various slice results from each machine." + "\nslices - Number of pieces to divide the problem into."
+				+ "\nobj - Resolver to transmit and invoke.";
 	}
+
 	@Override
 	public String getReturn()
 	{
 		return "Object";
 	}
+
 	@Override
 	public String getAttribution()
 	{
 		return ATTRIB_PROPRIETARY;
 	}
+
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("obj","Resolvable","slices","Number");
+		return jo("obj", "Resolvable", "slices", "Number");
 	}
 
 }
