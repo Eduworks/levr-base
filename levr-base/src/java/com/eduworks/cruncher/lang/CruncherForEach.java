@@ -185,7 +185,7 @@ public class CruncherForEach extends Cruncher
 			if (sequenceI == -1 || sequenceMod == -1 || i % sequenceMod == sequenceI)
 				if (threaded)
 				{
-					EwThreading.forkAccm(fl, true, new MyRunnable()
+					EwThreading.forkAccm(fl, false, new MyRunnable()
 					{
 						@Override
 						public void run()
