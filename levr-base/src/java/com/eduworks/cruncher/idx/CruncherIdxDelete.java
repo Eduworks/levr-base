@@ -13,6 +13,7 @@ import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
+import com.eduworks.util.io.EwDB;
 
 public class CruncherIdxDelete extends Cruncher
 {

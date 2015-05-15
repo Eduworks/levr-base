@@ -11,6 +11,7 @@ import org.mapdb.Fun;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
+import com.eduworks.util.io.EwDB;
 
 public class CruncherIdxAdd extends Cruncher
 {

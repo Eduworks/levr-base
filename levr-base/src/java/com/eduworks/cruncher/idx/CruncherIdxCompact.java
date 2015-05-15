@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
+import com.eduworks.util.io.EwDB;
 
 public class CruncherIdxCompact extends Cruncher
 {
