@@ -24,7 +24,7 @@ public class CruncherStripTags extends Cruncher
 	@Override
 	public String getDescription()
 	{
-		return "Returns a list that represents the discrete intersection of all lists represented by the parameters of this Resolver.\n Has alternate behavior, if 'contains' is used, will return any items that have a substring of the 'contains' parameter.";
+		return "Strips any non-simple-text-manipulating HTML Tags from the input string.";
 	}
 
 	@Override
