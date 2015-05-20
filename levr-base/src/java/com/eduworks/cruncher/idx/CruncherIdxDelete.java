@@ -30,7 +30,10 @@ public class CruncherIdxDelete extends Cruncher
 		EwDB ewDB = null;
 		try
 		{
-			ewDB = EwDB.get(_databasePath, _databaseName);
+			if (optCommit)
+				ewDB = EwDB.get(_databasePath, _databaseName);
+			else
+				ewDB = EwDB.getNoTransaction(_databasePath, _databaseName);
 
 			ewDB.compact = true;
 			

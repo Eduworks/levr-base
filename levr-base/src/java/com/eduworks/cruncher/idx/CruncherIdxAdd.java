@@ -30,7 +30,10 @@ public class CruncherIdxAdd extends Cruncher
 		EwDB ewDB = null;
 		try
 		{
-			ewDB = EwDB.get(_databasePath, _databaseName);
+			if (optCommit)
+				ewDB = EwDB.get(_databasePath, _databaseName);
+			else
+				ewDB = EwDB.getNoTransaction(_databasePath, _databaseName);
 			
 			NavigableSet<Fun.Tuple2<String,String>> multiMap = ewDB.db.getTreeSet(index);
 			ewDB.writeCount.incrementAndGet();

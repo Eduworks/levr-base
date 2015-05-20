@@ -1,5 +1,6 @@
 package com.eduworks.cruncher.net;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,12 +25,17 @@ import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.codehaus.plexus.util.StringInputStream;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import sun.awt.image.ByteArrayImageSource;
 
 import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
+import com.eduworks.resolver.exception.SoftException;
 import com.eduworks.util.io.InMemoryFile;
 
 public class CruncherHttpPost extends Cruncher
@@ -55,6 +61,8 @@ public class CruncherHttpPost extends Cruncher
 				contentBody = new FileBody((File) o,contentType);
 			else if (o instanceof InMemoryFile)
 				contentBody = new InputStreamBody(((InMemoryFile) o).getInputStream(),contentType);
+			else if (o instanceof JSONObject || o instanceof JSONArray)
+				contentBody = new StringBody(o.toString(),ContentType.APPLICATION_JSON);
 			else
 				contentBody = new StringBody(o.toString(),ContentType.create(contentType,Charset.forName("UTF-8")));
 			((MultipartEntity) entity).addPart(name, contentBody);
@@ -68,7 +76,7 @@ public class CruncherHttpPost extends Cruncher
 				else if (o instanceof InMemoryFile)
 					entity = new InputStreamEntity(((InMemoryFile) o).getInputStream());
 				else
-					entity = new StringEntity(o.toString());
+					entity = new InputStreamEntity(new ByteArrayInputStream(o.toString().getBytes("UTF-8")));
 				post.setHeader("Content-Type", contentType);
 //				if (accept != null)
 //				post.setHeader("Accept", accept);
@@ -110,6 +118,10 @@ public class CruncherHttpPost extends Cruncher
 		{
 			e.printStackTrace();
 			return null;
+		}
+		catch (java.net.SocketException e)
+		{
+			throw new SoftException(e.getMessage());
 		}
 		catch (IOException e)
 		{

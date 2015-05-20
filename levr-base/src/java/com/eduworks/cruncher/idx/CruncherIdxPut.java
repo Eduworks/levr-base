@@ -28,7 +28,10 @@ public class CruncherIdxPut extends Cruncher
 		EwDB ewDB = null;
 		try
 		{
-			ewDB = EwDB.get(_databasePath, _databaseName);
+			if (optCommit)
+				ewDB = EwDB.get(_databasePath, _databaseName);
+			else
+				ewDB = EwDB.getNoTransaction(_databasePath, _databaseName);
 
 			HTreeMap<Object, Object> hashMap = ewDB.db.getHashMap(index);
 			ewDB.writeCount.incrementAndGet();
