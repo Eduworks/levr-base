@@ -20,16 +20,14 @@ public class CruncherDebug extends Cruncher
 		try
 		{
 			String optAsString = optAsString("prefix", "", c, parameters, dataStreams);
-			if (!optAsString.isEmpty())
-				log.debug(optAsString);
 			if (obj == null)
-				log.debug("NULL");
+				log.debug(optAsString+"NULL");
 			else if (obj instanceof JSONArray)
-				log.debug(((JSONArray) obj).toString(5) + obj.getClass().getSimpleName());
+				log.debug(optAsString+((JSONArray) obj).toString(5) + " ("+ obj.getClass().getSimpleName() +")");
 			else if (obj instanceof JSONObject)
-				log.debug(((JSONObject) obj).toString(5) + obj.getClass().getSimpleName());
+				log.debug(optAsString+((JSONObject) obj).toString(5) + " ("+ obj.getClass().getSimpleName() +")");
 			else
-				log.debug(obj.toString() + obj.getClass().getSimpleName());
+				log.debug(optAsString+obj.toString() + " ("+obj.getClass().getSimpleName() +")");
 		}
 		catch (Throwable t)
 		{

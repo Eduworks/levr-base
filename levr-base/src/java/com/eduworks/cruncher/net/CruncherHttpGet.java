@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import javax.mail.internet.ContentDisposition;
+import javax.mail.internet.ParseException;
+
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -19,6 +23,7 @@ import org.json.JSONObject;
 import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
+import com.eduworks.util.io.InMemoryFile;
 
 public class CruncherHttpGet extends Cruncher
 {
@@ -31,23 +36,44 @@ public class CruncherHttpGet extends Cruncher
 
 		HttpParams httpParameters = new BasicHttpParams();
 		// Set the timeout in milliseconds until a connection is established.
-		// The default value is zero, that means the timeout is not used. 
-		int timeoutConnection = Integer.parseInt(optAsString("timeout","60000",c,parameters, dataStreams));
+		// The default value is zero, that means the timeout is not used.
+		int timeoutConnection = Integer.parseInt(optAsString("timeout", "60000", c, parameters, dataStreams));
 		HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
-		// Set the default socket timeout (SO_TIMEOUT) 
+		// Set the default socket timeout (SO_TIMEOUT)
 		// in milliseconds which is the timeout for waiting for data.
-		int timeoutSocket = Integer.parseInt(optAsString("timeout","60000",c,parameters, dataStreams));;
+		int timeoutSocket = Integer.parseInt(optAsString("timeout", "60000", c, parameters, dataStreams));
+		;
 		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 		HttpClient hc = new DefaultHttpClient(httpParameters);
-		
+
 		HttpResponse execute;
 		try
 		{
 			execute = hc.execute(get);
-			String string = EntityUtils.toString(execute.getEntity());
-			if (EwJson.isJson(string))
-				return EwJson.tryParseJson(string, false);
-			return string;
+			if (optAsBoolean("file", false, c, parameters, dataStreams))
+			{
+				InMemoryFile imf = new InMemoryFile();
+				imf.data = EntityUtils.toByteArray(execute.getEntity());
+				imf.mime = EntityUtils.getContentMimeType(execute.getEntity());
+				Header header = execute.getFirstHeader("Content-Disposition");
+				if (header != null)
+					try
+					{
+						imf.name = new ContentDisposition(header.getValue()).getParameter("filename");
+					}
+					catch (ParseException e)
+					{
+						e.printStackTrace();
+					}
+				return imf;
+			}
+			else
+			{
+				String string = EntityUtils.toString(execute.getEntity());
+				if (EwJson.isJson(string))
+					return EwJson.tryParseJson(string, false);
+				return string;
+			}
 		}
 		catch (ClientProtocolException e)
 		{
@@ -82,7 +108,7 @@ public class CruncherHttpGet extends Cruncher
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("obj","String");
+		return jo("obj", "String");
 	}
 
 }
