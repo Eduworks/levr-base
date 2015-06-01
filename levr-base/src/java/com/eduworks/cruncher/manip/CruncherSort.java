@@ -32,9 +32,10 @@ public class CruncherSort extends Cruncher
 		final String paramName = getAsString("paramName", c, parameters, dataStreams);
 
 		final Resolvable op = (Resolvable) get("op");
+		final boolean asString = optAsBoolean("asString",false,c,parameters,dataStreams);
 
 		List<Object> list = new EwList<Object>(ja);
-		final Map<Object, Number> cache = new HashMap<Object, Number>();
+		final Map<Object, Object> cache = new HashMap<Object, Object>();
 		Collections.sort(list, new Comparator<Object>()
 		{
 
@@ -43,37 +44,44 @@ public class CruncherSort extends Cruncher
 			{
 				try
 				{
-					Number s1 = cache.get(o1);
+					Object s1 = cache.get(o1);
 					if (s1 == null)
 					{
 						Map<String, String[]> newParameters = new HashMap<String, String[]>(parameters);
 						newParameters.put(paramName, new String[] { o1.toString() });
 						Object resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
 						if (resolve != null)
-						s1 = (Number) Double.parseDouble(resolve.toString());
+							if (asString)
+								s1 = resolve.toString();
+							else
+								s1 = (Number) Double.parseDouble(resolve.toString());
 					}
-					Number s2 = cache.get(o2);
+					Object s2 = cache.get(o2);
 					if (s2 == null)
 					{
 						Map<String, String[]> newParameters = new HashMap<String, String[]>(parameters);
 						newParameters.put(paramName, new String[] { o2.toString() });
 						Object resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
 						if (resolve != null)
-						s2 = (Number) Double.parseDouble(resolve.toString());
+							if (asString)
+								s2 = resolve.toString();
+							else
+								s2 = (Number) Double.parseDouble(resolve.toString());
 					}
+					if (asString) return s1.toString().compareTo(s2);
 					if (s1 == null && s2 == null) return 0;
 					if (s1 == null)
 						return -1;
 					if (s2 == null)
 						return 1;
 					if (desc)
-						if (s1.doubleValue() < s2.doubleValue())
+						if (((Number) s1).doubleValue() < ((Number) s2).doubleValue())
 							return 1;
 						else if (s1 == s2)
 							return 0;
 						else
 							return -1;
-					else if (s1.doubleValue() < s2.doubleValue())
+					else if (((Number) s1).doubleValue() < ((Number) s2).doubleValue())
 						return -1;
 					else if (s1 == s2)
 						return 0;
