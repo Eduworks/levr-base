@@ -68,7 +68,7 @@ public class CruncherSort extends Cruncher
 							else
 								s2 = (Number) Double.parseDouble(resolve.toString());
 					}
-					if (asString) return s1.toString().compareTo(s2);
+					if (asString) return s1.toString().compareTo((String) s2);
 					if (s1 == null && s2 == null) return 0;
 					if (s1 == null)
 						return -1;
