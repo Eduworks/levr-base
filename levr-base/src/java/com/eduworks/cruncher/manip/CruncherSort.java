@@ -51,10 +51,13 @@ public class CruncherSort extends Cruncher
 						newParameters.put(paramName, new String[] { o1.toString() });
 						Object resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
 						if (resolve != null)
+						{
 							if (asString)
 								s1 = resolve.toString();
 							else
 								s1 = (Number) Double.parseDouble(resolve.toString());
+						cache.put(s1, o1);
+						}
 					}
 					Object s2 = cache.get(o2);
 					if (s2 == null)
@@ -63,10 +66,13 @@ public class CruncherSort extends Cruncher
 						newParameters.put(paramName, new String[] { o2.toString() });
 						Object resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
 						if (resolve != null)
+						{
 							if (asString)
 								s2 = resolve.toString();
 							else
 								s2 = (Number) Double.parseDouble(resolve.toString());
+						cache.put(s2,o2);
+						}
 					}
 					if (asString) return s1.toString().compareTo((String) s2);
 					if (s1 == null && s2 == null) return 0;
