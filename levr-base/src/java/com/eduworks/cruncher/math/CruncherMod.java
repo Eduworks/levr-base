@@ -39,7 +39,7 @@ public class CruncherMod extends Cruncher
 	@Override
 	public String getDescription()
 	{
-		return "Divides two numbers. If operator is defined, performs modulo operation on operator using obj as divisor. If operand is defined, performs modulo operation on obj using operand as divisor.";
+		return "Performs Modulo operation on two numbers. If operator is defined, performs modulo operation on operator using obj as divisor. If operand is defined, performs modulo operation on obj using operand as divisor.";
 	}
 
 	@Override
