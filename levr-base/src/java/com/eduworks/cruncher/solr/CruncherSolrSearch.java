@@ -2,6 +2,7 @@ package com.eduworks.cruncher.solr;
 
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,6 +10,8 @@ import java.util.Map.Entry;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.response.FacetField;
+import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -88,6 +91,17 @@ public class CruncherSolrSearch extends Cruncher
 		boolean useCursor = optAsBoolean("useCursor", true, c, parameters, dataStreams); 
 		if (useCursor) queryParameters.set("cursorMark", optAsString("cursor", "*", c, parameters, dataStreams));
 		
+		JSONArray facetFields = getAsJsonArray("facetFields", c, parameters, dataStreams);
+		if(facetFields != null){
+			String[] facets = new String[facetFields.length()];
+			for(int i = 0; i < facetFields.length(); i++)
+				facets[i] = facetFields.getString(i);
+			
+			queryParameters.addFacetField(facets);
+		}
+		
+		
+		
 		QueryResponse results;
 		try {
 			results = solrServer.query(queryParameters);
@@ -112,6 +126,22 @@ public class CruncherSolrSearch extends Cruncher
 		
 		response.put("items", documentSet);
 		response.put("total", results.getResults().getNumFound());
+		
+		List<FacetField> facetResults = results.getFacetFields();
+		if(facetResults != null){
+			JSONObject facets = new JSONObject();
+			for(int i=0; i < facetResults.size(); i++){
+				FacetField facet = facetResults.get(i);
+				JSONArray vals = new JSONArray();
+				for(Count val : facet.getValues()){
+					vals.put(val.getName());
+				}
+				
+				facets.put(facet.getName(), vals);
+			}
+			response.put("facets", facets);
+		}
+		
 		if (useCursor)
 			response.put("cursor", results.getResponse().get("nextCursorMark"));
 		return response;
