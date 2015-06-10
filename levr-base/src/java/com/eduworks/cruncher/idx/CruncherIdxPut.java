@@ -2,10 +2,12 @@ package com.eduworks.cruncher.idx;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mapdb.HTreeMap;
+import org.mapdb.DB.HTreeMapMaker;
 
 import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
@@ -25,6 +27,8 @@ public class CruncherIdxPut extends Cruncher
 		String index = Resolver.decodeValue(getAsString("index", c, parameters, dataStreams));
 		boolean optCommit = optAsBoolean("_commit", true, c, parameters, dataStreams);
 		String key = getAsString("key", c, parameters, dataStreams);
+		int ttlInSecondsAccess = optAsInteger("ttlAccessSeconds", -1, c, parameters, dataStreams);
+		int ttlInSecondsModify = optAsInteger("ttlModifySeconds", -1, c, parameters, dataStreams);
 		EwDB ewDB = null;
 		try
 		{
@@ -33,7 +37,15 @@ public class CruncherIdxPut extends Cruncher
 			else
 				ewDB = EwDB.getNoTransaction(_databasePath, _databaseName);
 
-			HTreeMap<Object, Object> hashMap = ewDB.db.getHashMap(index);
+			HTreeMapMaker maker = ewDB.db.createHashMap(index);
+			
+			if (ttlInSecondsModify!=-1)
+				 maker.expireAfterWrite(ttlInSecondsModify, TimeUnit.SECONDS);
+			
+			if (ttlInSecondsAccess!=-1)
+				 maker.expireAfterAccess(ttlInSecondsAccess, TimeUnit.SECONDS);
+
+			HTreeMap<Object, Object> hashMap = maker.makeOrGet();
 			ewDB.writeCount.incrementAndGet();
 			JSONObject jo = null;
 			if (hashMap.containsKey(key) == false)
@@ -48,6 +60,8 @@ public class CruncherIdxPut extends Cruncher
 					if (keyx.equals("databaseName")) continue;
 					if (keyx.equals("index")) continue;
 					if (keyx.equals("key")) continue;
+					if (keyx.equals("ttlAccess")) continue;
+					if (keyx.equals("ttlModify")) continue;
 					jo.put(keyx, obj.get(keyx));
 				}
 			}
@@ -58,6 +72,8 @@ public class CruncherIdxPut extends Cruncher
 					if (keyx.equals("databaseName")) continue;
 					if (keyx.equals("index")) continue;
 					if (keyx.equals("key")) continue;
+					if (keyx.equals("ttlAccess")) continue;
+					if (keyx.equals("ttlModify")) continue;
 					jo.put(keyx, get(keyx, c, parameters, dataStreams));
 				}
 			hashMap.put(key,jo.toString());

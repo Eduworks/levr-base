@@ -2,9 +2,11 @@ package com.eduworks.cruncher.idx;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mapdb.DB.HTreeMapMaker;
 import org.mapdb.HTreeMap;
 
 import com.eduworks.lang.EwRandom;
@@ -24,6 +26,8 @@ public class CruncherIdxSet extends Cruncher
 		String index = Resolver.decodeValue(getAsString("index", c, parameters, dataStreams));
 		boolean optCommit = optAsBoolean("_commit", true, c, parameters, dataStreams);
 		String key = getAsString("key", c, parameters, dataStreams);
+		int ttlInSecondsAccess = optAsInteger("ttlAccessSeconds", -1, c, parameters, dataStreams);
+		int ttlInSecondsModify = optAsInteger("ttlModifySeconds", -1, c, parameters, dataStreams);
 		Object value = get("value", c, parameters, dataStreams);
 		if (value == null)
 			value = getObj(c, parameters, dataStreams);
@@ -35,12 +39,21 @@ public class CruncherIdxSet extends Cruncher
 			else
 				ewDB = EwDB.getNoTransaction(_databasePath, _databaseName);
 
-			HTreeMap<Object, Object> hashMap = ewDB.db.getHashMap(index);
+			HTreeMapMaker maker = ewDB.db.createHashMap(index);
+			
+			if (ttlInSecondsModify!=-1)
+				 maker.expireAfterWrite(ttlInSecondsModify, TimeUnit.SECONDS);
+			
+			if (ttlInSecondsAccess!=-1)
+				 maker.expireAfterAccess(ttlInSecondsAccess, TimeUnit.SECONDS);
+			
+			HTreeMap<Object, Object> hashMap = maker.makeOrGet();
 			ewDB.writeCount.incrementAndGet();
 			if (value == null)
 				hashMap.remove(key);
 			else
 				hashMap.put(key, value.toString());
+			
 		}
 		finally
 		{
