@@ -46,7 +46,7 @@ public class CruncherOntologyReadClassInstances extends CruncherOntology {
 			
 			OntologyClass cls = o.getClass(classId);
 			
-			Map<String, OntologyInstance> instances = cls.getAllInstances();
+			Map<String, OntologyInstance> instances = cls.getAllInstances(local);
 			for(String k : instances.keySet()){
 				
 				if(local){
