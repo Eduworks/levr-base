@@ -3,6 +3,7 @@ package com.eduworks.resolver.enumeration;
 @Deprecated
 public enum ResolverStringOp implements ResolverEnum
 {
+	LENGTH("length"),
 	CAPITALIZE("caps"),
 	FORMAT("format"),
 	REPLACE("replace"),
