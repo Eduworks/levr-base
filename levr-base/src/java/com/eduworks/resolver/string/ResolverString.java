@@ -62,6 +62,9 @@ public class ResolverString extends Resolver
 
 			case TO_UPPER:
 				return string.toUpperCase();
+				
+			case LENGTH:
+				return string.length();
 		}
 
 		return string;
