@@ -51,13 +51,14 @@ public class ResolverSendEmail extends ResolverString
 		final String subject = format(getAsString("_subject", parameters), parameters);
 		final String template = format(getAsString("_template", parameters), parameters);
 		final String smtpHost = getAsString("_smtpHost",parameters);
+		final String smtpPort = getAsString("_smtpPort",parameters);
 		final String smtpUser = getAsString("_smtpUser",parameters);
 		final String smtpPass = getAsString("_smtpPass",parameters);
 
 		if (optAsBoolean("html", false, parameters))
 			try
 			{
-				EwMail.sendHtmlEmail(smtpHost,smtpUser,smtpPass,fromEmail, toEmail, subject, template);
+				EwMail.sendHtmlEmail(smtpHost,smtpPort,smtpUser,smtpPass,fromEmail, toEmail, subject, template);
 			}
 			catch (AddressException e)
 			{
@@ -70,7 +71,7 @@ public class ResolverSendEmail extends ResolverString
 		else
 			try
 			{
-				EwMail.sendEmail(smtpHost,smtpUser,smtpPass,fromEmail, toEmail, subject, template);
+				EwMail.sendEmail(smtpHost,smtpPort,smtpUser,smtpPass,fromEmail, toEmail, subject, template);
 			}
 			catch (AddressException e)
 			{
