@@ -16,7 +16,7 @@ public class CruncherWhile extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		Object result = null;
-		if (getAsString("do", c, parameters, dataStreams).equals("true"))
+		if (optAsString("do","false", c, parameters, dataStreams).equals("true"))
 			result = getObj(c,parameters, dataStreams);
 		Object o = get("condition", c, parameters, dataStreams);
 		while(o != null && !o.equals("false"))

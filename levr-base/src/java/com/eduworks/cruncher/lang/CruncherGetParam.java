@@ -24,7 +24,7 @@ public class CruncherGetParam extends Cruncher
 		String asString = obj.toString(); 
 		if (asString == null) return null;
 		if (asString.isEmpty()) return null;
-		Object object = EwCache.getCache("callCache").get(asString);
+		Object object = c.get(asString);
 		return object;
 	}
 

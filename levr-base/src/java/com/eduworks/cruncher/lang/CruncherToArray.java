@@ -33,7 +33,7 @@ public class CruncherToArray extends Cruncher
 			try
 			{
 				String asString = getAsString("obj", c, parameters, dataStreams);
-				Object result = EwCache.getCache("callCache").get(asString);
+				Object result = c.get(asString);
 				if (result == null)
 					return new JSONArray(asString);
 				if (asString.startsWith("["))

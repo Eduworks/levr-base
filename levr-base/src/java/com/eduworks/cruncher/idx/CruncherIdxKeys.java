@@ -36,14 +36,14 @@ public class CruncherIdxKeys extends Cruncher
 			if (optCommit)
 				ewDB.db.commit();
 
-			EwJsonArray arr = new EwJsonArray();
+			JSONArray arr = new JSONArray();
 
 			Iterator<Entry<Object, Object>> it = ewDB.db.getHashMap(index).entrySet().iterator();
 			while (it.hasNext() && count-- > 0)
 			{
 				Entry<Object, Object> t = it.next();
 
-				if (!arr.contains(t.getKey()))
+//				if (!arr.contains(t.getKey()))
 					arr.put(t.getKey());
 			}
 

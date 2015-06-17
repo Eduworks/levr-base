@@ -81,15 +81,17 @@ public class CruncherIdxEach extends Cruncher
 							final Object value = hashMap.get(t);
 							final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 							newParams.put(paramName, new String[] { key });
-
+							String valueString=null;
 							if (valueName != null && value != null)
 							{
-								String valueString = value.toString();
+								valueString = value.toString();
 								newParams.put(valueName, new String[] { valueString });
 								newParams.put("i", new String[] { Integer.toString(index) });
-								EwCache.getCache("callCache").put(valueString, value);
+								c.put(valueString, value);
 							}
 							Object result = resolveAChild("op", c, newParams, dataStreams);
+							if (valueString != null)
+								c.remove(valueString);
 							if (result instanceof EwJsonSerializable)
 								result = ((EwJsonSerializable) result).toJsonObject();
 						}

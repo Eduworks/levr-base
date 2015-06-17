@@ -36,6 +36,7 @@ public class CruncherForEach extends Cruncher
 		final String valueName = getAsString("valueName", c, parameters, dataStreams);
 		final String extraParamName = optAsString("extraParamName", null, c, parameters, dataStreams);
 		final boolean memorySaver = optAsBoolean("memorySaver", false, c, parameters, dataStreams);
+		final int threadCap = optAsInteger("threadCap", Integer.MAX_VALUE, c, parameters, dataStreams);
 		final Integer cap = Integer.parseInt(optAsString("cap", "-1", c, parameters, dataStreams));
 		if (cap > 0)
 			threaded = false;
@@ -47,25 +48,25 @@ public class CruncherForEach extends Cruncher
 		if (obj instanceof JSONObject)
 		{
 			return executeJsonObject(c,parameters, dataStreams, threaded, obj, paramName, valueName, prevParamName,
-					extraParamName, extraParam, memorySaver, rethrow,cap);
+					extraParamName, extraParam, memorySaver, rethrow,cap,threadCap);
 		}
 		else if (obj instanceof JSONArray)
 		{
 			return executeJsonArray(c,parameters, dataStreams, threaded, obj, paramName, prevParamName, extraParamName,
-					extraParam, memorySaver, rethrow,cap);
+					extraParam, memorySaver, rethrow,cap,threadCap);
 		}
 		else if (obj instanceof EwList)
 		{
 			obj = new JSONArray((EwList) obj);
 			return executeJsonArray(c,parameters, dataStreams, threaded, obj, paramName, prevParamName, extraParamName,
-					extraParam, memorySaver, rethrow,cap);
+					extraParam, memorySaver, rethrow,cap,threadCap);
 		}
 		return null;
 	}
 
 	public Object executeJsonObject(final Context c,final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams,
 			final boolean threaded, Object obj, final String paramName, final String valueName, final String prevParamName,
-			final String extraParamName, final String extraParam, final boolean memorySaver, final boolean rethrow,final Integer cap)
+			final String extraParamName, final String extraParam, final boolean memorySaver, final boolean rethrow,final Integer cap, int threadCap)
 			throws JSONException
 	{
 		final JSONObject output = new JSONObject();
@@ -99,16 +100,19 @@ public class CruncherForEach extends Cruncher
 
 						if (prevParamName != null)
 							newParams.put(prevParamName, new String[] { prevIdFinal });
+						String valueString=null;
 						if (valueName != null && value != null)
 						{
-							String valueString = value.toString();
+							valueString = value.toString();
 							newParams.put(valueName, new String[] { valueString });
 							newParams.put("i", new String[] { Integer.toString(index) });
-							EwCache.getCache("callCache").put(valueString, value);
+							c.put(valueString, value);
 						}
 						if (extraParamName != null)
 							newParams.put(extraParamName, new String[] { extraParam });
 						Object result = resolveAChild("op", c,newParams, dataStreams);
+						if (valueString != null)
+							c.remove(valueString);
 						if (result instanceof EwJsonSerializable)
 							result = ((EwJsonSerializable) result).toJsonObject();
 						if (!memorySaver)
@@ -139,7 +143,7 @@ public class CruncherForEach extends Cruncher
 			if (sequenceI == -1 || sequenceMod == -1 || counter % sequenceMod == sequenceI)
 				if (threaded)
 				{
-					EwThreading.forkAccm(fl, true, r);
+					EwThreading.forkAccm(fl, true, r,threadCap);
 				}
 				else
 				{
@@ -164,7 +168,7 @@ public class CruncherForEach extends Cruncher
 
 	public Object executeJsonArray(final Context c,final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams,
 			boolean threaded, Object obj, final String paramName, final String prevParamName,
-			final String extraParamName, final String extraParam, final boolean memorySaver, final boolean rethrow,final Integer cap)
+			final String extraParamName, final String extraParam, final boolean memorySaver, final boolean rethrow,final Integer cap, int threadCap)
 			throws JSONException
 	{
 		final JSONObject output = new JSONObject();
@@ -194,7 +198,7 @@ public class CruncherForEach extends Cruncher
 							{
 								final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 								newParams.put(paramName, new String[] { key });
-								EwCache.getCache("callCache").put(key, value);
+								c.put(key, value);
 								if (prevParamName != null)
 									newParams.put(prevParamName, new String[] { prevIdFinal });
 								if (extraParamName != null)
@@ -215,6 +219,7 @@ public class CruncherForEach extends Cruncher
 										if (tryCount < 30)
 											keepTrying = true;
 									}
+								c.remove(key);
 								if (result instanceof EwJsonSerializable)
 									result = ((EwJsonSerializable) result).toJsonObject();
 								if (!memorySaver)
@@ -251,7 +256,7 @@ public class CruncherForEach extends Cruncher
 									ex.printStackTrace();
 							}
 						}
-					});
+					},threadCap);
 				}
 				else
 				{

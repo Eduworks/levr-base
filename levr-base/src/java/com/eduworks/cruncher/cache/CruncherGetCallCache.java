@@ -16,7 +16,7 @@ public class CruncherGetCallCache extends Cruncher
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		Object result = EwCache.getCache("callCache").get(getObj(c, parameters, dataStreams).toString());
+		Object result = c.get(getObj(c, parameters, dataStreams).toString());
 		return result;
 	}
 

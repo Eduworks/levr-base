@@ -1,6 +1,7 @@
 package com.eduworks.cruncher.lang;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -18,6 +19,7 @@ public class CruncherCall extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
+		ArrayList<String> valuesToRemove = new ArrayList<String>();
 		for (String key : keySet())
 		{
 			if (key.equals("obj"))
@@ -29,7 +31,8 @@ public class CruncherCall extends Cruncher
 			if (value != null)
 			{
 				String valueString = value.toString();
-				EwCache.getCache("callCache").put(valueString, value);
+				c.put(valueString, value);
+				valuesToRemove.add(valueString);
 				newParams.put(key, new String[] { valueString });
 			}
 		}
@@ -42,11 +45,14 @@ public class CruncherCall extends Cruncher
 			if (value != null)
 			{
 				String valueString = value.toString();
-				EwCache.getCache("callCache").put(valueString, value);
+				c.put(valueString, value);
+				valuesToRemove.add(valueString);
 				newParams.put(key, new String[] { valueString });
 			}
 		}
 		Object result = resolveAChild("obj", c,newParams, dataStreams);
+		for (String s : valuesToRemove)
+			c.remove(s);
 		return result;
 	}
 
