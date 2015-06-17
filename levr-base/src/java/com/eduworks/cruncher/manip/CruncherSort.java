@@ -48,8 +48,11 @@ public class CruncherSort extends Cruncher
 					if (s1 == null)
 					{
 						Map<String, String[]> newParameters = new HashMap<String, String[]>(parameters);
-						newParameters.put(paramName, new String[] { o1.toString() });
+						String o1Key = o1.toString();
+						c.put(o1Key, o1);
+						newParameters.put(paramName, new String[] { o1Key });
 						Object resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
+						c.remove(o1Key);
 						if (resolve != null)
 						{
 							if (asString)
@@ -63,8 +66,11 @@ public class CruncherSort extends Cruncher
 					if (s2 == null)
 					{
 						Map<String, String[]> newParameters = new HashMap<String, String[]>(parameters);
-						newParameters.put(paramName, new String[] { o2.toString() });
+						String o2Key = o2.toString();
+						c.put(o2Key, o1);
+						newParameters.put(paramName, new String[] { o2Key });
 						Object resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
+						c.remove(o2Key);
 						if (resolve != null)
 						{
 							if (asString)
