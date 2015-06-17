@@ -26,7 +26,7 @@ public class CruncherTop extends Cruncher
 			return null;
 		if (obj instanceof JSONObject)
 		{
-			JSONObject source = getObjAsJsonObject(c, parameters, dataStreams);
+			JSONObject source = (JSONObject) obj;
 			EwList<Tuple<String, Double>> wses = new EwList<Tuple<String, Double>>();
 			for (String key : EwJson.getKeys(source))
 				wses.add(new Tuple<String, Double>(key, source.getDouble(key)));
@@ -57,7 +57,7 @@ public class CruncherTop extends Cruncher
 		}
 		else if (obj instanceof JSONArray)
 		{
-			JSONArray array = getObjAsJsonArray(c, parameters, dataStreams);
+			JSONArray array = (JSONArray) obj;
 			JSONArray results = new JSONArray();
 			for (int i = 0; i < count && i < array.length(); i++)
 			{
