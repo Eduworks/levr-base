@@ -20,19 +20,20 @@ public class CruncherSort extends Cruncher
 {
 
 	@Override
-	public Object resolve(final Context c, final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams)
-			throws JSONException
+	public Object resolve(final Context c, final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams) throws JSONException
 	{
 		JSONArray ja = getObjAsJsonArray(c, parameters, dataStreams);
-		if (ja == null) return null;
-		if (ja.length() < 2) return ja;
+		if (ja == null)
+			return null;
+		if (ja.length() < 2)
+			return ja;
 
 		final Boolean desc = optAsBoolean("desc", false, c, parameters, dataStreams);
 
 		final String paramName = getAsString("paramName", c, parameters, dataStreams);
 
 		final Resolvable op = (Resolvable) get("op");
-		final boolean asString = optAsBoolean("asString",false,c,parameters,dataStreams);
+		final boolean asString = optAsBoolean("asString", false, c, parameters, dataStreams);
 
 		List<Object> list = new EwList<Object>(ja);
 		final Map<Object, Object> cache = new HashMap<Object, Object>();
@@ -59,7 +60,7 @@ public class CruncherSort extends Cruncher
 								s1 = resolve.toString();
 							else
 								s1 = (Number) Double.parseDouble(resolve.toString());
-						cache.put(s1, o1);
+							cache.put(s1, o1);
 						}
 					}
 					Object s2 = cache.get(o2);
@@ -77,28 +78,19 @@ public class CruncherSort extends Cruncher
 								s2 = resolve.toString();
 							else
 								s2 = (Number) Double.parseDouble(resolve.toString());
-						cache.put(s2,o2);
+							cache.put(s2, o2);
 						}
 					}
-					if (asString) return s1.toString().compareTo((String) s2);
-					if (s1 == null && s2 == null) return 0;
-					if (s1 == null)
-						return -1;
-					if (s2 == null)
-						return 1;
-					if (desc)
-						if (((Number) s1).doubleValue() < ((Number) s2).doubleValue())
-							return 1;
-						else if (s1 == s2)
-							return 0;
-						else
-							return -1;
-					else if (((Number) s1).doubleValue() < ((Number) s2).doubleValue())
-						return -1;
-					else if (s1 == s2)
-						return 0;
-					else
-						return 1;
+					
+				    if (s1 == null ^ s2 == null) {
+				        return (s1 == null) ? -1 : 1;
+				    }
+
+				    if (s1 == null && s2 == null) {
+				        return 0;
+				    }
+
+					return ((Comparable)s1).compareTo(s2);
 				}
 				catch (JSONException e)
 				{
@@ -112,6 +104,8 @@ public class CruncherSort extends Cruncher
 				}
 			}
 		});
+		if (desc)
+			Collections.reverse(list);
 
 		return new JSONArray(list);
 	}
@@ -137,7 +131,7 @@ public class CruncherSort extends Cruncher
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("obj","JSONArray","?desc","Boolean","paramName","String","op","Resolvable");
+		return jo("obj", "JSONArray", "?desc", "Boolean", "paramName", "String", "op", "Resolvable");
 	}
 
 }
