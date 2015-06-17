@@ -69,7 +69,7 @@ public class CruncherMerge extends Cruncher
 			return jo;
 		if (results.length() == 0)
 			return null;
-		return ja;
+		return results;
 	}
 
 	@Override
