@@ -60,7 +60,7 @@ public class CruncherSort extends Cruncher
 								s1 = resolve.toString();
 							else
 								s1 = (Number) Double.parseDouble(resolve.toString());
-							cache.put(s1, o1);
+							cache.put(o1, s1);
 						}
 					}
 					Object s2 = cache.get(o2);
@@ -78,7 +78,7 @@ public class CruncherSort extends Cruncher
 								s2 = resolve.toString();
 							else
 								s2 = (Number) Double.parseDouble(resolve.toString());
-							cache.put(s2, o2);
+							cache.put(o2, s2);
 						}
 					}
 					
