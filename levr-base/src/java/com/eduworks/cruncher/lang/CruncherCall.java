@@ -8,6 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.EwMap;
+import com.eduworks.lang.threading.EwThreading;
+import com.eduworks.lang.threading.EwThreading.MyRunnable;
 import com.eduworks.lang.util.EwCache;
 import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
@@ -16,13 +18,16 @@ import com.eduworks.resolver.Cruncher;
 public class CruncherCall extends Cruncher
 {
 	@Override
-	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
+	public Object resolve(final Context c, Map<String, String[]> parameters, final Map<String, InputStream> dataStreams) throws JSONException
 	{
 		final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
+		boolean background = optAsBoolean("background",false,c,parameters,dataStreams);
 		ArrayList<String> valuesToRemove = new ArrayList<String>();
 		for (String key : keySet())
 		{
 			if (key.equals("obj"))
+				continue;
+			if (key.equals("background"))
 				continue;
 			if (isSetting(key))
 				continue;
@@ -50,7 +55,26 @@ public class CruncherCall extends Cruncher
 				newParams.put(key, new String[] { valueString });
 			}
 		}
-		Object result = resolveAChild("obj", c,newParams, dataStreams);
+		Object result=null;
+		if (background)
+			EwThreading.fork(new MyRunnable()
+			{
+				
+				@Override
+				public void run()
+				{
+					try
+					{
+						Object result = resolveAChild("obj", c,newParams, dataStreams);
+					}
+					catch (JSONException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			});
+		else
+		result=resolveAChild("obj", c,newParams, dataStreams);
 		for (String s : valuesToRemove)
 			c.remove(s);
 		return result;
@@ -71,7 +95,7 @@ public class CruncherCall extends Cruncher
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("obj","Resolvable","<any>","Object");
+		return jo("obj","Resolvable","<any>","Object","background","Boolean");
 	}
 
 	@Override
