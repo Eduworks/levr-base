@@ -78,7 +78,6 @@ public class CruncherForEach extends Cruncher
 		int counter = 0;
 		int sequenceI = Integer.parseInt(optAsString("sequenceI", "-1", c, parameters, dataStreams));
 		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", c, parameters, dataStreams));
-		final boolean background = optAsBoolean("background",false,c,parameters,dataStreams);
 		while (keys.hasNext() && (cap == -1 || output.length() < cap))
 		{
 			final String key = keys.next();
@@ -116,7 +115,7 @@ public class CruncherForEach extends Cruncher
 							c.remove(valueString);
 						if (result instanceof EwJsonSerializable)
 							result = ((EwJsonSerializable) result).toJsonObject();
-						if (!memorySaver && !background)
+						if (!memorySaver)
 							synchronized (output)
 							{
 								output.put(key, result);
@@ -152,7 +151,6 @@ public class CruncherForEach extends Cruncher
 				}
 			prevId = key;
 		}
-		if (!background)
 		fl.nowPause(true);
 		if (optAsBoolean("array", false, c, parameters, dataStreams))
 		{
@@ -170,7 +168,7 @@ public class CruncherForEach extends Cruncher
 
 	public Object executeJsonArray(final Context c,final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams,
 			boolean threaded, Object obj, final String paramName, final String prevParamName,
-			final String extraParamName, final String extraParam, final boolean memorySaver, final boolean rethrow,final Integer cap, int threadCap)
+			final String extraParamName, final String extraParam, final boolean memorySaver, final boolean rethrow,final Integer cap, final int threadCap)
 			throws JSONException
 	{
 		final JSONObject output = new JSONObject();
@@ -180,7 +178,6 @@ public class CruncherForEach extends Cruncher
 		String prevId = null;
 		int sequenceI = Integer.parseInt(optAsString("sequenceI", "-1", c, parameters, dataStreams));
 		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", c, parameters, dataStreams));
-		final boolean background = optAsBoolean("background",false,c,parameters,dataStreams);
 		for (int i = 0; i < json.length() && (cap == -1 || output.length() < cap); i++)
 		{
 			final Object keyRaw = json.get(i);
@@ -200,6 +197,8 @@ public class CruncherForEach extends Cruncher
 						{
 							try
 							{
+								if (threadCap != Integer.MAX_VALUE)
+								EwThreading.setThreadCount(threadCap);
 								final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 								newParams.put(paramName, new String[] { key });
 								c.put(key, keyRaw);
@@ -226,7 +225,7 @@ public class CruncherForEach extends Cruncher
 								c.remove(key);
 								if (result instanceof EwJsonSerializable)
 									result = ((EwJsonSerializable) result).toJsonObject();
-								if (!memorySaver && !background)
+								if (!memorySaver)
 									synchronized (output)
 									{
 										if (optAsString("countInstances", "false", c, parameters, dataStreams).equals(
@@ -276,7 +275,7 @@ public class CruncherForEach extends Cruncher
 						newParams.put("i", new String[] { Integer.toString(index) });
 						Object result = resolveAChild("op", c,newParams, dataStreams);
 						c.remove(key);
-						if (!memorySaver && !background)
+						if (!memorySaver)
 						{
 							if (optAsString("countInstances", "false", c, parameters, dataStreams).equals("true"))
 							{
@@ -304,7 +303,6 @@ public class CruncherForEach extends Cruncher
 				}
 			prevId = key;
 		}
-		if (!background)
 			fl.nowPause(true);
 
 		if (optAsBoolean("array", false, c, parameters, dataStreams))
