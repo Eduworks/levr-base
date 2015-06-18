@@ -178,6 +178,7 @@ public class CruncherForEach extends Cruncher
 		String prevId = null;
 		int sequenceI = Integer.parseInt(optAsString("sequenceI", "-1", c, parameters, dataStreams));
 		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", c, parameters, dataStreams));
+		final boolean background = optAsBoolean("background",false,c,parameters,dataStreams);
 		for (int i = 0; i < json.length() && (cap == -1 || output.length() < cap); i++)
 		{
 			final String key = json.get(i).toString();
@@ -222,7 +223,7 @@ public class CruncherForEach extends Cruncher
 								c.remove(key);
 								if (result instanceof EwJsonSerializable)
 									result = ((EwJsonSerializable) result).toJsonObject();
-								if (!memorySaver)
+								if (!memorySaver && !background)
 									synchronized (output)
 									{
 										if (optAsString("countInstances", "false", c, parameters, dataStreams).equals(
@@ -264,14 +265,15 @@ public class CruncherForEach extends Cruncher
 					{
 						final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 						newParams.put(paramName, new String[] { key });
+						c.put(key, value);
 						if (prevParamName != null)
 							newParams.put(prevParamName, new String[] { prevIdFinal });
 						if (extraParamName != null)
 							newParams.put(extraParamName, new String[] { extraParam });
 						newParams.put("i", new String[] { Integer.toString(index) });
 						Object result = resolveAChild("op", c,newParams, dataStreams);
-
-						if (!memorySaver)
+						c.remove(key);
+						if (!memorySaver && !background)
 						{
 							if (optAsString("countInstances", "false", c, parameters, dataStreams).equals("true"))
 							{
@@ -299,7 +301,8 @@ public class CruncherForEach extends Cruncher
 				}
 			prevId = key;
 		}
-		fl.nowPause(true);
+		if (!background)
+			fl.nowPause(true);
 
 		if (optAsBoolean("array", false, c, parameters, dataStreams))
 		{
