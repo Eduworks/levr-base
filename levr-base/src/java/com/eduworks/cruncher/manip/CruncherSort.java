@@ -60,7 +60,7 @@ public class CruncherSort extends Cruncher
 					s1 = resolve.toString();
 				else
 					s1 = (Number) Double.parseDouble(resolve.toString());
-				cache.put(o1Key, s1);
+				cache.put(o1, s1);
 			}
 		}
 		Collections.sort(list, new Comparator<Object>()
