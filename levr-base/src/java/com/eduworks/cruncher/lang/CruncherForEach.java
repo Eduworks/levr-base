@@ -78,6 +78,7 @@ public class CruncherForEach extends Cruncher
 		int counter = 0;
 		int sequenceI = Integer.parseInt(optAsString("sequenceI", "-1", c, parameters, dataStreams));
 		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", c, parameters, dataStreams));
+		final boolean background = optAsBoolean("background",false,c,parameters,dataStreams);
 		while (keys.hasNext() && (cap == -1 || output.length() < cap))
 		{
 			final String key = keys.next();
@@ -115,7 +116,7 @@ public class CruncherForEach extends Cruncher
 							c.remove(valueString);
 						if (result instanceof EwJsonSerializable)
 							result = ((EwJsonSerializable) result).toJsonObject();
-						if (!memorySaver)
+						if (!memorySaver && !background)
 							synchronized (output)
 							{
 								output.put(key, result);
@@ -151,6 +152,7 @@ public class CruncherForEach extends Cruncher
 				}
 			prevId = key;
 		}
+		if (!background)
 		fl.nowPause(true);
 		if (optAsBoolean("array", false, c, parameters, dataStreams))
 		{
