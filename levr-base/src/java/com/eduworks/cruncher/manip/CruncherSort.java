@@ -36,7 +36,7 @@ public class CruncherSort extends Cruncher
 		final boolean asString = optAsBoolean("asString", false, c, parameters, dataStreams);
 
 		List<Object> list = new EwList<Object>(ja);
-		final Map<Object, Object> cache = new HashMap<Object, Object>();
+		final Map<String, Object> cache = new HashMap<String, Object>();
 		Collections.sort(list, new Comparator<Object>()
 		{
 
@@ -45,11 +45,11 @@ public class CruncherSort extends Cruncher
 			{
 				try
 				{
-					Object s1 = cache.get(o1);
+					String o1Key = o1.toString();
+					Object s1 = cache.get(o1Key);
 					if (s1 == null)
 					{
 						Map<String, String[]> newParameters = new HashMap<String, String[]>(parameters);
-						String o1Key = o1.toString();
 						c.put(o1Key, o1);
 						newParameters.put(paramName, new String[] { o1Key });
 						Object resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
@@ -60,14 +60,14 @@ public class CruncherSort extends Cruncher
 								s1 = resolve.toString();
 							else
 								s1 = (Number) Double.parseDouble(resolve.toString());
-							cache.put(o1, s1);
+							cache.put(o1Key, s1);
 						}
 					}
-					Object s2 = cache.get(o2);
+					String o2Key = o2.toString();
+					Object s2 = cache.get(o2Key);
 					if (s2 == null)
 					{
 						Map<String, String[]> newParameters = new HashMap<String, String[]>(parameters);
-						String o2Key = o2.toString();
 						c.put(o2Key, o1);
 						newParameters.put(paramName, new String[] { o2Key });
 						Object resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
@@ -78,7 +78,7 @@ public class CruncherSort extends Cruncher
 								s2 = resolve.toString();
 							else
 								s2 = (Number) Double.parseDouble(resolve.toString());
-							cache.put(o2, s2);
+							cache.put(o2Key, s2);
 						}
 					}
 					
