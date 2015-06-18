@@ -36,72 +36,53 @@ public class CruncherSort extends Cruncher
 		final boolean asString = optAsBoolean("asString", false, c, parameters, dataStreams);
 
 		List<Object> list = new EwList<Object>(ja);
-		final Map<String, Object> cache = new HashMap<String, Object>();
+		final Map<Object, Object> cache = new HashMap<Object, Object>();
+		for (Object o1 : list)
+		{
+			String o1Key = o1.toString();
+			Map<String, String[]> newParameters = new HashMap<String, String[]>(parameters);
+			c.put(o1Key, o1);
+			newParameters.put(paramName, new String[] { o1Key });
+			Object resolve = null;
+			try
+			{
+				resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
+			}
+			catch (CloneNotSupportedException e)
+			{
+				e.printStackTrace();
+			}
+			c.remove(o1Key);
+			if (resolve != null)
+			{
+				Object s1 = null;
+				if (asString)
+					s1 = resolve.toString();
+				else
+					s1 = (Number) Double.parseDouble(resolve.toString());
+				cache.put(o1Key, s1);
+			}
+		}
 		Collections.sort(list, new Comparator<Object>()
 		{
 
 			@Override
 			public int compare(Object o1, Object o2)
 			{
-				try
-				{
-					String o1Key = o1.toString();
-					Object s1 = cache.get(o1Key);
-					if (s1 == null)
-					{
-						Map<String, String[]> newParameters = new HashMap<String, String[]>(parameters);
-						c.put(o1Key, o1);
-						newParameters.put(paramName, new String[] { o1Key });
-						Object resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
-						c.remove(o1Key);
-						if (resolve != null)
-						{
-							if (asString)
-								s1 = resolve.toString();
-							else
-								s1 = (Number) Double.parseDouble(resolve.toString());
-							cache.put(o1Key, s1);
-						}
-					}
-					String o2Key = o2.toString();
-					Object s2 = cache.get(o2Key);
-					if (s2 == null)
-					{
-						Map<String, String[]> newParameters = new HashMap<String, String[]>(parameters);
-						c.put(o2Key, o1);
-						newParameters.put(paramName, new String[] { o2Key });
-						Object resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
-						c.remove(o2Key);
-						if (resolve != null)
-						{
-							if (asString)
-								s2 = resolve.toString();
-							else
-								s2 = (Number) Double.parseDouble(resolve.toString());
-							cache.put(o2Key, s2);
-						}
-					}
-					
-				    if (s1 == null ^ s2 == null) {
-				        return (s1 == null) ? -1 : 1;
-				    }
+				Object s1 = cache.get(o1);
+				Object s2 = cache.get(o2);
 
-				    if (s1 == null && s2 == null) {
-				        return 0;
-				    }
+				if (s1 == null ^ s2 == null)
+				{
+					return (s1 == null) ? -1 : 1;
+				}
 
-					return ((Comparable)s1).compareTo(s2);
-				}
-				catch (JSONException e)
+				if (s1 == null && s2 == null)
 				{
-					e.printStackTrace();
-					return -1;
+					return 0;
 				}
-				catch (CloneNotSupportedException e)
-				{
-					e.printStackTrace();
-					return -1;
-				}
+
+				return ((Comparable) s1).compareTo(s2);
 			}
 		});
 		if (desc)
