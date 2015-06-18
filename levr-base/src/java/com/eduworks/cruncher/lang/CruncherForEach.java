@@ -181,7 +181,8 @@ public class CruncherForEach extends Cruncher
 		final boolean background = optAsBoolean("background",false,c,parameters,dataStreams);
 		for (int i = 0; i < json.length() && (cap == -1 || output.length() < cap); i++)
 		{
-			final String key = json.get(i).toString();
+			final Object keyRaw = json.get(i);
+			final String key = keyRaw.toString();
 			final Object value = json.get(i);
 			final String prevIdFinal = prevId;
 			final int index = i;
@@ -199,7 +200,7 @@ public class CruncherForEach extends Cruncher
 							{
 								final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 								newParams.put(paramName, new String[] { key });
-								c.put(key, value);
+								c.put(key, keyRaw);
 								if (prevParamName != null)
 									newParams.put(prevParamName, new String[] { prevIdFinal });
 								if (extraParamName != null)
@@ -265,7 +266,7 @@ public class CruncherForEach extends Cruncher
 					{
 						final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 						newParams.put(paramName, new String[] { key });
-						c.put(key, value);
+						c.put(key, keyRaw);
 						if (prevParamName != null)
 							newParams.put(prevParamName, new String[] { prevIdFinal });
 						if (extraParamName != null)
