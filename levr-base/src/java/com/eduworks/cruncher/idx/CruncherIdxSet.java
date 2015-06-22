@@ -57,7 +57,7 @@ public class CruncherIdxSet extends Cruncher
 		}
 		finally
 		{
-			if (optCommit || EwRandom.r(10000) == 1)
+			if (optCommit && ewDB.handles.get() < 5)
 				ewDB.db.commit();
 			if (ewDB != null)
 				ewDB.close();

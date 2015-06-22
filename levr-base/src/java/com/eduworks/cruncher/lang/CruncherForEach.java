@@ -66,7 +66,7 @@ public class CruncherForEach extends Cruncher
 
 	public Object executeJsonObject(final Context c,final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams,
 			final boolean threaded, Object obj, final String paramName, final String valueName, final String prevParamName,
-			final String extraParamName, final String extraParam, final boolean memorySaver, final boolean rethrow,final Integer cap, int threadCap)
+			final String extraParamName, final String extraParam, final boolean memorySaver, final boolean rethrow,final Integer cap, final int threadCap)
 			throws JSONException
 	{
 		final JSONObject output = new JSONObject();
@@ -95,6 +95,8 @@ public class CruncherForEach extends Cruncher
 				{
 					try
 					{
+						if (threadCap != Integer.MAX_VALUE)
+						EwThreading.setThreadCount(threadCap);
 						final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 						newParams.put(paramName, new String[] { key });
 
