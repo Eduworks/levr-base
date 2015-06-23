@@ -2,7 +2,7 @@ package com.eduworks.resolver.security;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Base64;
+import org.apache.xerces.impl.dv.util.Base64;
 import java.util.Map;
 
 import jcifs.ntlmssp.Type1Message;
@@ -21,7 +21,7 @@ public class CruncherNtlmGetUsername extends Cruncher
 	{
 		String token = getObj(c, parameters, dataStreams).toString();
 
-		byte[] src = Base64.getDecoder().decode(token);
+		byte[] src = Base64.decode(token);
 		try
 		{
 			String msg = new String(src, "ASCII");
