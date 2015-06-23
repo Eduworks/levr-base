@@ -29,6 +29,7 @@ public class CruncherSql extends Cruncher
 		boolean sqlserver = optAsBoolean("sqlSqlServer", false, c, parameters, dataStreams);
 		Connection conn = null;
 		Statement stmt = null;
+		ResultSet rs = null;
 		JSONArray ja = new JSONArray();
 		try
 		{
@@ -42,33 +43,47 @@ public class CruncherSql extends Cruncher
 			conn = (Connection) c.get(DB_URL);
 			if (conn == null)
 			{
-				System.out.println("Connecting to database...");
 				conn = DriverManager.getConnection(DB_URL, USER, PASS);
+				final Connection conFinal = conn;
+				c.onFinally(new ContextEvent()
+				{
+					@Override
+					public void go()
+					{
+						if (conFinal != null)
+							try
+							{
+								conFinal.close();
+							}
+							catch (SQLException e)
+							{
+								e.printStackTrace();
+							}
+					}
+				});
 			}
 
 			// STEP 4: Execute a query
-			System.out.println("Creating statement...");
 			stmt = conn.createStatement();
 			String sql;
 			sql = getObj(c, parameters, dataStreams).toString();
-			ResultSet rs = stmt.executeQuery(sql);
+			rs = stmt.executeQuery(sql);
 
 			// STEP 5: Extract data from result set
 			while (rs.next())
 			{
 				JSONObject jo = new JSONObject();
-				for (String s : keySet())
+				for (int i = 0; i < rs.getMetaData().getColumnCount(); i++)
 				{
-					if (s.startsWith("sql"))
-						continue;
-					if (isSetting(s))
-						continue;
-					String colName = s.substring(0, s.length() - 2);
-					if (s.endsWith("_s"))
+					String colName = rs.getMetaData().getColumnName(i);
+					int colType = rs.getMetaData().getColumnType(i);
+					if (colType == java.sql.Types.VARCHAR)
 						jo.put(colName, rs.getString(colName).trim());
-					if (s.endsWith("_i"))
+					if (colType == java.sql.Types.INTEGER)
 						jo.put(colName, rs.getInt(colName));
-					if (s.endsWith("_d"))
+					if (colType == java.sql.Types.DECIMAL)
+						jo.put(colName, rs.getBigDecimal(colName));
+					if (colType == java.sql.Types.NUMERIC)
 						jo.put(colName, rs.getDouble(colName));
 				}
 				ja.put(jo);
@@ -95,31 +110,21 @@ public class CruncherSql extends Cruncher
 			// finally block used to close resources
 			try
 			{
+				if (rs != null)
+					rs.close();
+			}
+			catch (SQLException se2)
+			{
+			}// nothing we can do
+				// finally block used to close resources
+			try
+			{
 				if (stmt != null)
 					stmt.close();
 			}
 			catch (SQLException se2)
 			{
 			}// nothing we can do
-			final Connection conFinal = conn;
-			c.onFinally(new ContextEvent()
-			{
-
-				@Override
-				public void go()
-				{
-					if (conFinal != null)
-						try
-						{
-							conFinal.close();
-						}
-						catch (SQLException e)
-						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-				}
-			});
 		}// end try
 		return ja;
 	}
