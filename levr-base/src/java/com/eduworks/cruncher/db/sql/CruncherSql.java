@@ -27,6 +27,7 @@ public class CruncherSql extends Cruncher
 		String PASS = getAsString("sqlPassword", c, parameters, dataStreams);
 		boolean mysql = optAsBoolean("sqlMysql", false, c, parameters, dataStreams);
 		boolean sqlserver = optAsBoolean("sqlSqlServer", false, c, parameters, dataStreams);
+		boolean jtds = optAsBoolean("sqlJtds", false, c, parameters, dataStreams);
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -38,6 +39,8 @@ public class CruncherSql extends Cruncher
 				Class.forName("com.mysql.jdbc.Driver");
 			if (sqlserver)
 				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			if (jtds)
+				Class.forName("net.sourceforge.jtds.jdbc.Driver");
 
 			// STEP 3: Open a connection
 			conn = (Connection) c.get(DB_URL);
