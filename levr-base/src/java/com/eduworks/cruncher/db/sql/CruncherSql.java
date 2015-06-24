@@ -73,10 +73,12 @@ public class CruncherSql extends Cruncher
 			while (rs.next())
 			{
 				JSONObject jo = new JSONObject();
-				for (int i = 0; i < rs.getMetaData().getColumnCount(); i++)
+				for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++)
 				{
 					String colName = rs.getMetaData().getColumnName(i);
 					int colType = rs.getMetaData().getColumnType(i);
+					if (colType == java.sql.Types.CHAR)
+						jo.put(colName, rs.getString(colName).trim());
 					if (colType == java.sql.Types.VARCHAR)
 						jo.put(colName, rs.getString(colName).trim());
 					if (colType == java.sql.Types.INTEGER)
