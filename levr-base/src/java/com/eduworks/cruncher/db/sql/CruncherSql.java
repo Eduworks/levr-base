@@ -1,6 +1,9 @@
 package com.eduworks.cruncher.db.sql;
 
 import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -8,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -82,14 +86,16 @@ public class CruncherSql extends Cruncher
 					int colType = rs.getMetaData().getColumnType(i);
 					if (colType == java.sql.Types.CHAR)
 						jo.put(colName, rs.getString(colName).trim());
-					if (colType == java.sql.Types.VARCHAR)
+					else if (colType == java.sql.Types.VARCHAR)
 						jo.put(colName, rs.getString(colName).trim());
-					if (colType == java.sql.Types.INTEGER)
+					else if (colType == java.sql.Types.INTEGER)
 						jo.put(colName, rs.getInt(colName));
-					if (colType == java.sql.Types.DECIMAL)
+					else if (colType == java.sql.Types.DECIMAL)
 						jo.put(colName, rs.getBigDecimal(colName));
-					if (colType == java.sql.Types.NUMERIC)
+					else if (colType == java.sql.Types.NUMERIC)
 						jo.put(colName, rs.getDouble(colName));
+					else if (colType == java.sql.Types.CLOB)
+					   jo.put(colName, clobToString(rs.getClob(colName)));
 				}
 				ja.put(jo);
 			}
@@ -134,6 +140,13 @@ public class CruncherSql extends Cruncher
 		return ja;
 	}
 
+	private String clobToString(Clob c) throws Exception {
+	   Reader in = c.getCharacterStream();
+	   StringWriter w = new StringWriter();
+	   IOUtils.copy(in, w);
+	   return w.toString();
+	}
+	
 	@Override
 	public String getDescription()
 	{
