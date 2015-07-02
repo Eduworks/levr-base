@@ -60,8 +60,8 @@ public class CruncherIdxPut extends Cruncher
 					if (keyx.equals("databaseName")) continue;
 					if (keyx.equals("index")) continue;
 					if (keyx.equals("key")) continue;
-					if (keyx.equals("ttlAccess")) continue;
-					if (keyx.equals("ttlModify")) continue;
+					if (keyx.equals("ttlAccessSeconds")) continue;
+					if (keyx.equals("ttlModifySeconds")) continue;
 					jo.put(keyx, obj.get(keyx));
 				}
 			}
@@ -72,8 +72,8 @@ public class CruncherIdxPut extends Cruncher
 					if (keyx.equals("databaseName")) continue;
 					if (keyx.equals("index")) continue;
 					if (keyx.equals("key")) continue;
-					if (keyx.equals("ttlAccess")) continue;
-					if (keyx.equals("ttlModify")) continue;
+					if (keyx.equals("ttlAccessSeconds")) continue;
+					if (keyx.equals("ttlModifySeconds")) continue;
 					jo.put(keyx, get(keyx, c, parameters, dataStreams));
 				}
 			hashMap.put(key,jo.toString());
