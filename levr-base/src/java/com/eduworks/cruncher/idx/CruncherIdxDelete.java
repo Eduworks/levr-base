@@ -11,7 +11,6 @@ import org.mapdb.Fun;
 
 import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
-import com.eduworks.resolver.ContextEvent;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
 import com.eduworks.util.io.EwDB;
@@ -26,6 +25,7 @@ public class CruncherIdxDelete extends Cruncher
 		String _databaseName = Resolver.decodeValue(getAsString("databaseName", c, parameters, dataStreams));
 		boolean optCommit = optAsBoolean("_commit", true, c, parameters, dataStreams);
 		String index = Resolver.decodeValue(getAsString("index", c, parameters, dataStreams));
+		boolean deleteIndex = optAsBoolean("removeIndex", false, c, parameters, dataStreams);
 		String key = getAsString("key", c, parameters, dataStreams);
 		Object value = get("value", c, parameters, dataStreams);
 		EwDB ewDB = null;
@@ -37,23 +37,27 @@ public class CruncherIdxDelete extends Cruncher
 				ewDB = EwDB.getNoTransaction(_databasePath, _databaseName);
 
 			ewDB.compact = true;
-			
-			if (optAsString("multi", "false", c, parameters, dataStreams).equals("false")){
-				return ewDB.db.getHashMap(index).remove(key);
-			}else{
-				NavigableSet<Fun.Tuple2<String, Object>> multiMap = ewDB.db.getTreeSet(index);
-				
-				if(multiMap.remove(Fun.t2(key, value.toString())))
-					ewDB.writeCount.decrementAndGet();
-				
-				JSONArray ja = new JSONArray();
-				for (Object l : Fun.filter(multiMap, key))
-				{
-					ja.put(EwJson.tryParseJson(l,false));
-				}
-				if (ja.length() > 0)
-					return ja;
+			if (deleteIndex) {
+				ewDB.db.delete(index);
 				return null;
+			} else {
+				if (optAsString("multi", "false", c, parameters, dataStreams).equals("false")){
+					return ewDB.db.getHashMap(index).remove(key);
+				}else{
+					NavigableSet<Fun.Tuple2<String, Object>> multiMap = ewDB.db.getTreeSet(index);
+					
+					if(multiMap.remove(Fun.t2(key, value.toString())))
+						ewDB.writeCount.decrementAndGet();
+					
+					JSONArray ja = new JSONArray();
+					for (Object l : Fun.filter(multiMap, key))
+					{
+						ja.put(EwJson.tryParseJson(l,false));
+					}
+					if (ja.length() > 0)
+						return ja;
+					return null;
+				}
 			}
 		}
 		finally
