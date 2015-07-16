@@ -22,8 +22,6 @@ public class CruncherDifference extends Cruncher
 			if (!member(ja.get(i), ja2))
 				results.put(ja.get(i));
 		}
-		if (results.length() == 0)
-			return null;
 		return results;
 	}
 
