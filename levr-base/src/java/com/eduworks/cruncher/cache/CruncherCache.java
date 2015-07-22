@@ -41,9 +41,9 @@ public class CruncherCache extends Cruncher
 			if (optAsBoolean("remove", false, c, parameters, dataStreams))
 			{
 				if (optAsBoolean("global", false, c, parameters, dataStreams))
-					EwCache.getCache("GlobalCache").put(cacheName, null);
+					EwCache.getCache("GlobalCache").remove(cacheName);
 				else
-					c.put(cacheName, null);
+					c.remove(cacheName);
 			}
 			else
 			{
