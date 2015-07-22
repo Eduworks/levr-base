@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,8 +43,10 @@ public class CruncherIdxEach extends Cruncher
 		final String valueName = getAsString("valueName", c, parameters, dataStreams);
 		final boolean rethrow = optAsBoolean("rethrow", false, c, parameters, dataStreams);
 		boolean threaded = optAsBoolean("threaded", true, c, parameters, dataStreams);
+		final boolean memorySaver = optAsBoolean("memorySaver", true, c, parameters, dataStreams);
 		int sequenceI = Integer.parseInt(optAsString("sequenceI", "-1", c, parameters, dataStreams));
 		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", c, parameters, dataStreams));
+		final ConcurrentHashMap<String,Object> output = new ConcurrentHashMap<String,Object>();
 		EwDB ewDB = null;
 		try
 		{
@@ -58,6 +61,7 @@ public class CruncherIdxEach extends Cruncher
 			int counter = 0;
 			while (it.hasNext() && count-- > 0)
 			{
+				if (c.shouldAbort()) return null;
 				final Object t = it.next();
 				final int index = counter;
 				counter++;
@@ -94,6 +98,8 @@ public class CruncherIdxEach extends Cruncher
 								c.remove(valueString);
 							if (result instanceof EwJsonSerializable)
 								result = ((EwJsonSerializable) result).toJsonObject();
+							if (!memorySaver)
+								output.put(key, result);
 						}
 						catch (JSONException e)
 						{
@@ -127,7 +133,7 @@ public class CruncherIdxEach extends Cruncher
 			}
 			fl.nowPause(true);
 
-			return null;
+			return new JSONObject(output);
 		}
 
 		finally

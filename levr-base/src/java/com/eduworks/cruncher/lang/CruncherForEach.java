@@ -80,6 +80,7 @@ public class CruncherForEach extends Cruncher
 		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", c, parameters, dataStreams));
 		while (keys.hasNext() && (cap == -1 || output.length() < cap))
 		{
+			if (c.shouldAbort()) return null;
 			final String key = keys.next();
 			final Object value = json.get(key);
 			final String prevIdFinal = prevId;
@@ -182,6 +183,7 @@ public class CruncherForEach extends Cruncher
 		int sequenceMod = Integer.parseInt(optAsString("sequenceMod", "-1", c, parameters, dataStreams));
 		for (int i = 0; i < json.length() && (cap == -1 || output.length() < cap); i++)
 		{
+			if (c.shouldAbort()) return null;
 			final Object keyRaw = json.get(i);
 			final String key = keyRaw.toString();
 			final Object value = json.get(i);

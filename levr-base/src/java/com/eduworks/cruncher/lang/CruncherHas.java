@@ -39,6 +39,7 @@ public class CruncherHas extends Cruncher
 					p.matcher("");
 					c.put("regex_" + asString, p);
 				}
+				
 				return p.matcher(obj.toString()).matches();
 			}
 			else

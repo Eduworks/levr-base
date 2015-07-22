@@ -212,6 +212,7 @@ public class ResolverForEach extends Resolver
 		int sequenceMod = optAsInteger("sequenceMod", -1, parameters);
 		for (final String id : strings)
 		{
+			if (c.shouldAbort()) return;
 			counter++;
 			if (sequenceI == -1 || sequenceMod == -1 || counter % sequenceMod == sequenceI)
 			{
@@ -243,6 +244,7 @@ public class ResolverForEach extends Resolver
 		int sequenceMod = optAsInteger("sequenceMod", -1, parameters);
 		for (final String id : strings)
 		{
+			if (c.shouldAbort()) return;
 			counter++;
 			if (sequenceI == -1 || sequenceMod == -1 || counter % sequenceMod == sequenceI)
 			{
