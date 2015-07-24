@@ -44,6 +44,7 @@ public class ResolverFileFromDatastream extends Resolver
 		{
 			String except = optAsString("except", parameters);
 			EwList<Object> results = new EwList<Object>();
+			if (dataStreams != null)
 			for (Entry<String, InputStream> entry : dataStreams.entrySet())
 			{
 				String key = entry.getKey();
