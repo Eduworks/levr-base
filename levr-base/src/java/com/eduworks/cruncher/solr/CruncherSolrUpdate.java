@@ -25,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.lang.json.impl.EwJsonArray;
 import com.eduworks.lang.threading.EwThreading;
 import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
@@ -50,31 +51,26 @@ public class CruncherSolrUpdate extends Cruncher
 		
 		for(String fieldName : keySet()){
 			
-			if(fieldName.equals("obj")){
-				
-			}else if(fieldName.equals("solrURL")){
-				
-			}else if(fieldName.startsWith("?")){
-				
-			}else if(fieldName.equals("documentId")){
-				document.addField("id", getAsString(fieldName, c, parameters, dataStreams));
-			}else{
-				Map<String, Object> fieldMod = new HashMap<String, Object>();
-				Object fieldObj = resolveAChild(fieldName, c, parameters, dataStreams);
-				
-				JSONObject operation;
-				try{
-					operation = (JSONObject)fieldObj;
+			if (!(fieldName.equals("obj")||fieldName.equals("solrURL")||fieldName.startsWith("?"))) {
+				if(fieldName.equals("documentId")) {
+					document.addField("id", getAsString(fieldName, c, parameters, dataStreams));
+				} else {
+					Map<String, Object> fieldMod = new HashMap<String, Object>();
+					Object fieldObj = resolveAChild(fieldName, c, parameters, dataStreams);
 					
-					String op = operation.getString("op");
-					String val = operation.getString("val");
-					
-					fieldMod.put(op, val);
-					document.addField(fieldName, fieldMod);
-				}catch(RuntimeException e){
-					
+					JSONObject operation;
+					try{
+						operation = (JSONObject)fieldObj;
+						
+						String op = operation.getString("op");
+						Object val = operation.get("val");
+						
+						fieldMod.put(op, val);
+						document.addField(fieldName, fieldMod);
+					} catch(RuntimeException e) {
+						
+					}
 				}
-				
 			}
 		}
 		
@@ -92,7 +88,7 @@ public class CruncherSolrUpdate extends Cruncher
 		
 		return response;
 	}
-
+	
 	@Override
 	public String getDescription()
 	{
