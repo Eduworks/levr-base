@@ -20,14 +20,25 @@ public class CruncherUnion extends Cruncher
 	{
 		EwList<Object> ja = new EwList<Object>(getObjAsJsonArray(c, parameters, dataStreams));
 		Boolean accumulate = optAsBoolean("accumulate", true, c, parameters, dataStreams);
+		boolean unique = optAsBoolean("unique",true,c,parameters,dataStreams);
 		JSONObject jo = new JSONObject();
-		if (keySet().size() == 1)
+		int keys = 0;
+		for (String key : keySet())
+		{
+			if (key.equals("accumulate")) continue;
+			if (key.equals("unique")) continue;
+			keys++;
+		}
+		if (keys == 1)
 		{
 			EwList<Object> results = new EwList<Object>();
 			for (Object o : ja)
 			{
 				if (o instanceof JSONArray)
+					if (unique)
 					results=results.union(new EwList<Object>(o));
+					else
+						results.addAll(new EwList<Object>(o));
 				else if (o instanceof JSONObject)
 					for (String key : EwJson.getKeys((JSONObject)o))
 						if (accumulate)
@@ -47,7 +58,10 @@ public class CruncherUnion extends Cruncher
 				if (key.equals("obj"))
 					continue;
 				EwList<Object> organizations = new EwList<Object>(getAsJsonArray(key, c, parameters, dataStreams));
+				if (unique)
 				ja = ja.union(organizations);
+				else
+					ja.addAll(organizations);
 			}
 		}
 		if (jo.length() != 0)

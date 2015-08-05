@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import com.eduworks.lang.EwMap;
 import com.eduworks.resolver.Context;
+import com.eduworks.resolver.Resolvable;
 import com.eduworks.resolver.Resolver;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -107,10 +108,10 @@ public class ResolverHarvestRss extends Resolver
 	{
 		String id = entry.getLink();
 		String title = entry.getTitle();
-		Resolver operation = (Resolver) get("op");
+		Resolvable operation = (Resolvable) get("op");
 		try
 		{
-			final Resolver thing = (Resolver) operation.clone();
+			final Resolvable thing = (Resolvable) operation.clone();
 			try
 			{
 				final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);

@@ -49,7 +49,9 @@ public class ResolverString extends Resolver
 				return Arrays.asList(string.split(optAsString(REGEX_KEY, parameters)));
 
 			case SUBSTR:
-				return string.substring(optInt("begin"), Math.min(optInt("end", string.length()),string.length()));
+				int optInt = optInt("begin");
+				int optInt2 = optInt("end", string.length());
+				return string.substring(Math.min(optInt,string.length()), Math.min(optInt2,string.length()));
 
 			case TRIM:
 				return trim(string, optAsString("chars", parameters), optAsBoolean("trimQuotes", false, parameters));
