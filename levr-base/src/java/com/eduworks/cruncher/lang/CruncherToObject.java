@@ -25,15 +25,10 @@ public class CruncherToObject extends Cruncher
 		if (asString == null) return null;
 		if (asString.isEmpty()) return null;
 		Object object = c.get(asString);
-		JSONObject result;
-		try
-		{
+		JSONObject result=null;
+		if (object instanceof JSONObject)
 			result = (JSONObject) object;
-		}
-		catch (ClassCastException ex)
-		{
-			result = null;
-		}
+		
 		if (result == null)
 			return new JSONObject(asString);
 		return result;

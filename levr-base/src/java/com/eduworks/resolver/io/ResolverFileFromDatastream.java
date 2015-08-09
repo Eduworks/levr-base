@@ -25,14 +25,15 @@ public class ResolverFileFromDatastream extends Resolver
 		resolveAllChildren(c, parameters, dataStreams);
 		String nameField = optAsString("name", parameters);
 		Boolean useInMemory = optAsBoolean("inMemory", true, parameters);
+		Boolean useFileName = optAsBoolean("useFileName", false, parameters);
 		if (!nameField.isEmpty())
 		{
 			try
 			{
 				if (useInMemory)
-					return getRFileFromPost(dataStreams, nameField);
+					return getRFileFromPost(c,dataStreams, nameField,useFileName);
 				else
-					return getFileFromPost(dataStreams, nameField);
+					return getFileFromPost(c,dataStreams, nameField,useFileName);
 			}
 			catch (IOException e)
 			{
@@ -54,9 +55,9 @@ public class ResolverFileFromDatastream extends Resolver
 				{
 					entry.getValue().reset();
 					if (useInMemory)
-						results.add(getRFileFromPost(dataStreams, key));
+						results.add(getRFileFromPost(c,dataStreams, key,useFileName));
 					else
-						results.add(getFileFromPost(dataStreams, key));
+						results.add(getFileFromPost(c,dataStreams, key,useFileName));
 				}
 				catch (IOException e)
 				{
@@ -67,7 +68,7 @@ public class ResolverFileFromDatastream extends Resolver
 		}
 	}
 
-	private InMemoryFile getRFileFromPost(Map<String, InputStream> dataStreams, String nameField) throws IOException,
+	private InMemoryFile getRFileFromPost(Context c, Map<String, InputStream> dataStreams, String nameField, boolean useFileName) throws IOException,
 			FileNotFoundException
 	{
 		if (dataStreams == null)
@@ -77,12 +78,15 @@ public class ResolverFileFromDatastream extends Resolver
 		InputStream document = dataStreams.get(nameField);
 		document.reset();
 		InMemoryFile createTempFile = new InMemoryFile();
-		createTempFile.name = nameField;
+		if (useFileName && c.filenames.containsKey(nameField))
+			createTempFile.name = c.filenames.get(nameField);
+		if (createTempFile.name == null || createTempFile.name.isEmpty())
+			createTempFile.name = nameField;
 		createTempFile.data = IOUtils.toByteArray(document);
 		return createTempFile;
 	}
 	
-	private File getFileFromPost(Map<String, InputStream> dataStreams, String nameField) throws IOException,
+	private File getFileFromPost(Context c, Map<String, InputStream> dataStreams, String nameField, boolean useFileName) throws IOException,
 			FileNotFoundException
 	{
 		if (dataStreams == null)
@@ -92,6 +96,14 @@ public class ResolverFileFromDatastream extends Resolver
 		InputStream document = dataStreams.get(nameField);
 		document.reset();
 		String extension = "";
+		if (useFileName && c.filenames.containsKey(nameField))
+			extension = c.filenames.get(nameField);
+		if (extension == null || extension.isEmpty())
+			extension = nameField;
+		if (extension != null)
+			extension = extension.substring(Math.min(0, extension.lastIndexOf('.')));
+		if (extension == null || extension.isEmpty())
+			extension = "";
 		File createTempFile = File.createTempFile("foo", extension);
 		FileOutputStream fw = new FileOutputStream(createTempFile);
 		try
