@@ -29,10 +29,13 @@ public class CruncherStripTags extends Cruncher
 		if (allowTags != null) {
 			for (int i=0; i<allowTags.length(); i++) {
 				tagList[i+2] = allowTags.getString(i);
+				// For now, check for MathML tag and allow xmlns attribute on that tag if present
+				if (tagList[i+2].equalsIgnoreCase("math"))
+					wl.addAttributes("math", "xmlns");
 			}
 		}
 		wl = wl.addTags(tagList);
-		log.debug("JSoup allowed tag list:" + wl.toString());
+		//log.debug("JSoup allowed tag list:" + wl.toString());
 		
 		return Jsoup.clean(text, wl);
 	}
