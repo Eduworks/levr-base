@@ -1,6 +1,7 @@
 package com.eduworks.cruncher.parse;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -19,12 +20,16 @@ public class CruncherStripTags extends Cruncher
 	{
 		String text = (String)getObj(c, parameters, dataStreams);
 		Whitelist wl = Whitelist.simpleText().addTags("sub", "sup");
+		
 		JSONArray allowTags = getAsJsonArray("allowTags", c, parameters, dataStreams);
+		String[] tagList = new String[allowTags.length()];
 		if (allowTags != null) {
 			for (int i=0; i<allowTags.length(); i++) {
-				wl = wl.addTags(allowTags.getString(i));
+				tagList[i] = allowTags.getString(i);
 			}
+			wl = wl.addTags(tagList);
 		}
+		
 		return Jsoup.clean(text, wl);
 	}
 
