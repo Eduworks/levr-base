@@ -22,7 +22,7 @@ public class CruncherStripTags extends Cruncher
 		JSONArray allowTags = getAsJsonArray("allowTags", c, parameters, dataStreams);
 		if (allowTags != null) {
 			for (int i=0; i<allowTags.length(); i++) {
-				wl.addTags(allowTags.getString(i));
+				wl = wl.addTags(allowTags.getString(i));
 			}
 		}
 		return Jsoup.clean(text, wl);
