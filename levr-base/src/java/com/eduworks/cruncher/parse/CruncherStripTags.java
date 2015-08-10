@@ -32,6 +32,7 @@ public class CruncherStripTags extends Cruncher
 			}
 		}
 		wl = wl.addTags(tagList);
+		log.debug("JSoup allowed tag list:" + wl.toString());
 		
 		return Jsoup.clean(text, wl);
 	}
