@@ -30,8 +30,8 @@ public class CruncherStripTags extends Cruncher
 			for (int i=0; i<allowTags.length(); i++) {
 				tagList[i+2] = allowTags.getString(i);
 			}
-			wl = wl.addTags(tagList);
 		}
+		wl = wl.addTags(tagList);
 		
 		return Jsoup.clean(text, wl);
 	}
