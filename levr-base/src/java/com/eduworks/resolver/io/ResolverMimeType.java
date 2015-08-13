@@ -3,6 +3,7 @@ package com.eduworks.resolver.io;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -23,12 +24,13 @@ public class ResolverMimeType extends Resolver
 	{
 		resolveAllChildren(c, parameters, dataStreams);
 		Object obj = get("file", parameters);
+		JSONObject extensionMimes = (JSONObject)get("extensions", parameters);
 		try
 		{
 			if (obj instanceof File)
-				return getMimeType((File) obj);
+				return getMimeType((File) obj, extensionMimes);
 			else if (obj instanceof InMemoryFile)
-				return getMimeType((InMemoryFile) obj);
+				return getMimeType((InMemoryFile) obj, extensionMimes);
 			else
 				return null;
 		}
@@ -39,16 +41,17 @@ public class ResolverMimeType extends Resolver
 		}
 	}
 
-	public static Object getMimeType(InMemoryFile file) throws IOException
+	public static Object getMimeType(InMemoryFile file, JSONObject extensions) throws IOException, JSONException
 	{
 		String mimeType = null;
 		MimeTypeIdentifier identifier = new MagicMimeTypeIdentifier();
 		mimeType = identifier.identify(file.data, file.name, null);
+		mimeType = checkExtensions(mimeType, file, extensions);
 		mimeType = fixMimeType(mimeType, file.name, file.data);
 		return mimeType;
 	}
 
-	public static Object getMimeType(File file) throws IOException
+	public static Object getMimeType(File file, JSONObject extensions) throws IOException, JSONException
 	{
 		String mimeType = null;
 		if (mimeType == null)
@@ -58,11 +61,28 @@ public class ResolverMimeType extends Resolver
 			int length = Math.max(1024, identifier.getMinArrayLength());
 			bytes = FileUtils.readFileToByteArray(file);
 			mimeType = identifier.identify(bytes, file.getName(), null);
+			mimeType = checkExtensions(mimeType, file, extensions);
 			mimeType = fixMimeType(mimeType, file.getName(), bytes);
 		}
 		return mimeType;
 	}
 
+	public static String checkExtensions(String mime, Object f, JSONObject extensions) throws JSONException {
+		if (extensions!=null) {
+			String filename = "";
+			if (f instanceof InMemoryFile)
+				filename = ((InMemoryFile)f).name;
+			else if (f instanceof File)
+				filename = ((File)f).getName();
+			for (Iterator<String> cursor = extensions.keys(); cursor.hasNext(); ) {
+				String extension = cursor.next();
+				if (filename.endsWith(extension))
+					return extensions.getString(extension);
+			}
+		}
+		return mime;
+	}
+	
 	private static String fixMimeType(String mime, String url, byte[] firstBytes)
 	{
 		if ((url == null || url.endsWith(".fla")) && firstBytes != null && firstBytes.length >= 4 && firstBytes[0] == -48 && firstBytes[1] == -49
