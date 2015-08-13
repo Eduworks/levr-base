@@ -23,7 +23,6 @@ import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 public class CruncherSolrSearch extends Cruncher
 {
@@ -107,7 +106,10 @@ public class CruncherSolrSearch extends Cruncher
 			queryParameters.addFacetField(facets);
 		}
 		
-		
+		JSONArray fqs = getAsJsonArray("fq", c, parameters, dataStreams);
+		if (fqs!=null)
+			for (int i = 0; i < fqs.length(); i++)
+				queryParameters.addFilterQuery(fqs.getString(i));
 		
 		QueryResponse results;
 		try {
