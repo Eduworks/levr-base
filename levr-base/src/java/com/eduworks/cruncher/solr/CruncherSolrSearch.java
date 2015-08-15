@@ -106,10 +106,9 @@ public class CruncherSolrSearch extends Cruncher
 			queryParameters.addFacetField(facets);
 		}
 		
-		JSONArray fqs = getAsJsonArray("fq", c, parameters, dataStreams);
-		if (fqs!=null)
-			for (int i = 0; i < fqs.length(); i++)
-				queryParameters.addFilterQuery(fqs.getString(i));
+		String fq = optAsString("fq", null, c, parameters, dataStreams);
+		if (fq!=null)
+			queryParameters.addFilterQuery(fq);
 		
 		QueryResponse results;
 		try {
