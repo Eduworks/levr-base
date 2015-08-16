@@ -19,10 +19,18 @@ public class CruncherRemove extends Cruncher
 		JSONArray ja = getObjAsJsonArray(c, parameters, dataStreams);
 		JSONArray result = new JSONArray();
 		String asString = getAsString("item", c, parameters, dataStreams);
-		for (int i = 0;i < ja.length();i++)
-		{
-			if (!ja.getString(i).equals(asString))
-				result.put(ja.get(i));
+		String index = getAsString("index", c, parameters, dataStreams);
+		if (asString!=null)
+			for (int i = 0;i < ja.length();i++) {
+				if (!ja.getString(i).equals(asString))
+					result.put(ja.get(i));
+			}
+		else if (index!=null) {
+			int nIndex = Integer.parseInt(index);
+			for (int i = 0;i < ja.length();i++) {
+				if (i!=nIndex)
+					result.put(ja.get(i));
+			}
 		}
 		return result;
 	}
