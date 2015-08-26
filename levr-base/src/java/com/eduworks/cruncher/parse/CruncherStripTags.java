@@ -8,6 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Entities.EscapeMode;
+import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 
 import com.eduworks.resolver.Context;
@@ -20,6 +23,9 @@ public class CruncherStripTags extends Cruncher
 	{
 		String text = (String)getObj(c, parameters, dataStreams);
 		Whitelist wl = Whitelist.simpleText();
+		Document doc = Jsoup.parse(text);
+		doc.outputSettings().charset("UTF-8");
+		doc.outputSettings().escapeMode(EscapeMode.xhtml);
 		
 		JSONArray allowTags = getAsJsonArray("allowTags", c, parameters, dataStreams);
 		String[] tagList = new String[allowTags.length()+2];
@@ -36,9 +42,8 @@ public class CruncherStripTags extends Cruncher
 			//log.debug("JSoup allowed tag list:" + wl.toString());
 		}
 		wl = wl.addTags(tagList);
-
-		
-		return Jsoup.clean(text, wl);
+		doc = new Cleaner(wl).clean(doc);
+		return doc.body().html();
 	}
 
 	@Override
