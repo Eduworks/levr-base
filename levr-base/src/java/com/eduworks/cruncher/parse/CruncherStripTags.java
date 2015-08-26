@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +24,7 @@ public class CruncherStripTags extends Cruncher
 	{
 		String text = (String)getObj(c, parameters, dataStreams);
 		Whitelist wl = Whitelist.simpleText();
-		Document doc = Jsoup.parse(text);
+		Document doc = Jsoup.parse(StringEscapeUtils.unescapeHtml(text));
 		doc.outputSettings().charset("UTF-8");
 		doc.outputSettings().escapeMode(EscapeMode.xhtml);
 		
