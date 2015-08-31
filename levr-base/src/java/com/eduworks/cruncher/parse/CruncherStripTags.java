@@ -44,7 +44,7 @@ public class CruncherStripTags extends Cruncher
 		// Clean the text using the whitelist, and allow escaped characters
 		Document doc = Jsoup.parse(htmlText);
 		log.debug("JSoup parsed: " + doc.body().html());
-		doc.outputSettings().charset("UTF-8");
+		doc.outputSettings().charset("ISO-8859-1");
 		doc.outputSettings().escapeMode(EscapeMode.xhtml);
 		htmlText = Jsoup.clean(doc.body().html(), wl);
 		log.debug("JSoup cleaned: " + htmlText);
