@@ -57,7 +57,7 @@ public class CruncherOntologyTDBExport extends CruncherOntology
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("ontologyId", "string", "directory", "path string", "importId", "string");
+		return jo("identifier", "string", "extension", "path string", "tdbDirectory", "string", "exportDirectory", "string");
 	}
 
 }
