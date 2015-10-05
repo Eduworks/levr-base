@@ -37,10 +37,9 @@
   	<dependency org="mysql" name="mysql-connector-java" rev="5.1.35"/>
     <dependency org="jcifs" name="jcifs" rev="1.3.17"/>
   	  	                
-	<exclude org="javax.servlet"/> 
+  	<exclude module="servlet-api"/>
 	<exclude org="com.ibm.icu"/>
 	<exclude org="javax.sql"/>
-	<exclude org="javax.servlet"/>
 	<exclude org="javax.transaction"/>
 	<exclude org="commons-daemon"/>
 	<exclude org="groovy"/>

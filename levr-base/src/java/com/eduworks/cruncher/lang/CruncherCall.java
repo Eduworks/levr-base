@@ -22,6 +22,7 @@ public class CruncherCall extends Cruncher
 	{
 		final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 		boolean background = optAsBoolean("background",false,c,parameters,dataStreams);
+		final boolean newContext = optAsBoolean("newContext",false,c,parameters,dataStreams);
 		ArrayList<String> valuesToRemove = new ArrayList<String>();
 		for (String key : keySet())
 		{
@@ -65,7 +66,14 @@ public class CruncherCall extends Cruncher
 				{
 					try
 					{
-						Object result = resolveAChild("obj", c,newParams, dataStreams);
+						Object result = null;
+						if (newContext)
+						{
+							Context c2 = new Context(c);
+							result = resolveAChild("obj", c2,newParams, dataStreams);
+						}
+						else
+							result = resolveAChild("obj", c,newParams, dataStreams);
 					}
 					catch (JSONException e)
 					{
