@@ -1,6 +1,6 @@
 import org.apache.log4j.Logger;
 
-import com.eduworks.levr.server.LevrHttpServer;
+import com.eduworks.levr.jetty.LevrHttpServer;
 import com.eduworks.levr.servlet.impl.LevrResolverServlet;
 
 public class LevrHttpServerBase
