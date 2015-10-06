@@ -134,6 +134,7 @@
 			</fileset>
 		</copy>
 		<copy todir="${levr.base.web.lib}/" file="${eduworks.common.dist}/${eduworks.common.name}-${eduworks.common.version}.jar" />
+		<delete file="web/WEB-INF/lib/websocket-api.jar"/> <!-- http://stackoverflow.com/questions/21852459/tomcat-7-0-50-java-webscoket-implementation-gives-404-error -->
 		<zip destfile="dist/levr.war" basedir="web" />
 	</target>
 
