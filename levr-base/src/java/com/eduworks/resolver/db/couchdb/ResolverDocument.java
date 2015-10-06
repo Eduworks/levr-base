@@ -3,13 +3,14 @@ package com.eduworks.resolver.db.couchdb;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jetty.util.security.Credential.MD5;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,8 +79,16 @@ public abstract class ResolverDocument extends Resolver
 				if (!docPassValue.equals(curPassValue))
 					throw new SecurityException(invalidPassMsg);
 			}
-			else if (!docPassValue.equals(MD5.digest(curPassValue)))
-				throw new SecurityException(invalidPassMsg);
+			else
+				try
+				{
+					if (!docPassValue.equals(MessageDigest.getInstance("MD5").digest(curPassValue.getBytes())))
+						throw new SecurityException(invalidPassMsg);
+				}
+				catch (NoSuchAlgorithmException e)
+				{
+					e.printStackTrace();
+				}
 		}
 	}
 
@@ -90,7 +99,14 @@ public abstract class ResolverDocument extends Resolver
 		final String password = getAsString(NEW_PASS_KEY, parameters);
 
 		if (key.equals(NEW_PASS_KEY) && !password.isEmpty())
-			d.put(PASS_KEY, (isMD5(password)) ? password : MD5.digest(password));
+			try
+			{
+				d.put(PASS_KEY, (isMD5(password)) ? password : MessageDigest.getInstance("MD5").digest(password.getBytes()));
+			}
+			catch (NoSuchAlgorithmException e)
+			{
+				e.printStackTrace();
+			}
 	}
 
 	protected JSONObject dataToJsonObject(Map<String, InputStream> dataStreams) throws JSONException

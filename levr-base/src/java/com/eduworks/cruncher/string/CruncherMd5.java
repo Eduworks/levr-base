@@ -1,9 +1,10 @@
 package com.eduworks.cruncher.string;
 
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
-import org.eclipse.jetty.util.security.Credential.MD5;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,7 +17,15 @@ public class CruncherMd5 extends Cruncher
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		return MD5.digest(getObj(c, parameters, dataStreams).toString());
+		try
+		{
+			return MessageDigest.getInstance("MD5").digest(getObj(c, parameters, dataStreams).toString().getBytes());
+		}
+		catch (NoSuchAlgorithmException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override

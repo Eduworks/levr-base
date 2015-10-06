@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import org.eclipse.jetty.util.URIUtil;
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +21,15 @@ public class ResolverGetFromDocument extends ResolverDocument
 {
 	public String encodeValue2(String value)
 	{
-		return URIUtil.encodePath(value);
+		try
+		{
+			return URIUtil.encodePath(value);
+		}
+		catch (URIException e)
+		{
+			e.printStackTrace();
+			return value;
+		}
 	}
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
