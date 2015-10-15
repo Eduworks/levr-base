@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+  <info
+   organisation="com.eduworks"
+   module="levr-base-dev"
+   status="integration">
+   <extends organisation="com.eduworks" module="levr-core-dev" revision="latest.integration" location="../levr-core/ivy-dev.xml" extendType="configurations,dependencies"/>
+  </info>
+  <dependencies>
+  </dependencies>
+</ivy-module>

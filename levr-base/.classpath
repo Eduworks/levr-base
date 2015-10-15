@@ -7,5 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/levr-core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/eduworks-common"/>
 	<classpathentry kind="lib" path="deps/RCaller-2.4-SNAPSHOT.jar"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=levr-base&amp;ivyXmlPath=ivy-dev.xml&amp;confs=*"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
