@@ -20,6 +20,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.AbstractContentBody;
+import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -74,9 +75,12 @@ public class CruncherHttpPost extends Cruncher
 				if (o instanceof File)
 					entity = new FileEntity((File) o);
 				else if (o instanceof InMemoryFile)
-					entity = new InputStreamEntity(((InMemoryFile) o).getInputStream());
+					entity = new InputStreamEntity(((InMemoryFile) o).getInputStream(),((InMemoryFile) o).data.length);
 				else
-					entity = new InputStreamEntity(new ByteArrayInputStream(o.toString().getBytes("UTF-8")));
+				{
+					byte[] bytes = o.toString().getBytes("UTF-8");
+					entity = new InputStreamEntity(new ByteArrayInputStream(bytes),bytes.length);
+				}
 				post.setHeader("Content-Type", contentType);
 //				if (accept != null)
 //				post.setHeader("Accept", accept);
