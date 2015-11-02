@@ -29,11 +29,12 @@ public class CruncherOntologyReadClassInstances extends CruncherOntology {
 		String directory = Resolver.decodeValue(optAsString("directory","", c,parameters, dataStreams));
 		
 		boolean local = optAsBoolean("local", false, c, parameters, dataStreams);
+		boolean inference = optAsBoolean("inference", true, c, parameters, dataStreams);
 		
 		Ontology o = null;
 		JSONObject all = new JSONObject();
 		Dataset tdbDataset = getDataSet(directory,ReadWrite.READ,c);
-
+		
 		try
 		{	
 			
@@ -51,10 +52,10 @@ public class CruncherOntologyReadClassInstances extends CruncherOntology {
 				
 				if(local){
 					if(o.getJenaModel().isInBaseModel(instances.get(k).getJenaIndividual())){
-						all.put(k, instances.get(k).getJSONRepresentation());
+						all.put(k, instances.get(k).getJSONRepresentation(local, inference));
 					}
 				}else{
-					all.put(k, instances.get(k).getJSONRepresentation());
+					all.put(k, instances.get(k).getJSONRepresentation(local, inference));
 				}
 			}
 		}

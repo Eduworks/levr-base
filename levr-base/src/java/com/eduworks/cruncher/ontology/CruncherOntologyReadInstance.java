@@ -27,6 +27,9 @@ public class CruncherOntologyReadInstance extends CruncherOntology
 
 		String directory = Resolver.decodeValue(optAsString("directory", "", c, parameters, dataStreams));
 
+		boolean local = optAsBoolean("local", false, c, parameters, dataStreams);
+		boolean inference = optAsBoolean("inference", true, c, parameters, dataStreams);
+		
 		Ontology o = null;
 		JSONObject result = new JSONObject();
 		Dataset tdbDataset = getDataSet(directory,ReadWrite.READ,c);
@@ -50,12 +53,12 @@ public class CruncherOntologyReadInstance extends CruncherOntology
 				for (int i = 0; i < ids.length(); i++)
 				{
 					String id = ids.optString(i);
-					result.put(id, o.getInstance(id).getJSONRepresentation());
+					result.put(id, o.getInstance(id).getJSONRepresentation(local, inference));
 				}
 			}
 			else
 			{
-				result.put(instanceId, o.getInstance(instanceId).getJSONRepresentation());
+				result.put(instanceId, o.getInstance(instanceId).getJSONRepresentation(local, inference));
 			}
 		}
 		finally
