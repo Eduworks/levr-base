@@ -12,6 +12,8 @@ import org.jivesoftware.smack.packet.Message;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.lang.EwCacheMap;
+import com.eduworks.lang.EwMap;
 import com.eduworks.levr.servlet.impl.LevrResolverServlet;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
@@ -19,6 +21,7 @@ import com.eduworks.resolver.Resolvable;
 
 public class CruncherXmppListen extends Cruncher
 {
+	public Map<String, Object> recipientLocks = new EwMap<String, Object>();
 
 	private final class MessageListenerImplementation implements MessageListener
 	{
@@ -36,30 +39,38 @@ public class CruncherXmppListen extends Cruncher
 		@Override
 		public void processMessage(Chat chat2, Message arg1)
 		{
-			Context c = new Context();
-			try
+			synchronized (recipientLocks)
 			{
-				if (arg1.getBody() == null) 
-					return;
-				Map<String, String[]> newParameters = new HashMap<String,String[]>(parameters);
-				newParameters.put("message", new String[]{arg1.getBody()});
-				newParameters.put("sender", new String[]{chat2.getParticipant().split("/")[0]});
-				log.debug(chat2.getParticipant() + " --> " + arg1.getBody());
-				LevrResolverServlet.initConfig(System.out);
-				((Resolvable)op.clone()).resolve(c, newParameters, dataStreams);
-				c.success();
+				if (!recipientLocks.containsKey(chat2.getParticipant()))
+					recipientLocks.put(chat2.getParticipant(), new Object());
 			}
-			catch (Throwable e)
+			synchronized (recipientLocks.get(chat2.getParticipant()))
 			{
-				c.failure();
-				if (!(e instanceof RuntimeException))
-					e.printStackTrace();
-				else if (e.getMessage() != null && !e.getMessage().isEmpty())
-					System.out.println(e.getMessage());
-			}
-			finally
-			{
-				c.finish();
+				Context c = new Context();
+				try
+				{
+					if (arg1.getBody() == null)
+						return;
+					Map<String, String[]> newParameters = new HashMap<String, String[]>(parameters);
+					newParameters.put("message", new String[] { arg1.getBody() });
+					newParameters.put("sender", new String[] { chat2.getParticipant().split("/")[0] });
+					log.debug(chat2.getParticipant() + " --> " + arg1.getBody());
+					LevrResolverServlet.initConfig(System.out);
+					((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
+					c.success();
+				}
+				catch (Throwable e)
+				{
+					c.failure();
+					if (!(e instanceof RuntimeException))
+						e.printStackTrace();
+					else if (e.getMessage() != null && !e.getMessage().isEmpty())
+						System.out.println(e.getMessage());
+				}
+				finally
+				{
+					c.finish();
+				}
 			}
 		}
 	}
@@ -72,8 +83,8 @@ public class CruncherXmppListen extends Cruncher
 		String port = getAsString("port", c, parameters, dataStreams);
 		String username = getAsString("username", c, parameters, dataStreams);
 		String password = getAsString("password", c, parameters, dataStreams);
-		XMPPConnection connection = XmppManager.get(server,port,loginHostname, username, password);
-		
+		XMPPConnection connection = XmppManager.get(server, port, loginHostname, username, password);
+
 		final Resolvable op = (Resolvable) get("messageReceived");
 		log.debug("Unregistering chat listeners.");
 		for (ChatManagerListener cml : connection.getChatManager().getChatListeners())
@@ -82,7 +93,7 @@ public class CruncherXmppListen extends Cruncher
 		{
 			for (MessageListener l : ch.getListeners())
 			{
-				((MessageListenerImplementation)l).op = op;
+				((MessageListenerImplementation) l).op = op;
 			}
 		}
 		log.debug("Registering new chat listener.");
@@ -97,11 +108,11 @@ public class CruncherXmppListen extends Cruncher
 		return null;
 	}
 
-	public MessageListener getMessageListener(final Map<String, String[]> parameters,
-			final Map<String, InputStream> dataStreams, final Resolvable op)
+	public MessageListener getMessageListener(final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams, final Resolvable op)
 	{
 		return new MessageListenerImplementation(op, parameters, dataStreams);
 	}
+
 	@Override
 	public String getDescription()
 	{
@@ -123,7 +134,7 @@ public class CruncherXmppListen extends Cruncher
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("serverHostname","String","username","String","password","String");
+		return jo("serverHostname", "String", "username", "String", "password", "String");
 	}
 
 }

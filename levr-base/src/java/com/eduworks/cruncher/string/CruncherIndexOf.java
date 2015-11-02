@@ -15,7 +15,11 @@ public class CruncherIndexOf extends Cruncher
 	   public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	   {
 	      String str = getAsString("str",c,parameters, dataStreams);
+	      if (str == null)
+	    	  str = getAsString("obj",c,parameters,dataStreams);
 	      String substr = getAsString("substr",c,parameters, dataStreams);
+	      if (substr == null)
+	    	  substr = getAsString("of",c,parameters,dataStreams);
 	      
 	      return str.indexOf(substr);
 	   }

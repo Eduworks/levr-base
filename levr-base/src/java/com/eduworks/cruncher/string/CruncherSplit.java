@@ -22,7 +22,11 @@ public class CruncherSplit extends Cruncher
 		if (asString.isEmpty()) return new JSONArray();
 		if (optAsBoolean("newline",false,c,parameters, dataStreams))
 			return new JSONArray(asString.split("\r?\n"));
-		String[] split = asString.toString().split(Pattern.quote(getAsString("split",c,parameters, dataStreams)));
+		String[] split = null;
+		if (optAsBoolean("regex",false,c,parameters,dataStreams))
+			split = asString.toString().split(getAsString("split",c,parameters, dataStreams));
+		else
+			split = asString.toString().split(Pattern.quote(getAsString("split",c,parameters, dataStreams)));
 		return new JSONArray(split);
 	}
 

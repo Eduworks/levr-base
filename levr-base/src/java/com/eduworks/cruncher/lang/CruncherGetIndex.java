@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.lang.EwRandom;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
@@ -20,25 +21,18 @@ public class CruncherGetIndex extends Cruncher
 		if (optAsString("soft", "false", c, parameters, dataStreams).equals("true") && !(getObj(c, parameters, dataStreams) instanceof JSONArray))
 			return null;
 		Object objx = getObj(c, parameters, dataStreams);
+		Integer index = optAsInteger("index", 0,c, parameters, dataStreams);
+		boolean random = false;
+		if (optAsBoolean("random",false,c,parameters,dataStreams))
+			random = true;
 		if (objx instanceof List)
 		{
 			List obj = (List) objx;
 			if (obj == null)
 				return null;
-			int key = -1;
-			if (get("index", c, parameters, dataStreams) instanceof Double)
-				key = ((Double) get("index", c, parameters, dataStreams)).intValue();
-			else
-				try
-				{
-					key = Integer.parseInt(getAsString("index", c, parameters, dataStreams));
-				}
-				catch (NumberFormatException ex)
-				{
-					return null;
-				}
-			if (obj.size() > key)
-				return obj.get(key);
+			if (random) index = EwRandom.r(obj.size());
+			if (obj.size() > index)
+				return obj.get(index);
 		}
 		// if the object was a list and did not return, a cast exception would
 		// be thrown...TB 10/30/2014
@@ -47,20 +41,9 @@ public class CruncherGetIndex extends Cruncher
 			JSONArray obj = (JSONArray) objx;
 			if (obj == null)
 				return null;
-			int key = -1;
-			if (get("index", c, parameters, dataStreams) instanceof Double)
-				key = ((Double) get("index", c, parameters, dataStreams)).intValue();
-			else
-				try
-				{
-					key = Integer.parseInt(getAsString("index", c, parameters, dataStreams));
-				}
-				catch (NumberFormatException ex)
-				{
-					return null;
-				}
-			if (obj.length() > key)
-				return obj.get(key);
+			if (random) index = EwRandom.r(obj.length());
+			if (obj.length() > index)
+				return obj.get(index);
 		}
 		return null;
 	}
