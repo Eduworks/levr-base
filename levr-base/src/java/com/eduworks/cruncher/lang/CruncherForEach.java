@@ -15,7 +15,6 @@ import com.eduworks.lang.EwStringUtil;
 import com.eduworks.lang.threading.EwThreading;
 import com.eduworks.lang.threading.EwThreading.MyFutureList;
 import com.eduworks.lang.threading.EwThreading.MyRunnable;
-import com.eduworks.lang.util.EwCache;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolver;
@@ -255,6 +254,10 @@ public class CruncherForEach extends Cruncher
 								else
 									e.printStackTrace();
 							}
+							catch (RuntimeException ex)
+							{
+									throw ex;
+							}
 							catch (Exception ex)
 							{
 								if (rethrow)
@@ -296,6 +299,10 @@ public class CruncherForEach extends Cruncher
 						}
 						if (threaded)
 							clearThreadCache();
+					}
+					catch (RuntimeException ex)
+					{
+						throw ex;
 					}
 					catch (Exception ex)
 					{
