@@ -74,7 +74,7 @@ public class CruncherHas extends Cruncher
 			String has = getAsString("has", c, parameters, dataStreams);
 			for (int i = 0; i < obje.length(); i++)
 			{
-				if (obje.get(i).equals(has))
+				if (obje.getString(i).equals(has))
 					return true;
 			}
 			return false;
