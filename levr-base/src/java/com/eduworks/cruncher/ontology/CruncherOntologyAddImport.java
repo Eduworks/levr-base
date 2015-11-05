@@ -44,9 +44,7 @@ public class CruncherOntologyAddImport extends CruncherOntology
 				return resolve(c, parameters, dataStreams);
 			}
 			o.addOntology(tdbDataset, importId);
-
-			o.save(tdbDataset);
-
+			
 			Set<String> ids = o.listImportedOntologies();
 
 			for (String id : ids)

@@ -7,6 +7,7 @@ import com.eduworks.resolver.Cruncher;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.shared.ClosedException;
+import com.hp.hpl.jena.tdb.TDB;
 
 public abstract class CruncherOntology extends Cruncher {
 
@@ -122,6 +123,8 @@ public abstract class CruncherOntology extends Cruncher {
 						e.commit();
 						e.end();
 					}
+					
+					TDB.sync(e);
 				}
 			});
 		if (rw == ReadWrite.WRITE)
@@ -132,6 +135,7 @@ public abstract class CruncherOntology extends Cruncher {
 				{
 					if (e.isInTransaction())
 						e.abort();
+					TDB.sync(e);
 				}
 			});
 		if (rw == ReadWrite.WRITE)
@@ -140,7 +144,9 @@ public abstract class CruncherOntology extends Cruncher {
 				@Override
 				public void go()
 				{
+					TDB.sync(e);
 					e.close();
+					
 				}
 			});
 		return e;
