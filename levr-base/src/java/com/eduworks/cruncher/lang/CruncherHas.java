@@ -26,6 +26,8 @@ public class CruncherHas extends Cruncher
 		if (obj instanceof String)
 		{
 			String asString = getAsString("has", c, parameters, dataStreams);
+			if (asString == null)
+				return false;
 			if (optAsBoolean("regex", false, c, parameters, dataStreams))
 			{
 				Pattern p = null;

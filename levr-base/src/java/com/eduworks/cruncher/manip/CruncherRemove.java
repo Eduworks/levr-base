@@ -34,7 +34,7 @@ public class CruncherRemove extends Cruncher
 		}
 		return result;
 	}
-
+	
 	@Override
 	public String getDescription()
 	{

@@ -133,6 +133,10 @@ public class CruncherForEach extends Cruncher
 						else
 							e.printStackTrace();
 					}
+					catch (RuntimeException ex)
+					{
+							throw ex;
+					}
 					catch (Exception ex)
 					{
 						if (rethrow)
