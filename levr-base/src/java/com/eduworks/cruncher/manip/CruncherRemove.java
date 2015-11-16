@@ -17,6 +17,7 @@ public class CruncherRemove extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		JSONArray ja = getObjAsJsonArray(c, parameters, dataStreams);
+		if (ja == null) return null;
 		JSONArray result = new JSONArray();
 		String asString = getAsString("item", c, parameters, dataStreams);
 		String index = getAsString("index", c, parameters, dataStreams);

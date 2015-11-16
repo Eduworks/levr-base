@@ -64,7 +64,9 @@ public abstract class ResolverGetter extends Resolver
 	 */
 	protected EwJsonArray getDefaultArray(Map<String, String[]> parameters) throws JSONException
 	{
-		final Object array = opt("array", parameters);
+		Object array = opt("array", parameters);
+		if (array == null)
+			array = opt("obj",parameters);
 		final JSONArray wrapped = EwJson.wrapAsArray(array);
 		final boolean notWrapped = (wrapped == null || wrapped.length() == 0);
 

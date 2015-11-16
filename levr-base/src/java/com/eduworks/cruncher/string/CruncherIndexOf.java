@@ -17,10 +17,12 @@ public class CruncherIndexOf extends Cruncher
 	      String str = getAsString("str",c,parameters, dataStreams);
 	      if (str == null)
 	    	  str = getAsString("obj",c,parameters,dataStreams);
+	      if (str == null)
+	    	  return null;
 	      String substr = getAsString("substr",c,parameters, dataStreams);
 	      if (substr == null)
 	    	  substr = getAsString("of",c,parameters,dataStreams);
-	      
+	      if (substr == null) return null;
 	      return str.indexOf(substr);
 	   }
 

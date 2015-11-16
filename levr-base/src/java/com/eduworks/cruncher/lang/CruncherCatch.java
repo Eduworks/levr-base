@@ -17,8 +17,11 @@ public class CruncherCatch extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{		
 		Object result;
-		try{	
-			result = resolveAChild("try", c,parameters, dataStreams);
+		try{
+			if (has("try"))
+				result = resolveAChild("try", c,parameters, dataStreams);
+			else
+				result = resolveAChild("obj", c,parameters, dataStreams);
 		}catch(NullPointerException e){
 			if(has("null")){
 				final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);

@@ -30,7 +30,8 @@ public class CruncherGetIndex extends Cruncher
 			List obj = (List) objx;
 			if (obj == null)
 				return null;
-			if (random) index = EwRandom.r(obj.size());
+			if (random) 
+				index = EwRandom.r(obj.size());
 			if (obj.size() > index)
 				return obj.get(index);
 		}

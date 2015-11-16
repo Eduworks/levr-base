@@ -33,7 +33,7 @@ public class CruncherCache extends Cruncher
 			lock = obj.get(cacheName);
 			if (lock == null)
 			{
-				obj.put(cacheName, lock = new Object());
+				obj.put(cacheName, lock = cacheName);
 			}
 		}
 		synchronized (lock)
@@ -54,6 +54,7 @@ public class CruncherCache extends Cruncher
 				if (result == null)
 				{
 					result = getObj(c, parameters, dataStreams);
+					if (!optAsBoolean("justLock",false,c,parameters,dataStreams))
 					if (optAsBoolean("global", false, c, parameters, dataStreams))
 						EwCache.getCache("GlobalCache").put(cacheName, result);
 					else

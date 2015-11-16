@@ -64,7 +64,8 @@ public class CruncherExecute extends Cruncher
 			{
 				e.printStackTrace();
 			}
-			parameterMap.put("obj", new String[]{o.toString()});
+			if (o != null)
+				parameterMap.put("obj", new String[]{o.toString()});
 		}
 
 		try

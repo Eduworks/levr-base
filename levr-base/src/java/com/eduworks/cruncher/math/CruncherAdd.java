@@ -1,6 +1,7 @@
 package com.eduworks.cruncher.math;
 
 import java.io.InputStream;
+import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ public class CruncherAdd extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		double result = 0.0;
+		boolean fancyNumber = optAsBoolean("_fancyNumber",false,c,parameters,dataStreams);
 		StringBuilder resultStr = new StringBuilder();
 		Iterator<String> i = this.sortedKeys();
 		while (i.hasNext())
@@ -43,6 +45,8 @@ public class CruncherAdd extends Cruncher
 		}
 		if (resultStr.length() > 0)
 			return resultStr.toString();
+		if (fancyNumber)
+			return NumberFormat.getNumberInstance(java.util.Locale.US).format(result);
 		return result;
 	}
 

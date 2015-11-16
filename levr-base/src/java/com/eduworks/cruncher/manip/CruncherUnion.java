@@ -1,6 +1,9 @@
 package com.eduworks.cruncher.manip;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -18,9 +21,17 @@ public class CruncherUnion extends Cruncher
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		EwList<Object> ja = new EwList<Object>(getObjAsJsonArray(c, parameters, dataStreams));
-		Boolean accumulate = optAsBoolean("accumulate", true, c, parameters, dataStreams);
+		Collection<Object> ja;
 		boolean unique = optAsBoolean("unique",true,c,parameters,dataStreams);
+		if (unique)
+			ja = new HashSet<Object>();
+		else
+			ja = new ArrayList<Object>();
+		JSONArray obj = getObjAsJsonArray(c, parameters, dataStreams);
+		for (int i = 0;i < obj.length();i++)
+			ja.add(obj.get(i));
+			
+		Boolean accumulate = optAsBoolean("accumulate", true, c, parameters, dataStreams);
 		JSONObject jo = new JSONObject();
 		int keys = 0;
 		for (String key : keySet())
@@ -31,14 +42,15 @@ public class CruncherUnion extends Cruncher
 		}
 		if (keys == 1)
 		{
-			EwList<Object> results = new EwList<Object>();
+			Collection<Object> results;
+			if (unique)
+				results = new HashSet<Object>();
+			else
+				results = new ArrayList<Object>();
 			for (Object o : ja)
 			{
 				if (o instanceof JSONArray)
-					if (unique)
-					results=results.union(new EwList<Object>(o));
-					else
-						results.addAll(new EwList<Object>(o));
+					results.addAll(new EwList<Object>(o));
 				else if (o instanceof JSONObject)
 					for (String key : EwJson.getKeys((JSONObject)o))
 						if (accumulate)
@@ -46,8 +58,7 @@ public class CruncherUnion extends Cruncher
 						else
 							jo.put(key, ((JSONObject)o).get(key));
 				else
-					if (!results.contains(o))
-						results.add(o);
+					results.add(o);
 			}
 			ja = results;
 		}
@@ -58,9 +69,6 @@ public class CruncherUnion extends Cruncher
 				if (key.equals("obj"))
 					continue;
 				EwList<Object> organizations = new EwList<Object>(getAsJsonArray(key, c, parameters, dataStreams));
-				if (unique)
-				ja = ja.union(organizations);
-				else
 					ja.addAll(organizations);
 			}
 		}
