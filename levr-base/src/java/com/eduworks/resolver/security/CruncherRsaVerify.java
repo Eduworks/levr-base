@@ -16,8 +16,8 @@ import org.json.JSONObject;
 
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+
+import org.apache.xerces.impl.dv.util.Base64;
 
 public class CruncherRsaVerify extends Cruncher
 {
@@ -54,10 +54,6 @@ public class CruncherRsaVerify extends Cruncher
 			throw new RuntimeException(e);
 		}
 		catch (InvalidKeySpecException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (Base64DecodingException e)
 		{
 			throw new RuntimeException(e);
 		}
