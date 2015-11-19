@@ -21,12 +21,13 @@ public class CruncherFileToString extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		Object obj =  getObj(c, parameters, dataStreams);
+		String encoding = optAsString("encoding", "ISO-8859-1", c, parameters, dataStreams);
 		
 		if(obj instanceof InMemoryFile){
 			InMemoryFile file = (InMemoryFile) obj;
 			try
 			{
-				return IOUtils.toString(file.data);
+				return IOUtils.toString(file.data,encoding);
 			}
 			catch (IOException e)
 			{
@@ -40,7 +41,7 @@ public class CruncherFileToString extends Cruncher
 			
 			try {
 				for(InMemoryFile file : fileList){
-					array.put(IOUtils.toString(file.data));
+					array.put(IOUtils.toString(file.data,encoding));
 				}
 				
 				return array;
