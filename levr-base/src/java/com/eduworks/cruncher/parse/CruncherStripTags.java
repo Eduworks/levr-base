@@ -25,29 +25,23 @@ public class CruncherStripTags extends Cruncher
 		String htmlText = (String)getObj(c, parameters, dataStreams);
 		
 		// Customize the whitelist
-		Whitelist wl = Whitelist.simpleText();
+		Whitelist wl = Whitelist.basic();
 		JSONArray allowTags = getAsJsonArray("allowTags", c, parameters, dataStreams);
-		String[] tagList = new String[allowTags.length()+2];
-		tagList[0] = "sub";
-		tagList[1] = "sup";
-		if (allowTags != null) {
-			for (int i=0; i<allowTags.length(); i++) {
-				tagList[i+2] = allowTags.getString(i);
-				// For now, check for MathML tag and allow xmlns attribute on that tag if present
-				if (tagList[i+2].equalsIgnoreCase("math"))
-					wl = wl.addAttributes("math", "xmlns");
-			}
-			//log.debug("JSoup allowed tag list:" + wl.toString());
-		}
-		wl = wl.addTags(tagList);
+		if (allowTags != null) 
+			for (int i=0; i<allowTags.length(); i++) 
+				wl.addTags(allowTags.getString(i));
+        
+        JSONArray allowAttributes = getAsJsonArray("allowAttributes", c, parameters, dataStreams);
+        for (int i = 0; i < allowAttributes.length(); i++) {
+            JSONObject attribute = allowAttributes.getJSONObject(i);
+            wl.allowAttributes(attribute.getString("element"), attribute.getString("attribute"));
+        }
 		
 		// Clean the text using the whitelist, and allow escaped characters
-		log.debug("String to clean: " + htmlText);
 		Document doc = Jsoup.parse(htmlText);
-		doc.outputSettings().charset("ISO-8859-1");
+		doc.outputSettings().charset("UTF-8");
 		doc.outputSettings().escapeMode(EscapeMode.xhtml);
 		htmlText = Jsoup.clean(doc.body().html(), wl);
-		log.debug("JSoup cleaned: " + htmlText);
 		htmlText = StringEscapeUtils.unescapeHtml(htmlText);
 		return htmlText;
 	}
@@ -73,7 +67,7 @@ public class CruncherStripTags extends Cruncher
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("obj","String", "allowTags", "JSONArray");
+		return jo("obj","String", "?allowTags", "JSONArray", "?allowAttributes", "JSONArray");
 	}
 
 }
