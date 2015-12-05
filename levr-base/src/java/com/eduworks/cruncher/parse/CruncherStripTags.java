@@ -35,7 +35,7 @@ public class CruncherStripTags extends Cruncher
         if (allowAttributes!=null)
             for (int i = 0; i < allowAttributes.length(); i++) {
                 JSONObject attribute = allowAttributes.getJSONObject(i);
-                wl.allowAttributes(attribute.getString("element"), attribute.getString("attribute"));
+                wl.addAttributes(attribute.getString("element"), attribute.getString("attribute"));
             }
 		
 		// Clean the text using the whitelist, and allow escaped characters
