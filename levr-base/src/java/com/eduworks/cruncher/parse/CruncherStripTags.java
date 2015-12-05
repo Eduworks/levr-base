@@ -32,10 +32,11 @@ public class CruncherStripTags extends Cruncher
 				wl.addTags(allowTags.getString(i));
         
         JSONArray allowAttributes = getAsJsonArray("allowAttributes", c, parameters, dataStreams);
-        for (int i = 0; i < allowAttributes.length(); i++) {
-            JSONObject attribute = allowAttributes.getJSONObject(i);
-            wl.allowAttributes(attribute.getString("element"), attribute.getString("attribute"));
-        }
+        if (allowAttributes!=null)
+            for (int i = 0; i < allowAttributes.length(); i++) {
+                JSONObject attribute = allowAttributes.getJSONObject(i);
+                wl.allowAttributes(attribute.getString("element"), attribute.getString("attribute"));
+            }
 		
 		// Clean the text using the whitelist, and allow escaped characters
 		Document doc = Jsoup.parse(htmlText);
