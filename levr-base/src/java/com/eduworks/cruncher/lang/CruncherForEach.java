@@ -371,7 +371,8 @@ public class CruncherForEach extends Cruncher
 				+ "array='false' (Returns only the results of 'op')\n"
 				+ "threaded='true' (Performs operations simultaneously)\n"
 				+ "memorySaver='false' (Discards results of 'op')\n"
-				+ "soft='false' (Returns a null value instead of an empty array)\n" + "op= (Operation to perform)\n";
+				+ "soft='false' (Returns a null value instead of an empty array)\n" + "op= (Operation to perform)\n"
+				+ "rethrow='true' (Throws Any Caught Exceptions)";
 	}
 
 	@Override
@@ -390,6 +391,6 @@ public class CruncherForEach extends Cruncher
 	public JSONObject getParameters() throws JSONException
 	{
 		return jo("obj", "JSONArray|JSONObject", "paramName", "String", "valueName", "String", "op", "Resolvable",
-				"?array", "Boolean", "?threaded", "Boolean", "?memorySaver", "Boolean", "?soft", "Boolean");
+				"?array", "Boolean", "?threaded", "Boolean", "?memorySaver", "Boolean", "?soft", "Boolean", "?rethrow", "Boolean");
 	}
 }
