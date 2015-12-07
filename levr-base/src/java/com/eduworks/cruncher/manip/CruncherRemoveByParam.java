@@ -51,7 +51,7 @@ public class CruncherRemoveByParam extends Cruncher
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("obj","JSONArray","item","String");
+		return jo("obj","JSONArray","param","String");
 	}
 
 }
