@@ -1,4 +1,4 @@
-package com.eduworks.resolver.security;
+package com.eduworks.cruncher.security;
 
 import java.io.IOException;
 import java.io.InputStream;

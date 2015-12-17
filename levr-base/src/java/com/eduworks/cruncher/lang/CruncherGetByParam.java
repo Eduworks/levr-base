@@ -20,7 +20,8 @@ public class CruncherGetByParam extends Cruncher
 		String key = getAsString("param",c,parameters, dataStreams);
 		if (!obj.has(key))
 			return null;
-		return obj.get(key);
+		Object object = obj.get(key);
+		return object;
 	}
 
 	@Override

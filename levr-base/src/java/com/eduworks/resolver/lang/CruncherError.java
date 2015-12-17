@@ -6,23 +6,25 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.levr.servlet.HttpErrorException;
 import com.eduworks.resolver.Context;
-import com.eduworks.resolver.string.ResolverString;
+import com.eduworks.resolver.Cruncher;
 
-public class ResolverError extends ResolverString
+public class CruncherError extends Cruncher
 {
 
 	@Override
 	public Object resolve(Context c, Map<String,String[]> parameters, Map<String,InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(c, parameters, dataStreams);
-
-		Object object = get("msg", parameters);
+		short httpStatus = (short) optAsInteger("code", 500, c, parameters, dataStreams);
+		Object object = getAsString("msg", c,parameters,dataStreams);
 		String message = "";
 		if (object != null)
 			message = object.toString();
 
-		throw new RuntimeException(message);
+		HttpErrorException ex = new HttpErrorException(message);
+		ex.httpStatus = httpStatus;
+		throw ex;
 	}
 
 	@Override
@@ -46,6 +48,6 @@ public class ResolverError extends ResolverString
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("msg","String","?<any>","String|Number");
+		return jo("msg","String","code","Number");
 	}
 }

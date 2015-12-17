@@ -1,4 +1,4 @@
-package com.eduworks.cruncher.string;
+package com.eduworks.cruncher.security;
 
 import java.io.InputStream;
 import java.security.MessageDigest;

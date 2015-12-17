@@ -1,6 +1,7 @@
-package com.eduworks.resolver.security;
+package com.eduworks.cruncher.security;
 
 import java.io.InputStream;
+import java.security.SecureRandom;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -9,28 +10,28 @@ import org.json.JSONObject;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
-public class CruncherBCryptCompareHash extends Cruncher
+public class CruncherBCryptHash extends Cruncher
 {
 
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		String password = getAsString("password", c, parameters, dataStreams);
-		String passwordHash = getAsString("passwordHash", c, parameters, dataStreams);
+		int rounds = Integer.parseInt(optAsString("rounds", "10", c, parameters, dataStreams));
 		
-		return BCrypt.checkpw(password, passwordHash);
+		return BCrypt.hashpw(password, BCrypt.gensalt(rounds, new SecureRandom()));
 	}
 
 	@Override
 	public String getDescription()
 	{
-		return "Compares the password hash to a the supplied password and returns if they are the same.";
+		return "Generates password hash from supplied password given the number of supplied rounds, if nothing is supplied then the default 10 rounds.";
 	}
 
 	@Override
 	public String getReturn()
 	{
-		return "Boolean";
+		return "String";
 	}
 
 	@Override
@@ -42,7 +43,6 @@ public class CruncherBCryptCompareHash extends Cruncher
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("password","string","passwordHash","string");
+		return jo("password","string","rounds","int");
 	}
-
 }

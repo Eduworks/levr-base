@@ -66,7 +66,7 @@ public class ResolverDisplayJson extends Resolver
 			if (spaces > 0)
 				result = ((JSONObject) result).toString(spaces);
 			else
-				result = ((JSONObject) result).toString();
+				result = ((JSONObject) result).toString(2);
 		}
 		else if (isJsonArray)
 		{
