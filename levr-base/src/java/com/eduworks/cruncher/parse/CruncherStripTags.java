@@ -23,16 +23,18 @@ public class CruncherStripTags extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		String htmlText = (String)getObj(c, parameters, dataStreams);
+        if (htmlText==null)
+            htmlText = "";
 		
 		// Customize the whitelist
-		Whitelist wl = Whitelist.basic();
+		Whitelist wl = Whitelist.basic().addTags("math");
 		JSONArray allowTags = getAsJsonArray("allowTags", c, parameters, dataStreams);
 		if (allowTags != null) 
-			for (int i=0; i<allowTags.length(); i++) 
+			for (int i = 0; i < allowTags.length(); i++) 
 				wl.addTags(allowTags.getString(i));
         
         JSONArray allowAttributes = getAsJsonArray("allowAttributes", c, parameters, dataStreams);
-        if (allowAttributes!=null)
+        if (allowAttributes != null)
             for (int i = 0; i < allowAttributes.length(); i++) {
                 JSONObject attribute = allowAttributes.getJSONObject(i);
                 wl.addAttributes(attribute.getString("element"), attribute.getString("attribute"));

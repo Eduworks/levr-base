@@ -32,7 +32,7 @@ public class CruncherGetIndex extends Cruncher
 				return null;
 			if (random) 
 				index = EwRandom.r(obj.size());
-			if (obj.size() > index)
+			if (obj.size() > index && index >= 0)
 				return obj.get(index);
 		}
 		// if the object was a list and did not return, a cast exception would
@@ -43,7 +43,7 @@ public class CruncherGetIndex extends Cruncher
 			if (obj == null)
 				return null;
 			if (random) index = EwRandom.r(obj.length());
-			if (obj.length() > index)
+			if (obj.length() > index && index >= 0)
 				return obj.get(index);
 		}
 		return null;
