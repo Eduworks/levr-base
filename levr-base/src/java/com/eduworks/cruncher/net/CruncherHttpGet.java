@@ -105,8 +105,10 @@ public class CruncherHttpGet extends Cruncher
 		{
 			try
 			{
-				execute.close();
-				hc.close();
+				if (execute != null)
+					execute.close();
+				if (hc != null)
+					hc.close();
 			}
 			catch (IOException e)
 			{
