@@ -15,6 +15,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.bouncycastle.util.encoders.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,14 +34,14 @@ public class CruncherAesDecrypt extends Cruncher
 
 		try
 		{
-			IvParameterSpec ivParameter = new IvParameterSpec(java.util.Base64.getDecoder().decode(iv));
-			SecretKeySpec aesKey = new SecretKeySpec(java.util.Base64.getDecoder().decode(secret), "AES");
+			IvParameterSpec ivParameter = new IvParameterSpec(Base64.decode(iv));
+			SecretKeySpec aesKey = new SecretKeySpec(Base64.decode(secret), "AES");
 
 			Cipher decryptCipher = Cipher.getInstance("AES/CTR/PKCS5Padding");
 			decryptCipher.init(Cipher.DECRYPT_MODE, aesKey, ivParameter);
 
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			ByteArrayInputStream inStream = new ByteArrayInputStream(java.util.Base64.getDecoder().decode(cipherText));
+			ByteArrayInputStream inStream = new ByteArrayInputStream(Base64.decode(cipherText));
 			CipherInputStream cipherInputStream = new CipherInputStream(inStream, decryptCipher);
 			byte[] buf = new byte[1024];
 			int bytesRead;

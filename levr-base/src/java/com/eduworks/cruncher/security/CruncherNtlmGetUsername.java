@@ -2,12 +2,12 @@ package com.eduworks.cruncher.security;
 
 import java.io.IOException;
 import java.io.InputStream;
-import org.apache.xerces.impl.dv.util.Base64;
 import java.util.Map;
 
 import jcifs.ntlmssp.Type1Message;
 import jcifs.ntlmssp.Type3Message;
 
+import org.apache.xerces.impl.dv.util.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 

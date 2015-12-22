@@ -3,12 +3,12 @@ package com.eduworks.cruncher.security;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Base64;
 import java.util.Map;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import org.bouncycastle.util.encoders.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,7 +30,7 @@ public class CruncherPbkdf2 extends Cruncher
 		{
 			SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 			byte[] hash = skf.generateSecret(spec).getEncoded();
-			return new String(Base64.getEncoder().encode(hash));
+			return new String(Base64.encode(hash));
 		}
 		catch (InvalidKeySpecException e)
 		{

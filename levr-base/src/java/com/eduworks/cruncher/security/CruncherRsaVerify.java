@@ -9,18 +9,15 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.ArrayList;
 import java.util.Map;
 
+import org.apache.xerces.impl.dv.util.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.lang.json.impl.EwJsonObject;
-import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-
-import org.apache.xerces.impl.dv.util.Base64;
 
 public class CruncherRsaVerify extends Cruncher
 {

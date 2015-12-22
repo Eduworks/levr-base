@@ -1,35 +1,23 @@
 package com.eduworks.cruncher.security;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Map;
 
 import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
-import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.xerces.impl.dv.util.Base64;
+import org.bouncycastle.util.encoders.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.eduworks.lang.json.impl.EwJsonObject;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
@@ -44,8 +32,8 @@ public class CruncherAesEncrypt extends Cruncher
 
 		try
 		{
-			IvParameterSpec ivParameter = new IvParameterSpec(java.util.Base64.getDecoder().decode(iv));
-			SecretKeySpec aesKey = new SecretKeySpec(java.util.Base64.getDecoder().decode(secret), "AES");
+			IvParameterSpec ivParameter = new IvParameterSpec(Base64.decode(iv));
+			SecretKeySpec aesKey = new SecretKeySpec(Base64.decode(secret), "AES");
 
 			// Encrypt cipher
 			Cipher encryptCipher = Cipher.getInstance("AES/CTR/PKCS5Padding");
@@ -59,7 +47,7 @@ public class CruncherAesEncrypt extends Cruncher
 			cipherOutputStream.close();
 			byte[] encryptedBytes = outputStream.toByteArray();
 
-			return new String(java.util.Base64.getEncoder().encode(encryptedBytes));
+			return new String(Base64.encode(encryptedBytes));
 		}
 		catch (InvalidKeyException e)
 		{

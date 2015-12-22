@@ -4,17 +4,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.xerces.impl.dv.util.Base64;
 import org.bouncycastle.util.io.pem.PemObject;
-import org.bouncycastle.util.io.pem.PemObjectGenerator;
 import org.bouncycastle.util.io.pem.PemWriter;
 import org.json.JSONException;
 import org.json.JSONObject;
