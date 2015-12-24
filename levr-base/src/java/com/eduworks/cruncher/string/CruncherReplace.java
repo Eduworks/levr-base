@@ -15,7 +15,7 @@ public class CruncherReplace extends Cruncher
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String obj = getObj(c, parameters, dataStreams).toString();
+		String obj = getObjAsString(c, parameters, dataStreams);
 		String replace = getAsString("replace", c, parameters, dataStreams);
 		String with = getAsString("with",c,parameters, dataStreams);
 		Boolean simple = optAsBoolean("simple", false, c, parameters, dataStreams);

@@ -38,9 +38,10 @@ public class CruncherHttpGet extends Cruncher
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		final String url = getObj(c, parameters, dataStreams).toString();
+		final String url = getObjAsString(c, parameters, dataStreams);
 		HttpGet get = new HttpGet(url);
 		boolean reliable = optAsBoolean("reliable", false, c, parameters, dataStreams);
+				
 		CloseableHttpClient hc = HttpClients.createDefault();
 
 		CloseableHttpResponse execute = null;
