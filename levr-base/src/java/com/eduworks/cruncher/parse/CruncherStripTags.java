@@ -27,7 +27,12 @@ public class CruncherStripTags extends Cruncher
             htmlText = "";
 		
 		// Customize the whitelist
-		Whitelist wl = Whitelist.basic().addTags("math");
+		Whitelist wl;
+        if (optAsBoolean("removeAll", false, c, parameters, dataStreams))
+            wl = Whitelist.none();
+        else
+            wl = Whitelist.basic();
+        
 		JSONArray allowTags = getAsJsonArray("allowTags", c, parameters, dataStreams);
 		if (allowTags != null) 
 			for (int i = 0; i < allowTags.length(); i++) 
@@ -39,7 +44,7 @@ public class CruncherStripTags extends Cruncher
                 JSONObject attribute = allowAttributes.getJSONObject(i);
                 wl.addAttributes(attribute.getString("element"), attribute.getString("attribute"));
             }
-		
+            
 		// Clean the text using the whitelist, and allow escaped characters
 		Document doc = Jsoup.parse(htmlText);
 		doc.outputSettings().charset("UTF-8");
