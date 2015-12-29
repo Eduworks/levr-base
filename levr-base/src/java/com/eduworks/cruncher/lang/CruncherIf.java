@@ -16,6 +16,10 @@ public class CruncherIf extends Cruncher
 	{
 		Object operator = getOpValue("operator", c,parameters,dataStreams);
 		Object operand = getOpValue("operand", c,parameters,dataStreams);
+		if (operator instanceof Double && operand instanceof Long)
+			operand = new Double((Long)operand);
+		if (operand instanceof Double && operator instanceof Long)
+			operator = new Double((Long)operator);
 		if (operator instanceof Double && operand instanceof Integer)
 			operand = new Double((Integer)operand);
 		if (operand instanceof Double && operator instanceof Integer)
@@ -98,7 +102,7 @@ public class CruncherIf extends Cruncher
 			return opValue;
 		try
 		{
-			opValue = Integer.parseInt(opValue.toString());
+			opValue = Long.parseLong(opValue.toString());
 			return opValue;
 		}
 		catch (NumberFormatException ex)
