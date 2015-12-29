@@ -70,7 +70,7 @@ public class CruncherExecute extends Cruncher
 
 		try
 		{
-			return LevrResolverServlet.execute(log, true, ws, c, parameterMap,dataStreams, false);
+			return LevrResolverServlet.execute(log, true, ws, c, parameterMap,dataStreamMap, false);
 		}
 		catch (RuntimeException e)
 		{

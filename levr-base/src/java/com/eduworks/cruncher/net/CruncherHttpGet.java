@@ -44,6 +44,19 @@ public class CruncherHttpGet extends Cruncher
 				
 		CloseableHttpClient hc = HttpClients.createDefault();
 
+		for (String key : keySet())
+		{
+			if (key.equals("url"))
+				continue;
+			if (key.equals("obj"))
+				continue;
+			if (key.equals("reliable"))
+				continue;
+			if (key.equals("file"))
+				continue;
+			get.setHeader(key, getAsString(key, c, parameters, dataStreams));
+		}
+		
 		CloseableHttpResponse execute = null;
 		try
 		{

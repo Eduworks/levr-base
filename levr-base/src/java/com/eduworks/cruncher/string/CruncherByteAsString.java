@@ -1,8 +1,7 @@
-package com.eduworks.cruncher.security;
+package com.eduworks.cruncher.string;
 
 import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -10,32 +9,21 @@ import org.json.JSONObject;
 
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.eduworks.util.io.InMemoryFile;
 
-public class CruncherMd5 extends Cruncher
+public class CruncherByteAsString extends Cruncher
 {
 
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		try
-		{
-				Object obj = getObj(c, parameters, dataStreams);
-				if (obj instanceof InMemoryFile)
-					return MessageDigest.getInstance("MD5").digest(((InMemoryFile) obj).data);
-				return MessageDigest.getInstance("MD5").digest(obj.toString().getBytes());
-		}
-		catch (NoSuchAlgorithmException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+		byte b = Byte.parseByte(getObjAsString(c, parameters, dataStreams),16);
+		return new String(new byte[]{b},Charset.forName("ASCII"));
 	}
 
 	@Override
 	public String getDescription()
 	{
-		return "Returns MD5 Hash of String.";
+		return "Returns the byte as a string.";
 	}
 
 	@Override
