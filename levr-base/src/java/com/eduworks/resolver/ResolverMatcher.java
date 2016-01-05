@@ -143,8 +143,13 @@ public abstract class ResolverMatcher extends ResolverGetter
 
 				if (compareAsArrays)
 				{
+					Object val = item.get(key);
+					if(val == null){
+						val = key;
+					}
+					
 					// Compare all element values to this item
-					final Object itemValue = item.get(key);
+					final Object itemValue = val;
 
 					for (int j = 0; j < elemLen; j++)
 						if (valuesMatch(itemValue, element.get(j), false))
