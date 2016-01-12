@@ -18,6 +18,7 @@ public class CruncherLeaves extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		Object o = getObj(c, parameters, dataStreams);
+		if (o == null) return null;
 		JSONArray results = new JSONArray();
 		recurse(results,o);
 		return results;
