@@ -21,6 +21,7 @@ public class CruncherFromDotAndArrayNotationObject extends Cruncher
 	{
 		JSONObject jo = getObjAsJsonObject(c, parameters, dataStreams);
 		JSONObject result = new JSONObject();
+		if (jo == null) return null;
 		for (String key : EwJson.getKeys(jo))
 		{
 			parseInto(result,key,jo.get(key));
