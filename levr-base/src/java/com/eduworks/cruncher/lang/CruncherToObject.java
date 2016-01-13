@@ -30,8 +30,6 @@ public class CruncherToObject extends Cruncher
 			result = (JSONObject) object;		
 		if (result == null)
 			result = new JSONObject(asString);
-		if (c.contains(asString) == false)
-			c.put(asString, result);
 		return result;
 	}
 
