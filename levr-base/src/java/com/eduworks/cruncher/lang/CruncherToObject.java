@@ -27,10 +27,11 @@ public class CruncherToObject extends Cruncher
 		Object object = c.get(asString);
 		JSONObject result=null;
 		if (object instanceof JSONObject)
-			result = (JSONObject) object;
-		
+			result = (JSONObject) object;		
 		if (result == null)
-			return new JSONObject(asString);
+			result = new JSONObject(asString);
+		if (c.contains(asString) == false)
+			c.put(asString, result);
 		return result;
 	}
 

@@ -34,16 +34,18 @@ public class CruncherToArray extends Cruncher
 			{
 				String asString = getAsString("obj", c, parameters, dataStreams);
 				Object result = c.get(asString);
-				if (result == null)
-					return new JSONArray(asString);
+				if (result != null && result instanceof JSONArray)
+					return result;
 				if (asString.startsWith("["))
-					return new JSONArray(asString);
+					result = new JSONArray(asString);
 				if (!(result instanceof JSONArray))
 				{
 					JSONArray ja = new JSONArray();
 					ja.put(obj);
-					return ja;
+					result = ja;
 				}
+				if (c.contains(asString) == false)
+					c.put(asString, result);
 				return result;
 			}
 			catch (Exception ex)
