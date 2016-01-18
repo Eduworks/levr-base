@@ -27,12 +27,12 @@ public class CruncherRsaVerify extends Cruncher
 	{
 		String signature = getObj(c, parameters, dataStreams).toString();
 		String key = getAsString("pk", c, parameters, dataStreams);
-		Object against = get("against", c, parameters, dataStreams);
+		Object against = new EwJsonObject(get("against", c, parameters, dataStreams).toString()).toString();
 		if (against instanceof JSONObject)
 			against = new EwJsonObject(against);
 		try
 		{
-			X509EncodedKeySpec bobPubKeySpec = new X509EncodedKeySpec(Base64.decode(key.replace("-----BEGIN PUBLIC KEY-----", "").replace("-----END PUBLIC KEY-----", "").replaceAll("\r?\n","")));
+			X509EncodedKeySpec bobPubKeySpec = new X509EncodedKeySpec(Base64.decode(key.replace("-----BEGIN PUBLIC KEY-----", "").replace("-----END PUBLIC KEY-----", "").replace("-----BEGIN RSA PUBLIC KEY-----", "").replace("-----END RSA PUBLIC KEY-----", "").replaceAll("\r?\n","")));
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 			PublicKey bobPubKey = keyFactory.generatePublic(bobPubKeySpec);
 			Signature sig = Signature.getInstance("sha1withrsa");

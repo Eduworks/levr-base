@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import com.eduworks.ontology.Ontology;
 import com.eduworks.resolver.Context;
-import com.eduworks.resolver.Resolver;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.shared.ClosedException;
@@ -21,13 +20,13 @@ public class CruncherOntologyGetShortestPath extends CruncherOntology {
 	public Object resolve(Context c,
 			Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException {
 		
-		String directory = Resolver.decodeValue(optAsString("directory","", c,parameters, dataStreams));
+		String directory = decodeValue(optAsString("directory","", c,parameters, dataStreams));
 		
-		String ontologyId = Resolver.decodeValue(optAsString("ontologyId","", c,parameters, dataStreams));
+		String ontologyId = decodeValue(optAsString("ontologyId","", c,parameters, dataStreams));
 		
-		String start = Resolver.decodeValue(optAsString("startId","", c,parameters, dataStreams));
+		String start = decodeValue(optAsString("startId","", c,parameters, dataStreams));
 		
-		String end = Resolver.decodeValue(optAsString("endId","", c,parameters, dataStreams));
+		String end = decodeValue(optAsString("endId","", c,parameters, dataStreams));
 		
 		JSONArray pathRelationships = getAsJsonArray("path", c, parameters, dataStreams);
 		

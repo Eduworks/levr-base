@@ -6,6 +6,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
@@ -19,16 +20,18 @@ public class CruncherPut extends Cruncher
 		if (jo == null)
 			jo = new JSONObject();
 		else
-			jo=new JSONObject(jo.toString());
+			jo = EwJson.clone(jo);
 		for (String key : keySet())
 		{
-			if (isSetting(key))continue;
-			if (key.equals("obj"))continue;
-			jo.put(key,get(key,c,parameters, dataStreams));
+			if (isSetting(key))
+				continue;
+			if (key.equals("obj"))
+				continue;
+			jo.put(key, get(key, c, parameters, dataStreams));
 		}
 		String key = optAsString("_key", null, c, parameters, dataStreams);
 		if (key != null)
-			jo.put(key,get("_value",c,parameters, dataStreams));
+			jo.put(key, get("_value", c, parameters, dataStreams));
 		return jo;
 	}
 
@@ -53,7 +56,7 @@ public class CruncherPut extends Cruncher
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("obj","JSONObject","<any>","Any");
+		return jo("obj", "JSONObject", "<any>", "Any");
 	}
 
 }

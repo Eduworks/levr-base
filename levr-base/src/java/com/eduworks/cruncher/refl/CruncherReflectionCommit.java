@@ -26,7 +26,7 @@ public class CruncherReflectionCommit extends Cruncher
 				if (!f.getName().equals(getAsString("filename", c, parameters, dataStreams)))
 					continue;
 				FileUtils.writeStringToFile(f, getObj(c, parameters, dataStreams).toString());
-				LevrResolverServlet.lastChecked -= 5000;
+				LevrResolverServlet.codeFilesLastCheckedMs -= 5000;
 			}
 		}
 		catch (IOException e)

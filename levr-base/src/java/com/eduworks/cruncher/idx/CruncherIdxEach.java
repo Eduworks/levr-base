@@ -3,27 +3,20 @@ package com.eduworks.cruncher.idx;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.NavigableSet;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mapdb.Fun;
-import org.mapdb.Fun.Tuple2;
 import org.mapdb.HTreeMap;
 
 import com.eduworks.interfaces.EwJsonSerializable;
 import com.eduworks.lang.EwMap;
 import com.eduworks.lang.EwStringUtil;
-import com.eduworks.lang.json.impl.EwJsonArray;
 import com.eduworks.lang.threading.EwThreading;
 import com.eduworks.lang.threading.EwThreading.MyFutureList;
 import com.eduworks.lang.threading.EwThreading.MyRunnable;
-import com.eduworks.lang.util.EwCache;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.eduworks.resolver.Resolver;
 import com.eduworks.resolver.exception.SoftException;
 import com.eduworks.util.io.EwDB;
 
@@ -32,9 +25,9 @@ public class CruncherIdxEach extends Cruncher
 
 	public Object resolve(final Context c, final Map<String, String[]> parameters, final Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String _databasePath = Resolver.decodeValue(getAsString("indexDir", c, parameters, dataStreams));
-		String _databaseName = Resolver.decodeValue(getAsString("databaseName", c, parameters, dataStreams));
-		String dbIndex = Resolver.decodeValue(getAsString("index", c, parameters, dataStreams));
+		String _databasePath = decodeValue(getAsString("indexDir", c, parameters, dataStreams));
+		String _databaseName = decodeValue(getAsString("databaseName", c, parameters, dataStreams));
+		String dbIndex = decodeValue(getAsString("index", c, parameters, dataStreams));
 		Integer count = optAsInteger("count", Integer.MAX_VALUE, c, parameters, dataStreams);
 		Integer start = optAsInteger("start", 0, c, parameters, dataStreams);
 		boolean optCommit = optAsBoolean("_commit", true, c, parameters, dataStreams);

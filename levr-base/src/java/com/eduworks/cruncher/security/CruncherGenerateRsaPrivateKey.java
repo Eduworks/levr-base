@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
@@ -26,7 +27,7 @@ public class CruncherGenerateRsaPrivateKey extends Cruncher
 		KeyPairGenerator keyPairGenerator;
 		try
 		{
-			keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+			keyPairGenerator = KeyPairGenerator.getInstance("RSA","BC");
 
 			keyPairGenerator.initialize(1024);
 			KeyPair keyPair = keyPairGenerator.genKeyPair();
@@ -50,6 +51,10 @@ public class CruncherGenerateRsaPrivateKey extends Cruncher
 			e.printStackTrace();
 		}
 		catch (NoSuchAlgorithmException e)
+		{
+			e.printStackTrace();
+		}
+		catch (NoSuchProviderException e)
 		{
 			e.printStackTrace();
 		}

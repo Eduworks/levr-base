@@ -7,8 +7,6 @@ import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
 
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;

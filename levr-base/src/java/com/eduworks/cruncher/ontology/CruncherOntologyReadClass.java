@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import com.eduworks.ontology.Ontology;
 import com.eduworks.resolver.Context;
-import com.eduworks.resolver.Resolver;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.shared.ClosedException;
@@ -20,11 +19,11 @@ public class CruncherOntologyReadClass extends CruncherOntology
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 
-		String directory = Resolver.decodeValue(optAsString("directory", "", c, parameters, dataStreams));
+		String directory = decodeValue(optAsString("directory", "", c, parameters, dataStreams));
 
-		String ontologyId = Resolver.decodeValue(optAsString("ontologyId", "", c, parameters, dataStreams));
+		String ontologyId = decodeValue(optAsString("ontologyId", "", c, parameters, dataStreams));
 
-		String classId = Resolver.decodeValue(optAsString("classId", "", c, parameters, dataStreams));
+		String classId = decodeValue(optAsString("classId", "", c, parameters, dataStreams));
 
 		Ontology o = null;
 		JSONObject jsonRepresentation = null;

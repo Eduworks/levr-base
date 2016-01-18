@@ -12,7 +12,6 @@ import org.jivesoftware.smack.packet.Message;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.eduworks.lang.EwCacheMap;
 import com.eduworks.lang.EwMap;
 import com.eduworks.levr.servlet.impl.LevrResolverServlet;
 import com.eduworks.resolver.Context;
@@ -56,7 +55,7 @@ public class CruncherXmppListen extends Cruncher
 					newParameters.put("sender", new String[] { chat2.getParticipant().split("/")[0] });
 					log.debug(chat2.getParticipant() + " --> " + arg1.getBody());
 					LevrResolverServlet.initConfig(System.out);
-					((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
+					((Resolvable) op).resolve(c, newParameters, dataStreams);
 					c.success();
 				}
 				catch (Throwable e)

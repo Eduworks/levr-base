@@ -12,19 +12,18 @@ import org.json.JSONObject;
 import com.eduworks.lang.EwList;
 import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
-import com.eduworks.resolver.Resolver;
+import com.eduworks.resolver.Cruncher;
 import com.eduworks.util.io.InMemoryFile;
 
-public class ResolverDataFromPost extends Resolver
+public class ResolverDataFromPost extends Cruncher
 {
 
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		resolveAllChildren(c, parameters, dataStreams);
-		boolean soft = optAsBoolean("soft", false, parameters);
-		EwList<String> nameField = optAsStrings("name", parameters);
-		Integer maxPage = optAsInteger("pages", Integer.MAX_VALUE, parameters);
+		boolean soft = optAsBoolean("soft", false, c, parameters, dataStreams);
+		EwList<String> nameField = getAsStrings("name", c, parameters, dataStreams);
+		Integer maxPage = optAsInteger("pages", Integer.MAX_VALUE, c, parameters, dataStreams);
 		if (nameField != null && !nameField.isEmpty())
 		{
 			try
@@ -49,8 +48,8 @@ public class ResolverDataFromPost extends Resolver
 		}
 		else
 		{
-			EwList<String> except = optAsStrings("except", parameters);
-			if (optAsBoolean("_asObject", false, parameters))
+			EwList<String> except = getAsStrings("except", c, parameters, dataStreams);
+			if (optAsBoolean("_asObject", false, c, parameters, dataStreams))
 			{
 				JSONObject results = new JSONObject();
 				if (dataStreams == null)

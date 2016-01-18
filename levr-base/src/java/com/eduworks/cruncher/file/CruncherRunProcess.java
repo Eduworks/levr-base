@@ -1,20 +1,17 @@
 package com.eduworks.cruncher.file;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.eduworks.util.io.InMemoryFile;
 
 public class CruncherRunProcess extends Cruncher
 {

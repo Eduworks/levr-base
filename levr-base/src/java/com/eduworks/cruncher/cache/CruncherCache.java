@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import com.eduworks.lang.util.EwCache;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.eduworks.resolver.Resolver;
 
 public class CruncherCache extends Cruncher
 {
@@ -25,7 +24,7 @@ public class CruncherCache extends Cruncher
 		Object lock = null;
 		if (optAsBoolean("removeAllGlobal", false, c, parameters, dataStreams))
 		{
-			Resolver.clearCache();
+			EwCache.caches.clear();
 			return null;
 		}
 		synchronized (getClass())

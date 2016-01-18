@@ -1,7 +1,6 @@
 package com.eduworks.cruncher.parse;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -11,7 +10,6 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Entities.EscapeMode;
-import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 
 import com.eduworks.resolver.Context;

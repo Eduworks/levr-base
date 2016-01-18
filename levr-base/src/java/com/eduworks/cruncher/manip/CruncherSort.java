@@ -44,14 +44,7 @@ public class CruncherSort extends Cruncher
 			c.put(o1Key, o1);
 			newParameters.put(paramName, new String[] { o1Key });
 			Object resolve = null;
-			try
-			{
-				resolve = ((Resolvable) op.clone()).resolve(c, newParameters, dataStreams);
-			}
-			catch (CloneNotSupportedException e)
-			{
-				e.printStackTrace();
-			}
+			resolve = resolveAChild("op", c, newParameters, dataStreams);
 			c.remove(o1Key);
 			if (resolve != null)
 			{

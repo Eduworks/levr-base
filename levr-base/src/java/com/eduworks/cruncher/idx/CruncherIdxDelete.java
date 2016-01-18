@@ -12,7 +12,6 @@ import org.mapdb.Fun;
 import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.eduworks.resolver.Resolver;
 import com.eduworks.util.io.EwDB;
 
 public class CruncherIdxDelete extends Cruncher
@@ -21,10 +20,10 @@ public class CruncherIdxDelete extends Cruncher
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String _databasePath = Resolver.decodeValue(getAsString("indexDir", c, parameters, dataStreams));
-		String _databaseName = Resolver.decodeValue(getAsString("databaseName", c, parameters, dataStreams));
+		String _databasePath = decodeValue(getAsString("indexDir", c, parameters, dataStreams));
+		String _databaseName = decodeValue(getAsString("databaseName", c, parameters, dataStreams));
 		boolean optCommit = optAsBoolean("_commit", true, c, parameters, dataStreams);
-		String index = Resolver.decodeValue(getAsString("index", c, parameters, dataStreams));
+		String index = decodeValue(getAsString("index", c, parameters, dataStreams));
 		boolean deleteIndex = optAsBoolean("removeIndex", false, c, parameters, dataStreams);
 		String key = getAsString("key", c, parameters, dataStreams);
 		Object value = get("value", c, parameters, dataStreams);

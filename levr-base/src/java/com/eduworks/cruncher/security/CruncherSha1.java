@@ -1,15 +1,12 @@
 package com.eduworks.cruncher.security;
 
 import java.io.InputStream;
-import java.security.SignatureException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 
 import org.apache.xerces.impl.dv.util.Base64;
 import org.json.JSONException;

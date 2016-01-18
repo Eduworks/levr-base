@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.eduworks.resolver.Resolver;
 
 public class CruncherMultiply extends Cruncher
 {

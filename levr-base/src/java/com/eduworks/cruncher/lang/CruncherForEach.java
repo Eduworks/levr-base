@@ -17,7 +17,6 @@ import com.eduworks.lang.threading.EwThreading.MyFutureList;
 import com.eduworks.lang.threading.EwThreading.MyRunnable;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.eduworks.resolver.Resolver;
 import com.eduworks.resolver.exception.SoftException;
 
 public class CruncherForEach extends Cruncher
@@ -29,7 +28,6 @@ public class CruncherForEach extends Cruncher
 	{
 		boolean threaded = optAsBoolean("threaded", true, c, parameters, dataStreams);
 		Object obj = getObj(c, parameters, dataStreams);
-		verifyCloneMode(this);
 		final String paramName = optAsString("paramName", "eachId", c, parameters, dataStreams);
 		final String prevParamName = optAsString("prevParamName", null, c, parameters, dataStreams);
 		final String valueName = getAsString("valueName", c, parameters, dataStreams);
@@ -123,8 +121,6 @@ public class CruncherForEach extends Cruncher
 								output.put(key, result);
 								outputArray.put(index, result);
 							}
-						if (threaded)
-							clearThreadCache();
 					}
 					catch (JSONException e)
 					{
@@ -249,7 +245,6 @@ public class CruncherForEach extends Cruncher
 										output.put(key, result);
 										outputArray.put(index, result);
 									}
-									clearThreadCache();
 							}
 							catch (JSONException e)
 							{
@@ -301,8 +296,6 @@ public class CruncherForEach extends Cruncher
 							output.put(key, result);
 							outputArray.put(index, result);
 						}
-						if (threaded)
-							clearThreadCache();
 					}
 					catch (RuntimeException ex)
 					{
@@ -333,32 +326,6 @@ public class CruncherForEach extends Cruncher
 			if (output.length() == 0)
 				return null;
 		return output;
-	}
-
-	private boolean verifyCloneMode(Object o) throws JSONException
-	{
-		if (o instanceof Resolver)
-		{
-			Resolver r = (Resolver) o;
-			for (String key : r.keySet())
-				verifyCloneMode(r.get(key));
-			return true;
-		}
-		if (o instanceof Cruncher)
-		{
-			Cruncher c = (Cruncher) o;
-			if (c.resolverCompatibilityReplaceMode == true)
-				return true;
-			boolean replaceMode = false;
-			for (String key : c.keySet())
-			{
-				if (verifyCloneMode(c.get(key)))
-					replaceMode = true;
-			}
-			c.resolverCompatibilityReplaceMode = replaceMode;
-			return replaceMode;
-		}
-		return false;
 	}
 
 	@Override

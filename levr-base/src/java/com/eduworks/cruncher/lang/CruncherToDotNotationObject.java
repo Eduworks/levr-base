@@ -7,7 +7,6 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.python.antlr.PythonParser.else_clause_return;
 
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;

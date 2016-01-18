@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import com.eduworks.ontology.Ontology;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.eduworks.resolver.Resolver;
 
 public class CruncherOntologySetUriPrefix extends Cruncher
 {
@@ -17,7 +16,7 @@ public class CruncherOntologySetUriPrefix extends Cruncher
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String uri = Resolver.decodeValue(optAsString("uri", "", c, parameters, dataStreams));
+		String uri = decodeValue(optAsString("uri", "", c, parameters, dataStreams));
 		
 		Ontology.setDefaultURI(uri);
 		

@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 import com.eduworks.resolver.Resolvable;
-import com.eduworks.resolver.Resolver;
 import com.eduworks.resolver.ResolverFactory;
 
 public class CruncherReflectionManifest extends Cruncher
@@ -23,9 +22,6 @@ public class CruncherReflectionManifest extends Cruncher
 		try
 		{
 			for (Entry<String, Class<? extends Cruncher>> cruncher : ResolverFactory.cruncherSpecs.entrySet())
-				if (!cruncher.getValue().getName().startsWith("Command"))
-					results.put(cruncher.getKey(), getSpecs(cruncher.getValue().newInstance()));
-			for (Entry<String, Class<? extends Resolver>> cruncher : ResolverFactory.factorySpecs.entrySet())
 				if (!cruncher.getValue().getName().startsWith("Command"))
 					results.put(cruncher.getKey(), getSpecs(cruncher.getValue().newInstance()));
 		}

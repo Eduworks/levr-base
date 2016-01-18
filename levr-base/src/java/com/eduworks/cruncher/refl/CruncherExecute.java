@@ -79,7 +79,7 @@ public class CruncherExecute extends Cruncher
 		catch (Exception e)
 		{
 			if (soft)
-				log.error(e);
+				e.printStackTrace();
 			else
 				throw new RuntimeException(e);
 			return null;

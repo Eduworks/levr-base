@@ -17,37 +17,7 @@
 	<import file="../levr-core/build.xml" />
 
 	<target name="levr-base-copy-config" depends="" description="Copies the src config files to etc, useful in development">
-
-		<copy todir="${levr.base.etc}">
-			<fileset dir="${levr.core.src}">
-				<include name="*.json" />
-				<include name="*.rsl" />
-				<include name="*.rs2" />
-				<include name="**/*.json" />
-				<include name="**/*.rsl" />
-				<include name="**/*.rs2" />
-			</fileset>
-		</copy>
-		<copy todir="${levr.base.etc}">
-			<fileset dir="${levr.base.src}">
-				<include name="*.json" />
-				<include name="*.rsl" />
-				<include name="*.rs2" />
-				<include name="**/*.json" />
-				<include name="**/*.rsl" />
-				<include name="**/*.rs2" />
-			</fileset>
-		</copy>
-		<copy todir="${levr.base.etc}">
-			<fileset dir="${levr.scripts.dir}">
-				<include name="*.json" />
-				<include name="*.rsl" />
-				<include name="*.rs2" />
-				<include name="**/*.json" />
-				<include name="**/*.rsl" />
-				<include name="**/*.rs2" />
-			</fileset>
-		</copy>
+		<ant antfile="../ace-product-levr-semantic/copy.scripts.xml" />
 	</target>
 
 	<!-- used to depend on compile -->

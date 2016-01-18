@@ -2,7 +2,6 @@ package com.eduworks.cruncher.string;
 
 import java.io.InputStream;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONException;

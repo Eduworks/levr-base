@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import com.eduworks.ontology.Ontology;
 import com.eduworks.resolver.Context;
-import com.eduworks.resolver.Resolver;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
 
@@ -19,13 +18,13 @@ public class CruncherOntologyTDBLoader extends CruncherOntology
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String inputDirectory = Resolver.decodeValue(optAsString("input", "", c, parameters, dataStreams));
+		String inputDirectory = decodeValue(optAsString("input", "", c, parameters, dataStreams));
 
-		String extension = Resolver.decodeValue(optAsString("extension", "", c, parameters, dataStreams));
+		String extension = decodeValue(optAsString("extension", "", c, parameters, dataStreams));
 
-		String tdbDirectory = Resolver.decodeValue(optAsString("tdbDirectory", "", c, parameters, dataStreams));
+		String tdbDirectory = decodeValue(optAsString("tdbDirectory", "", c, parameters, dataStreams));
 
-		String identifier = Resolver.decodeValue(optAsString("identifier", "", c, parameters, dataStreams));
+		String identifier = decodeValue(optAsString("identifier", "", c, parameters, dataStreams));
 
 		Dataset tdbDataset = getDataSet(tdbDirectory,ReadWrite.WRITE,c);
 

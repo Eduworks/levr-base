@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import com.eduworks.ontology.Ontology;
 import com.eduworks.resolver.Context;
-import com.eduworks.resolver.Resolver;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
 
@@ -19,7 +18,7 @@ public class CruncherOntologyListOntologies extends CruncherOntology
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String directory = Resolver.decodeValue(optAsString("directory", "", c, parameters, dataStreams));
+		String directory = decodeValue(optAsString("directory", "", c, parameters, dataStreams));
 
 		JSONArray ret = new JSONArray();
 

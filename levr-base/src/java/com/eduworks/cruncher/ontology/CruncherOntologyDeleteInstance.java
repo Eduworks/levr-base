@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import com.eduworks.ontology.Ontology;
 import com.eduworks.ontology.OntologyInstance;
 import com.eduworks.resolver.Context;
-import com.eduworks.resolver.Resolver;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.shared.ClosedException;
@@ -22,11 +21,11 @@ public class CruncherOntologyDeleteInstance extends CruncherOntology {
 	public Object resolve(Context c,
 			Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException {
 		
-		String ontologyId = Resolver.decodeValue(optAsString("ontologyId","", c,parameters, dataStreams));
+		String ontologyId = decodeValue(optAsString("ontologyId","", c,parameters, dataStreams));
 		
-		String instanceId = Resolver.decodeValue(optAsString("instanceId","", c,parameters, dataStreams));
+		String instanceId = decodeValue(optAsString("instanceId","", c,parameters, dataStreams));
 		
-		String directory = Resolver.decodeValue(optAsString("directory","", c,parameters, dataStreams));
+		String directory = decodeValue(optAsString("directory","", c,parameters, dataStreams));
 		
 		Ontology o = null;
 		OntologyInstance ins = null;

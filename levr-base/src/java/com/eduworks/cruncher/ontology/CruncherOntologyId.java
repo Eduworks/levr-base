@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import com.eduworks.ontology.Ontology;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.eduworks.resolver.Resolver;
 
 
 public class CruncherOntologyId extends Cruncher {
@@ -18,7 +17,7 @@ public class CruncherOntologyId extends Cruncher {
 	public Object resolve(Context c,
 			Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException {
 		
-		String id = Resolver.decodeValue(optAsString("id","", c,parameters, dataStreams));
+		String id = decodeValue(optAsString("id","", c,parameters, dataStreams));
 		
 		if(!id.startsWith(Ontology.idCharacter)){
 			return Ontology.idCharacter+id;

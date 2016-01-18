@@ -1,6 +1,5 @@
 package com.eduworks.cruncher.lang;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 

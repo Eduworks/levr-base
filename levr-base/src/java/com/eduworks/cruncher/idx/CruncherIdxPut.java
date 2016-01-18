@@ -6,13 +6,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mapdb.HTreeMap;
 import org.mapdb.DB.HTreeMapMaker;
+import org.mapdb.HTreeMap;
 
 import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.eduworks.resolver.Resolver;
 import com.eduworks.util.io.EwDB;
 
 public class CruncherIdxPut extends Cruncher
@@ -22,9 +21,9 @@ public class CruncherIdxPut extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		JSONObject obj = getObjAsJsonObject(c, parameters, dataStreams);
-		String _databasePath = Resolver.decodeValue(getAsString("indexDir", c, parameters, dataStreams));
-		String _databaseName = Resolver.decodeValue(getAsString("databaseName", c, parameters, dataStreams));
-		String index = Resolver.decodeValue(getAsString("index", c, parameters, dataStreams));
+		String _databasePath = decodeValue(getAsString("indexDir", c, parameters, dataStreams));
+		String _databaseName = decodeValue(getAsString("databaseName", c, parameters, dataStreams));
+		String index = decodeValue(getAsString("index", c, parameters, dataStreams));
 		boolean optCommit = optAsBoolean("_commit", true, c, parameters, dataStreams);
 		String key = getAsString("key", c, parameters, dataStreams);
 		int ttlInSecondsAccess = optAsInteger("ttlAccessSeconds", -1, c, parameters, dataStreams);

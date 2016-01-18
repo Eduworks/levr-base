@@ -15,14 +15,13 @@ import org.json.JSONObject;
 
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
-import com.eduworks.resolver.Resolver;
 
 public class CruncherSolrDeleteDocument extends Cruncher
 {
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		String solrURL = Resolver.decodeValue(optAsString("solrURL", "http%3A%2F%2Flocalhost%3A8983%2Fsolr%2F", c, parameters, dataStreams));
+		String solrURL = decodeValue(optAsString("solrURL", "http%3A%2F%2Flocalhost%3A8983%2Fsolr%2F", c, parameters, dataStreams));
 		HttpSolrServer solrServer;
 		if (!SolrServer.serverMap.containsKey(solrURL)) {
 			solrServer = new HttpSolrServer(solrURL);
