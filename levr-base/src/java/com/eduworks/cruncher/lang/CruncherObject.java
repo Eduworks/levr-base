@@ -7,6 +7,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.lang.json.impl.EwJsonObject;
 import com.eduworks.lang.util.EwJson;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
@@ -17,7 +18,7 @@ public class CruncherObject extends Cruncher
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
-		JSONObject result = new JSONObject();
+		EwJsonObject result = new EwJsonObject();
 		Iterator<String> keySet = sortedKeys();
 //		if (optAsBoolean("_ordered",false,c,parameters, dataStreams))
 //			keySet = sortedKeys();
