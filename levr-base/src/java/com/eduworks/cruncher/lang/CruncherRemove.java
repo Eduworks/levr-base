@@ -39,8 +39,8 @@ public class CruncherRemove extends Cruncher
 		}
 		if (o instanceof JSONArray)
 		{
-			JSONArray ja = new JSONArray();
-			EwList<Object> arr = new EwList<Object>(ja);
+			// JSONArray ja = new JSONArray();
+			EwList<Object> arr = new EwList<Object>(o);
 
 			for (String key : keySet())
 				if (!isSetting(key))
