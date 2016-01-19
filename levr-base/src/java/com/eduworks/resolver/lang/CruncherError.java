@@ -17,7 +17,7 @@ public class CruncherError extends Cruncher
 	public Object resolve(Context c, Map<String,String[]> parameters, Map<String,InputStream> dataStreams) throws JSONException
 	{
 		short httpStatus = (short) optAsInteger("code", 500, c, parameters, dataStreams);
-		Object object = getAsString("msg", c,parameters,dataStreams);
+		Object object = get("msg", c,parameters,dataStreams).toString();
 		String message = "";
 		if (object != null)
 			message = object.toString();
