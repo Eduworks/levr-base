@@ -51,7 +51,8 @@ public class CruncherRemove extends Cruncher
 					try
 					{
 						int index = Integer.parseInt(o2.toString());
-						arr.remove(index);
+                        if (index >= 0 && index < arr.size())
+                            arr.remove(index);
 					}
 					catch (NumberFormatException ex)
 					{
