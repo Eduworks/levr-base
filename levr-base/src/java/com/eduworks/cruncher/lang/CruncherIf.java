@@ -24,6 +24,10 @@ public class CruncherIf extends Cruncher
 			operand = new Double((Integer)operand);
 		if (operand instanceof Double && operator instanceof Integer)
 			operator = new Double((Integer)operator);
+		if (operator instanceof Long && operand instanceof Integer)
+			operand = new Double((Long)operand);
+		if (operand instanceof Long && operator instanceof Integer)
+			operator = new Double((Long)operator);
 		if (operator instanceof Boolean && operand instanceof String)
 			operand = new Boolean((String)operand);
 		if (operand instanceof Boolean && operator instanceof String)
