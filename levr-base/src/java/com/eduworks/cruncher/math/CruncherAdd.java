@@ -20,6 +20,7 @@ public class CruncherAdd extends Cruncher
 		boolean fancyNumber = optAsBoolean("_fancyNumber",false,c,parameters,dataStreams);
 		StringBuilder resultStr = new StringBuilder();
 		Iterator<String> i = this.sortedKeys();
+		boolean enforceString = optAsBoolean("_string",false,c,parameters, dataStreams);
 		while (i.hasNext())
 		{
 			String key = i.next();
@@ -28,7 +29,7 @@ public class CruncherAdd extends Cruncher
 			Object o = get(key,c,parameters, dataStreams);
 			if (o == null || o.toString().isEmpty())
 				continue;
-			if (resultStr.length() == 0 && !optAsBoolean("_string",false,c,parameters, dataStreams))
+			if (resultStr.length() == 0 && !enforceString)
 				try
 				{
 					Double value = objectToDouble(o);
@@ -43,7 +44,7 @@ public class CruncherAdd extends Cruncher
 			else
 				resultStr.append(objectToString(o));
 		}
-		if (resultStr.length() > 0)
+		if (resultStr.length() > 0 || enforceString)
 			return resultStr.toString();
 		if (fancyNumber)
 			return NumberFormat.getNumberInstance(java.util.Locale.US).format(result);
