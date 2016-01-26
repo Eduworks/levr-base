@@ -6,6 +6,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.eduworks.lang.json.impl.EwJsonObject;
 import com.eduworks.resolver.Context;
 import com.eduworks.resolver.Cruncher;
 
@@ -28,7 +29,7 @@ public class CruncherToObject extends Cruncher
 		if (object instanceof JSONObject)
 			result = (JSONObject) object;		
 		if (result == null)
-			result = new JSONObject(asString);
+			result = new EwJsonObject(asString);
 		return result;
 	}
 

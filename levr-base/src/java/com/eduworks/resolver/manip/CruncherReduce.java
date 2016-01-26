@@ -40,7 +40,7 @@ public class CruncherReduce extends Cruncher
 			else
 				return o;
 		}
-		throw new RuntimeException("Expected Array or Object, got "+obj.getClass().getName());
+		return obj;
 	}
 
 	@Override

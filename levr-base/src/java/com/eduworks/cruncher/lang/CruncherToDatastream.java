@@ -18,7 +18,8 @@ public class CruncherToDatastream extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		String paramName=getAsString("paramName",c,parameters, dataStreams);
-		InMemoryFile o = (InMemoryFile) getObj(c,parameters, dataStreams);
+		Object obj = getObj(c,parameters, dataStreams);
+		InMemoryFile o = (InMemoryFile) obj;
 
 		final EwMap<String, InputStream> newData = new EwMap<String, InputStream>(dataStreams);
         newData.put(paramName, o.getInputStream());

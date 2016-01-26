@@ -31,7 +31,7 @@ public class CruncherToArray extends Cruncher
 		{
 			try
 			{
-				String asString = getAsString("obj", c, parameters, dataStreams);
+				String asString = obj.toString();
 				Object result = c.get(asString);
 				if (result == null)
 					if (asString.startsWith("["))
@@ -43,6 +43,8 @@ public class CruncherToArray extends Cruncher
 					}
 				if (!(result instanceof JSONArray))
 				{
+					if (result.toString().startsWith("["))
+						return new JSONArray(result.toString());
 					result = new JSONArray();
 					((JSONArray) result).put(obj);
 				}
