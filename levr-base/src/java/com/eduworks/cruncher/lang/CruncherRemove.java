@@ -1,6 +1,7 @@
 package com.eduworks.cruncher.lang;
 
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -32,9 +33,28 @@ public class CruncherRemove extends Cruncher
 			JSONObject jo = (JSONObject) o;
 			for (String key : keySet())
 				if (key.equals("item"))
-					jo.remove(jo.getString(key));
+				{
+					jo.remove(getAsString(key, c, parameters, dataStreams));
+				}
+				else if(key.equals("_value"))
+				{
+					Iterator<String> keys = jo.keys();
+					JSONArray removeKeys = new JSONArray();
+					while(keys.hasNext()){
+						String objectKey = keys.next();
+						if(jo.get(objectKey).equals(get(key))){
+							removeKeys.put(objectKey);
+						}
+					}
+					
+					for(int i = 0; i < removeKeys.length(); i++){
+						jo.remove(removeKeys.getString(i));
+					}
+				}
 				else
+				{
 					jo.remove(key);
+				}
 			return jo;
 		}
 		if (o instanceof JSONArray)

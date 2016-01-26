@@ -42,6 +42,7 @@ public class CruncherRunProcess extends Cruncher
 	        while ((line = br.readLine()) != null) {
 	        	output.add(line);
 	        }
+	        
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new JSONException(e.getMessage());
@@ -50,7 +51,7 @@ public class CruncherRunProcess extends Cruncher
 			throw new JSONException(e.getMessage());
 		}
         
-		return output.toArray(new String[output.size()]);
+		return new JSONArray(output);
 	}
 
 	@Override
