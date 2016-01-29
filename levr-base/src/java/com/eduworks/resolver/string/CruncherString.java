@@ -32,7 +32,7 @@ public class CruncherString extends Cruncher
 				return capitalize(string);
 
 			case FORMAT:
-				return format(this,string, c,parameters,dataStreams, strKey);
+				return format(string, c,parameters,dataStreams, strKey);
 
 			case REPLACE:
 				return string.replaceAll(
@@ -109,7 +109,7 @@ public class CruncherString extends Cruncher
 	 * or the attached parameters. Setting keys and any keys specified in the ignore array may
 	 * not be referenced in the format string, or an exception is thrown.
 	 */
-	public static String format(Cruncher r, String format, Context c, Map<String,String[]> parameters, Map<String,InputStream> dataStreams, String ... ignore)
+	public String format(String format, Context c, Map<String,String[]> parameters, Map<String,InputStream> dataStreams, String ... ignore)
 	{
 		// Approximate the result length: format string + 16 character args
 	    final StringBuilder sb = new StringBuilder(format.length() + (parameters.size()*16));
@@ -179,7 +179,7 @@ public class CruncherString extends Cruncher
 	            						sb.setLength(sb.length() - 1);
 
 	            						// Append the corresponding param value
-	            						sb.append(r.getAsString(fmtKey, c,parameters,dataStreams));
+	            						sb.append(getAsString(fmtKey, c,parameters,dataStreams));
 	            					}
 	            					catch (Exception e)
 	            					{
