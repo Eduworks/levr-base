@@ -16,7 +16,6 @@ import com.eduworks.resolver.Context;
 public class CruncherSqlUpdate extends SqlTypeCruncher
 {
 
-	private int numRowsAffected;
 
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
@@ -31,7 +30,7 @@ public class CruncherSqlUpdate extends SqlTypeCruncher
 			try
 			{
 				stmt = conn.createStatement();
-				numRowsAffected = stmt.executeUpdate(statement);
+				int numRowsAffected = stmt.executeUpdate(statement);
 				conn.commit();
 				return numRowsAffected;
 			}
