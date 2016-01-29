@@ -37,6 +37,7 @@ public class CruncherSqlUpdate extends SqlTypeCruncher {
       }
       catch (Exception e) {
          log.debug("Exception executing sql update: " + getSqlStatement());
+	      e.printStackTrace();
          rollbackTransaction();         
       }
    }

@@ -45,6 +45,7 @@ public class CruncherSql extends SqlTypeCruncher {
 	   }
 	   catch (Exception e) {
 	      log.debug("Exception executing sql statement:" + getSqlStatement());
+	      e.printStackTrace();
          throw e;
 	   }
 	}
@@ -57,6 +58,7 @@ public class CruncherSql extends SqlTypeCruncher {
       }
       catch (Exception e) {
          log.debug("Exception parsing result set:" + getSqlStatement());
+	      e.printStackTrace();
          throw e;
       }
 	}
