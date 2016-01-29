@@ -203,7 +203,7 @@ public class CruncherFilesToZip extends Cruncher
 	@Override
 	public String getReturn()
 	{
-		return "ResolverFile";
+		return "InMemoryFile";
 	}
 
 	@Override

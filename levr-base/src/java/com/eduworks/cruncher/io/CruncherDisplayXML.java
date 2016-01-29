@@ -78,7 +78,7 @@ public class CruncherDisplayXML extends Cruncher
 	@Override
 	public String getReturn()
 	{
-		return "ResolverFile";
+		return "InMemoryFile";
 	}
 
 	@Override

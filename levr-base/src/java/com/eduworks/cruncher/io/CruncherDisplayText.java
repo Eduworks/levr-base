@@ -54,7 +54,7 @@ public class CruncherDisplayText extends Cruncher
 	@Override
 	public String getReturn()
 	{
-		return "ResolverFile";
+		return "InMemoryFile";
 	}
 
 	@Override
