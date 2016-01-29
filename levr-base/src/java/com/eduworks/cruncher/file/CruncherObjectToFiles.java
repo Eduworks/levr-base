@@ -13,11 +13,11 @@ import com.eduworks.resolver.Cruncher;
 
 public class CruncherObjectToFiles extends Cruncher
 {
-	Map<String, String>	documents	= new HashMap<String, String>();
 
 	@Override
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
+		Map<String, String>	documents	= new HashMap<String, String>();
 		JSONObject jo = getObjAsJsonObject(c, parameters, dataStreams);
 		for (String key : EwJson.getKeys(jo))
 		{

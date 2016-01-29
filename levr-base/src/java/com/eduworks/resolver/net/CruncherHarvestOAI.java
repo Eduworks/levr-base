@@ -119,16 +119,10 @@ public class CruncherHarvestOAI extends Cruncher
 		resolveRecord(item.asXML(), results, c, parameters, dataStreams);
 	}
 
-	int i = 0;
-	int max = 0;
-
 	private void resolveRecord(String record, JSONObject results, Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams)
 	{
 		try
 		{
-			i++;
-			if (i % 1000 == 0)
-				System.out.println("ForEach: On " + i + "/" + max);
 			JSONObject jsonObject = XML.toJSONObject(record);
 			jsonObject = new JSONObject(jsonObject.toString().replaceAll("oai:", ""));
 			jsonObject = new JSONObject(jsonObject.toString().replaceAll("dc:", ""));

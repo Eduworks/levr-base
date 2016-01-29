@@ -53,7 +53,7 @@ public class CruncherAbortable extends Cruncher
 	@Override
 	public String getDescription()
 	{
-		return "Allows the operation to abort itself. As Java Servlets do not have connection closed detection, we trickle space characters out and wait for a connection reset."
+		return "*WARNING, DOES NOT WORK TERRIBLY WELL* Allows the operation to abort itself. As Java Servlets do not have connection closed detection, we trickle space characters out and wait for a connection reset."
 				+ "Headers must be set before data goes out, so all key/value pairs here are placed into headers. Note that all crunchers (that do not explicitly check for abort clauses) will only be aborted at the beginning of their execution.";
 	}
 

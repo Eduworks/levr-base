@@ -20,10 +20,10 @@ import com.eduworks.resolver.Resolvable;
 
 public class CruncherXmppListen extends Cruncher
 {
-	public Map<String, Object> recipientLocks = new EwMap<String, Object>();
-
 	private final class MessageListenerImplementation implements MessageListener
 	{
+		public Map<String, Object> recipientLocks = new EwMap<String, Object>();
+
 		protected Resolvable op;
 		private final Map<String, String[]> parameters;
 		private final Map<String, InputStream> dataStreams;
