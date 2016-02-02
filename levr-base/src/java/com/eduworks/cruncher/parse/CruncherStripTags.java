@@ -23,7 +23,7 @@ public class CruncherStripTags extends Cruncher
 		String htmlText = (String)getObj(c, parameters, dataStreams);
         if (htmlText==null)
             htmlText = "";
-		
+		        
 		// Customize the whitelist
 		Whitelist wl;
         if (optAsBoolean("removeAll", false, c, parameters, dataStreams))
@@ -49,6 +49,16 @@ public class CruncherStripTags extends Cruncher
 		doc.outputSettings().escapeMode(EscapeMode.xhtml);
 		htmlText = Jsoup.clean(doc.body().html(), wl);
 		htmlText = StringEscapeUtils.unescapeHtml(htmlText);
+        if (optAsBoolean("alphanumeric", false, c, parameters, dataStreams)) {
+            StringBuilder sb = new StringBuilder();
+            int size = htmlText.length();
+            for (int i = 0; i < size; i++) {
+                int ch = htmlText.codePointAt(i);
+                if (ch == 32 || (ch >= 48 && ch <= 57) || (ch >= 65 && ch <= 90) || (ch >= 97 && ch <= 122))
+                    sb.append((char)ch);
+            }
+            htmlText = sb.toString();
+        }
 		return htmlText;
 	}
 
