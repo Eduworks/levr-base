@@ -17,6 +17,7 @@ public class CruncherCatch extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{		
 		Object result;
+		boolean printStackTrace = optAsBoolean("printStackTrace", false, c, parameters, dataStreams);
 		try{
 			if (has("try"))
 				result = resolveAChild("try", c,parameters, dataStreams);
@@ -26,7 +27,8 @@ public class CruncherCatch extends Cruncher
 			if(has("null")){
 				final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 				newParams.put("message", new String[] { e.getMessage() });
-				
+				if (printStackTrace)
+					e.printStackTrace();
 				result = resolveAChild("null", c,newParams, dataStreams);
 			}else{
 				throw e;
@@ -35,17 +37,18 @@ public class CruncherCatch extends Cruncher
 			if(has("runtime")){
 				final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 				newParams.put("message", new String[] { e.getMessage() });
-				
+				if (printStackTrace)
+					e.printStackTrace();
 				result = resolveAChild("runtime", c,newParams, dataStreams);
 			}else{
 				throw e;
 			}
-			
 		}catch(Exception e){
 			if(has("any")){
 				final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 				newParams.put("message", new String[] { e.getMessage() });
-				
+				if (printStackTrace)
+					e.printStackTrace();
 				result = resolveAChild("any", c,newParams, dataStreams);
 			}else{
 				throw new RuntimeException(e);
