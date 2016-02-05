@@ -24,47 +24,57 @@ public class CruncherString extends Cruncher
 		String string = getAsString(strKey, c, parameters, dataStreams);
 		if (string == null || string.isEmpty())
 			string = getAsString("obj",c, parameters, dataStreams);
-		if (string == null) return null;
 		final CruncherStringOp operation = CruncherStringOp.operationForKeyValue(getAsString(OP_KEY, c, parameters, dataStreams));
 
 		switch (operation)
 		{
 			case CAPITALIZE:
+				if (string == null) return null;
 				return capitalize(string);
 
 			case FORMAT:
+				if (string == null) return null;
 				return format(string, c,parameters,dataStreams, strKey);
 
 			case REPLACE:
+				if (string == null) return null;
 				return string.replaceAll(
 						decodeValue(optAsString(REGEX_KEY,null, c, parameters, dataStreams)),
 						optAsString("with",null, c, parameters, dataStreams)
 					);
 
 			case REVERSE:
+				if (string == null) return null;
 				return new StringBuilder(string).reverse().toString();
 
 			case SPLIT:
+				if (string == null) return null;
 				return Arrays.asList(string.split(optAsString(REGEX_KEY,null, c, parameters, dataStreams)));
 
 			case SUBSTR:
+				if (string == null) return null;
 				int optInt = optAsInteger("begin",0, c, parameters, dataStreams);
 				int optInt2 = optAsInteger("end", string.length(), c, parameters, dataStreams);
 				return string.substring(Math.min(optInt,string.length()), Math.min(optInt2,string.length()));
 
 			case TRIM:
+				if (string == null) return null;
 				return trim(string, optAsString("chars",null, c, parameters, dataStreams), optAsBoolean("trimQuotes", false, c, parameters, dataStreams));
 
 			case TO_LOWER:
+				if (string == null) return null;
 				return string.toLowerCase();
 
 			case TO_TITLE:
+				if (string == null) return null;
 				return toTitleCase(string, optAsBoolean("lowerFirst", false, c, parameters, dataStreams));
 
 			case TO_UPPER:
+				if (string == null) return null;
 				return string.toUpperCase();
 				
 			case LENGTH:
+				if (string == null) return null;
 				return string.length();
 		}
 
