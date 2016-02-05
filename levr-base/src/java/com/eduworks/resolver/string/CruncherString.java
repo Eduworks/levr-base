@@ -24,6 +24,7 @@ public class CruncherString extends Cruncher
 		String string = getAsString(strKey, c, parameters, dataStreams);
 		if (string == null || string.isEmpty())
 			string = getAsString("obj",c, parameters, dataStreams);
+		if (string == null) return null;
 		final CruncherStringOp operation = CruncherStringOp.operationForKeyValue(getAsString(OP_KEY, c, parameters, dataStreams));
 
 		switch (operation)
