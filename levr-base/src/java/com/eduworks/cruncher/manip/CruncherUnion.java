@@ -28,8 +28,10 @@ public class CruncherUnion extends Cruncher
 		else
 			ja = new ArrayList<Object>();
 		JSONArray obj = getObjAsJsonArray(c, parameters, dataStreams);
+		
 		for (int i = 0;i < obj.length();i++)
 			ja.add(obj.get(i));
+		
 			
 		Boolean accumulate = optAsBoolean("accumulate", true, c, parameters, dataStreams);
 		JSONObject jo = new JSONObject();
@@ -74,8 +76,8 @@ public class CruncherUnion extends Cruncher
 		}
 		if (jo.length() != 0)
 			return jo;
-		if (ja.size() == 0)
-			return null;
+		//if (ja.size() == 0)  removed these two lines because it was returning null on the union of two empty arrays
+			//return null;     this caused problems when combining lists if the first two lists were empty
 		return new JSONArray(ja);
 	}
 
