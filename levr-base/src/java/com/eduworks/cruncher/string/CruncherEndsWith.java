@@ -16,7 +16,7 @@ public class CruncherEndsWith extends Cruncher
 	   {
 	      String s1 = getAsString("string1",c,parameters, dataStreams);
 	      if (s1 == null)
-	    	  s1 = getObj(c, parameters, dataStreams).toString();
+	    	  s1 = (String) getObj(c, parameters, dataStreams);
 	      if (s1 == null) return false;
 	      s1 = s1.toLowerCase();
 	      String s2 = getAsString("string2",c,parameters, dataStreams);
