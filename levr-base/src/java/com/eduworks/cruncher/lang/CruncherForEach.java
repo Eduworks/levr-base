@@ -93,8 +93,6 @@ public class CruncherForEach extends Cruncher
 				{
 					try
 					{
-						if (threadCap != Integer.MAX_VALUE)
-						EwThreading.setThreadCount(threadCap);
 						final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 						newParams.put(paramName, new String[] { key });
 
@@ -185,7 +183,6 @@ public class CruncherForEach extends Cruncher
 			if (c.shouldAbort()) return null;
 			final Object keyRaw = json.get(i);
 			final String key = keyRaw.toString();
-			final Object value = json.get(i);
 			final String prevIdFinal = prevId;
 			final int index = i;
 			if (i > 0 && i % 1000 == 0)
@@ -200,8 +197,6 @@ public class CruncherForEach extends Cruncher
 						{
 							try
 							{
-								if (threadCap != Integer.MAX_VALUE)
-								EwThreading.setThreadCount(threadCap);
 								final EwMap<String, String[]> newParams = new EwMap<String, String[]>(parameters);
 								newParams.put(paramName, new String[] { key });
 								c.put(key, keyRaw);

@@ -1,6 +1,7 @@
 package com.eduworks.cruncher.file;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
@@ -20,14 +21,23 @@ public class CruncherFileLoad extends Cruncher
 		if (path.contains(".."))
 			throw new RuntimeException("Cannot go up in filesystem.");
 		File f = new File(path);
-		if (optAsBoolean("file",false,c,parameters,dataStreams))
+		if (optAsBoolean("file", false, c, parameters, dataStreams))
 			return f;
 		try
 		{
-			InMemoryFile imf = new InMemoryFile(f);
-			if (optAsBoolean("text", false, c, parameters, dataStreams))
-				return IOUtils.toString(imf.getInputStream());
-			return imf;
+			if (f.length() > Integer.MAX_VALUE)
+			{
+				if (optAsBoolean("text", false, c, parameters, dataStreams))
+					return IOUtils.toString(new FileInputStream(f));
+				return f;
+			}
+			else
+			{
+				InMemoryFile imf = new InMemoryFile(f);
+				if (optAsBoolean("text", false, c, parameters, dataStreams))
+					return IOUtils.toString(imf.getInputStream());
+				return imf;
+			}
 		}
 		catch (IOException e)
 		{

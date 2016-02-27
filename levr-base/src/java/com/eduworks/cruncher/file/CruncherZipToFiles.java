@@ -2,6 +2,7 @@ package com.eduworks.cruncher.file;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -27,19 +28,17 @@ public class CruncherZipToFiles extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException {
 		Object obj = getObj(c, parameters, dataStreams);
 		EwJsonArray files = new EwJsonArray();
-		InMemoryFile f = null;
 		ZipInputStream in = null;
 		JSONObject filters = getAsJsonObject("filter", c, parameters, dataStreams);
 		try
 		{
 			if (obj instanceof File)
-				f = new InMemoryFile((File)obj);
+				in = new ZipInputStream(new FileInputStream((File)obj));
 			else if (obj instanceof InMemoryFile)
-				f = (InMemoryFile)obj;
+				in = new ZipInputStream(((InMemoryFile)obj).getInputStream());
 				
 			byte[] buf = new byte[4096];
 
-			in = new ZipInputStream(new ByteArrayInputStream(f.data));
 			ZipEntry ze;
 			
 			while ((ze=in.getNextEntry())!=null) {
