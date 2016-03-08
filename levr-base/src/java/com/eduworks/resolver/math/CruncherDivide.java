@@ -17,6 +17,8 @@ public class CruncherDivide extends Cruncher
 	{
 		boolean ignoreZeros = optAsBoolean("_ignoreZeros", false, c, parameters, dataStreams);
 		Double result = getAsDouble("numerator", c, parameters, dataStreams);
+		if (result == null)
+			result = getAsDouble("obj", c, parameters, dataStreams);
 		Iterator<String> i = keySet().iterator();
 		while (i.hasNext())
 		{
@@ -24,6 +26,8 @@ public class CruncherDivide extends Cruncher
 			if (isSetting(key))
 				continue;
 			if (key.equals("numerator"))
+				continue;
+			if (key.equals("obj"))
 				continue;
 			Double value = getAsDouble(key, c, parameters, dataStreams);
 			if (value == 0 && ignoreZeros)
@@ -41,7 +45,7 @@ public class CruncherDivide extends Cruncher
 	@Override
 	public String getDescription()
 	{
-		return "Divides the number in 'numerator' by all other numbers provided." + "\nIf '_NaNresult' is provided, will use that result if NaN is achieved.";
+		return "Divides the number in 'numerator' or 'obj' by all other numbers provided." + "\nIf '_NaNresult' is provided, will use that result if NaN is achieved.";
 	}
 
 	@Override
