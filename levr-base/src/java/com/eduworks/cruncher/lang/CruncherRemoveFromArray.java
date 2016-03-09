@@ -19,15 +19,24 @@ public class CruncherRemoveFromArray extends Cruncher
    {
       Object obj = getObj(c, parameters, dataStreams);
       if (obj == null) return null;
+      int index = optAsInteger("_index", -1, c, parameters, dataStreams);
       JSONArray ja = (JSONArray) obj;
       EwJsonArray returnArray = new EwJsonArray();
-      String item = getAsString("item", c, parameters, dataStreams);
-      if (item == null)
-    	  item = getAsString("remove", c, parameters, dataStreams);
-      for (int i=0; i < ja.length(); i++) 
-      {
-         if (!ja.get(i).equals(item)) returnArray.put(ja.get(i));
-      }      
+      if (index > -1){
+    	  for (int j=0; j < ja.length(); j++){
+    		  if (j != index){
+    			  returnArray.put(ja.get(j));
+    		  }
+    	  }
+      } else {
+	      String item = getAsString("item", c, parameters, dataStreams);
+	      if (item == null)
+	    	  item = getAsString("remove", c, parameters, dataStreams);
+	      for (int i=0; i < ja.length(); i++) 
+	      {
+	         if (!ja.get(i).equals(item)) returnArray.put(ja.get(i));
+	      }     
+      }
       return returnArray;
    }
 
@@ -52,7 +61,7 @@ public class CruncherRemoveFromArray extends Cruncher
    @Override
    public JSONObject getParameters() throws JSONException
    {
-      return jo("obj","JSONArray","item","String|Number");
+      return jo("obj","JSONArray","item","String|Number","?_index","Integer");
    }
 
 }
