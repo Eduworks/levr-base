@@ -22,13 +22,13 @@ public class CruncherToDotNotationObject extends Cruncher
 		String[] stopAt;
 		String stopAtString = optAsString("stopAt", null, c, parameters, dataStreams);
 		if (stopAtString == null)
-			stopAt = new String[] {};
+			stopAt = null;
 		else
 			stopAt = stopAtString.split(",");
 		String[] remove;
 		String removeString = optAsString("remove", null, c, parameters, dataStreams);
 		if (removeString == null)
-			remove = new String[] {};
+			remove = null;
 		else
 			remove = removeString.split(",");
 		JSONObject result = new JSONObject();
