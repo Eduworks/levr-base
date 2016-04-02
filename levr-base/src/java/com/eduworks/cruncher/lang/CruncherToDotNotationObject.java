@@ -18,6 +18,7 @@ public class CruncherToDotNotationObject extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		JSONObject obj = getObjAsJsonObject(c, parameters, dataStreams);
+		if (obj == null) return null;
 		String[] stopAt;
 		String stopAtString = optAsString("stopAt", null, c, parameters, dataStreams);
 		if (stopAtString == null)
