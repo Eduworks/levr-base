@@ -18,8 +18,18 @@ public class CruncherToDotNotationObject extends Cruncher
 	public Object resolve(Context c, Map<String, String[]> parameters, Map<String, InputStream> dataStreams) throws JSONException
 	{
 		JSONObject obj = getObjAsJsonObject(c, parameters, dataStreams);
-		String[] stopAt = optAsString("stopAt", null, c, parameters, dataStreams).split(",");
-		String[] remove = optAsString("remove", null, c, parameters, dataStreams).split(",");
+		String[] stopAt;
+		String stopAtString = optAsString("stopAt", null, c, parameters, dataStreams);
+		if (stopAtString == null)
+			stopAt = new String[] {};
+		else
+			stopAt = stopAtString.split(",");
+		String[] remove;
+		String removeString = optAsString("remove", null, c, parameters, dataStreams);
+		if (removeString == null)
+			remove = new String[] {};
+		else
+			remove = removeString.split(",");
 		JSONObject result = new JSONObject();
 		recurse("", result, obj, stopAt, remove);
 		return result;
@@ -32,7 +42,7 @@ public class CruncherToDotNotationObject extends Cruncher
 		{
 			String key = it.next().toString();
 			String myDot = dot;
-			if (!myDot.endsWith("."+key))
+			if (!myDot.endsWith("." + key))
 			{
 				if (dot.isEmpty() == false)
 					myDot += ".";
