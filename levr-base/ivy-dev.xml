@@ -7,5 +7,12 @@
    <extends organisation="com.eduworks" module="levr-core-dev" revision="latest.integration" location="../levr-core/ivy-dev.xml" extendType="configurations,dependencies"/>
   </info>
   <dependencies>
+  	<exclude module="servlet-api"/>
+	<exclude org="com.ibm.icu"/>
+	<exclude org="org.slf4j"/>
+	<exclude module="slf4j-log4j12"/>
+	<exclude module="slf4j-simple"/>
+	<exclude module="google-collections"/>
+	<exclude org="com.google.collections"/>
   </dependencies>
 </ivy-module>

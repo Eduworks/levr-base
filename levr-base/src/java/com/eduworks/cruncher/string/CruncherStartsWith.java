@@ -17,7 +17,11 @@ public class CruncherStartsWith extends Cruncher
 	{
 		String s1 = getAsString("string1", c, parameters, dataStreams);
 		if (s1 == null)
-			s1 = getObj(c, parameters, dataStreams).toString();
+		{
+			Object obj = getObj(c, parameters, dataStreams);
+			if (obj != null)
+			s1 = obj.toString();
+		}
 		if (s1 == null)
 			return false;
 		s1 = s1.toLowerCase();

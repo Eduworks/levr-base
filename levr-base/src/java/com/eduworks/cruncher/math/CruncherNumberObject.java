@@ -18,7 +18,7 @@ public class CruncherNumberObject extends Cruncher
 		int min = Integer.parseInt(getAsString("min",c,parameters, dataStreams));
 		int max = Integer.parseInt(getAsString("max",c,parameters, dataStreams));
 		JSONObject results = new JSONObject();
-		for (int i = min;i < max;i++)
+		for (int i = min;i <= max;i++)
 		{
 			results.put(Integer.toString(i),"");
 		}
