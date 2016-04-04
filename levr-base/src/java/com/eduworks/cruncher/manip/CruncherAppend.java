@@ -38,7 +38,6 @@ public class CruncherAppend extends Cruncher
 			if (key.equals("obj"))
 				continue;
 			ja.put(get(key, c, parameters, dataStreams));
-			return ja;
 		}
 		return ja;
 	}
