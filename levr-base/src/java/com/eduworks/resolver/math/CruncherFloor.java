@@ -23,7 +23,7 @@ public class CruncherFloor extends Cruncher
 		if (result.length() == 0)
 			return null;
 		if (result.length() == 1)
-			return get(keySet().iterator().next());
+			return result.get(result.keys().next().toString());
 		return this;
 	}
 
