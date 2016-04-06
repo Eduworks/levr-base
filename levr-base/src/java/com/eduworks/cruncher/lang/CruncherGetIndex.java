@@ -52,7 +52,7 @@ public class CruncherGetIndex extends Cruncher
 	@Override
 	public String getDescription()
 	{
-		return "Indexes into an array and retreives the item at the index designated by 'index'.\nSoft will make it not error out if obj is not a JSONArray";
+		return "Indexes into an array and retreives the item at the index designated by 'index'.\nSoft will make it not error out if obj is not a JSONArray.\nIf random, a random item from the array is returned.";
 	}
 
 	@Override
@@ -70,6 +70,6 @@ public class CruncherGetIndex extends Cruncher
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("obj", "JSONArray", "index", "Number", "?soft", "Boolean");
+		return jo("obj", "JSONArray", "index", "Number", "?soft", "Boolean", "?random", "Boolean");
 	}
 }
