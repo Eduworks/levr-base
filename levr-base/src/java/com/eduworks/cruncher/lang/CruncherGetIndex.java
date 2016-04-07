@@ -26,9 +26,7 @@ public class CruncherGetIndex extends Cruncher
 		Integer index = optAsInteger("index", 0,c, parameters, dataStreams);
 		boolean random = false;
 		Integer sampleSize=optAsInteger("samplesize",-1,c,parameters,dataStreams);
-		
-		//System.out.println("sampleSize: "+sampleSize);
-		
+				
 		if (optAsBoolean("random",false,c,parameters,dataStreams))
 			random = true;
 		if (objx instanceof List)
@@ -51,7 +49,7 @@ public class CruncherGetIndex extends Cruncher
 							selectedIndex++;
 						selectedIndecesSoFar.add(selectedIndex);
 						selectedSoFar.put(obj.get(selectedIndex));
-						System.out.println(selectedSoFar.length());
+						
 					}
 					return selectedSoFar;				
 				
@@ -94,7 +92,6 @@ public class CruncherGetIndex extends Cruncher
 					return obj.get(EwRandom.r(obj.length()));
 				}
 			}
-			//if (random) index = EwRandom.r(obj.length());
 			if (obj.length() > index && index >= 0)
 				return obj.get(index);
 		}
@@ -122,6 +119,6 @@ public class CruncherGetIndex extends Cruncher
 	@Override
 	public JSONObject getParameters() throws JSONException
 	{
-		return jo("obj", "JSONArray", "index", "Number", "?soft", "Boolean", "?random", "Boolean", "","?samplesize","Number");
+		return jo("obj", "JSONArray", "index", "Number", "?soft", "Boolean", "?random", "Boolean", "?samplesize","Number");
 	}
 }
