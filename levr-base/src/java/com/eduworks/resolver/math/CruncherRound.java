@@ -23,11 +23,9 @@ public class CruncherRound extends Cruncher
 				continue;
 			results.put(key, Math.pow(10, -places) * Math.round(Math.pow(10, places) * getAsDouble(key, c, parameters, dataStreams)));
 		}
-		System.out.println("Res:"+results.toString());
 		if (results.length() == 0)
 			return null;
 		if (results.length() == 1){
-			System.out.println("Res2: "+ results.get(results.keys().next().toString()));
 			return results.get(results.keys().next().toString());
 			//return get(keySet().iterator().next());
 		}
