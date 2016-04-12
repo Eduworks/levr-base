@@ -25,6 +25,7 @@ public class CruncherIdxKeys extends Cruncher
 		String _databasePath = decodeValue(getAsString("indexDir", c, parameters, dataStreams));
 		String _databaseName = decodeValue(getAsString("databaseName", c, parameters, dataStreams));
 		String index = decodeValue(getAsString("index", c, parameters, dataStreams));
+		Integer start = optAsInteger("start", 0, c, parameters, dataStreams);
 		Integer count = optAsInteger("count",Integer.MAX_VALUE,c,parameters,dataStreams);
 		boolean optCommit = optAsBoolean("_commit", true, c, parameters, dataStreams);
 		EwDB ewDB = null;
@@ -38,9 +39,15 @@ public class CruncherIdxKeys extends Cruncher
 			JSONArray arr = new JSONArray();
 
 			Iterator<Entry<Object, Object>> it = ewDB.db.getHashMap(index).entrySet().iterator();
-			while (it.hasNext() && count-- > 0)
+			while (it.hasNext() && count > 0)
 			{
 				Entry<Object, Object> t = it.next();
+				
+				if (start > 0) {
+					start--;
+					continue;
+				} else
+					count--;
 
 //				if (!arr.contains(t.getKey()))
 					arr.put(t.getKey());
@@ -55,9 +62,15 @@ public class CruncherIdxKeys extends Cruncher
 			EwJsonArray arr = new EwJsonArray();
 
 			Iterator<Tuple2<String, String>> it = multiMap.iterator();
-			while (it.hasNext() && count-- > 0)
+			while (it.hasNext() && count > 0)
 			{
 				Tuple2<String, String> t = it.next();
+				
+				if (start > 0) {
+					start--;
+					continue;
+				} else
+					count--;
 
 				if (!arr.contains(t.a))
 					arr.put(t.a);
